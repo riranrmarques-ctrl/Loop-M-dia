@@ -5,69 +5,12 @@ const TABELA_PLAYLISTS = "playlists";
 
 let supabaseClient = null;
 let usandoSupabase = false;
+let criandoNovoPonto = false;
 
 const store = {
-  selectedPointId: "ponto-001",
+  selectedPointId: "",
   manifestVersion: 1,
-  pontos: [
-    {
-      id: "ponto-001",
-      codigo: "DUNA-001",
-      nome: "Academia Prime Barra",
-      cidade: "Salvador / Barra",
-      endereco: "Av. Oceanica, 1200",
-      disponivel: true,
-      imagem: "https://placehold.co/900x506/0f6b5a/ffffff/png?text=Academia+Prime",
-      materiais: [
-        {
-          id: "mat-001",
-          cliente: "Duna Branding",
-          nome: "Institucional Duna",
-          tipo: "video",
-          posicao: 1,
-          repeticoes: 2,
-          duracao: 30,
-          storagePath: "r2://duna/institucional-duna.mp4",
-          checksum: "sha256-demo-001",
-          status: "ativo",
-        },
-        {
-          id: "mat-002",
-          cliente: "Mega Burger",
-          nome: "Combo almoco",
-          tipo: "video",
-          posicao: 2,
-          repeticoes: 1,
-          duracao: 20,
-          storagePath: "r2://mega-burger/combo-almoco.mp4",
-          checksum: "sha256-demo-002",
-          status: "ativo",
-        },
-        {
-          id: "mat-003",
-          cliente: "Clinica Vida",
-          nome: "Checkup preventivo",
-          tipo: "imagem",
-          posicao: 3,
-          repeticoes: 3,
-          duracao: 12,
-          storagePath: "r2://clinica-vida/checkup.jpg",
-          checksum: "sha256-demo-003",
-          status: "ativo",
-        },
-      ],
-    },
-    {
-      id: "ponto-002",
-      codigo: "DUNA-002",
-      nome: "Restaurante Mar Azul",
-      cidade: "Salvador / Pituba",
-      endereco: "Rua das Hortensias, 88",
-      disponivel: true,
-      imagem: "https://placehold.co/900x506/c99b36/111b17/png?text=Mar+Azul",
-      materiais: [],
-    },
-  ],
+  pontos: [],
 };
 
 const api = {
@@ -101,7 +44,7 @@ const api = {
         }
       } catch (error) {
         usandoSupabase = false;
-        console.warn("Supabase indisponivel, usando mock local:", error);
+        console.error("Erro ao carregar pontos da Supabase:", error);
       }
     }
 
@@ -206,10 +149,130 @@ const api = {
       if (error) throw error;
     }
   },
+  async salvarPonto(pontoId, payload) {
+    if (!supabaseClient) throw new Error("Supabase nao carregou.");
+
+    if (pontoId) {
+      const ponto = store.pontos.find((item) => item.id === pontoId);
+      if (!ponto) return null;
+
+      const { data, error } = await supabaseClient
+        .from(TABELA_PONTOS)
+        .update(payload)
+        .eq("codigo", ponto.codigo)
+        .select("*")
+        .single();
+
+      if (error) throw error;
+      return mapearPontoSupabase(data, ponto.materiais.map((material) => ({
+        ...material,
+        codigo: ponto.codigo,
+      })));
+    }
+
+    const { data, error } = await supabaseClient
+      .from(TABELA_PONTOS)
+      .insert({
+        codigo: gerarCodigoPonto(),
+        disponivel: true,
+        ...payload,
+      })
+      .select("*")
+      .single();
+
+    if (error) throw error;
+    return mapearPontoSupabase(data, []);
+  },
+  async deletarPonto(pontoId) {
+    if (!supabaseClient) throw new Error("Supabase nao carregou.");
+
+    const ponto = store.pontos.find((item) => item.id === pontoId);
+    if (!ponto) return;
+
+    const { error: playlistsError } = await supabaseClient
+      .from(TABELA_PLAYLISTS)
+      .delete()
+      .eq("codigo", ponto.codigo);
+
+    if (playlistsError) throw playlistsError;
+
+    const { error } = await supabaseClient
+      .from(TABELA_PONTOS)
+      .delete()
+      .eq("codigo", ponto.codigo);
+
+    if (error) throw error;
+  },
+  async uploadImagemPonto(pontoId, arquivo) {
+    if (!supabaseClient) throw new Error("Supabase nao carregou.");
+
+    const ponto = store.pontos.find((item) => item.id === pontoId);
+    if (!ponto) return "";
+
+    const storagePath = `${ponto.codigo}/${Date.now()}-${normalizarNomeArquivo(arquivo.name)}`;
+    const { error } = await supabaseClient.storage
+      .from("pontos")
+      .upload(storagePath, arquivo, { upsert: true });
+
+    if (error) throw error;
+
+    const { data } = supabaseClient.storage.from("pontos").getPublicUrl(storagePath);
+    const imagemUrl = data.publicUrl;
+
+    await this.salvarPonto(pontoId, { imagem_url: imagemUrl });
+    ponto.imagem = imagemUrl;
+    return imagemUrl;
+  },
+  async uploadMidiaPlaylist(pontoId, arquivo) {
+    if (!supabaseClient) throw new Error("Supabase nao carregou.");
+
+    const ponto = store.pontos.find((item) => item.id === pontoId);
+    if (!ponto) return;
+
+    const storagePath = `playlists/${ponto.codigo}/${Date.now()}-${normalizarNomeArquivo(arquivo.name)}`;
+    const { error: uploadError } = await supabaseClient.storage
+      .from("pontos")
+      .upload(storagePath, arquivo, { upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    const { data: publicData } = supabaseClient.storage.from("pontos").getPublicUrl(storagePath);
+    const tipo = arquivo.type.startsWith("image/") ? "imagem" : "video";
+
+    await this.salvarMaterial(pontoId, {
+      cliente: "",
+      nome: arquivo.name,
+      tipo,
+      storagePath: publicData.publicUrl,
+    });
+  },
 };
 
 function copiarDados(valor) {
   return JSON.parse(JSON.stringify(valor));
+}
+
+function gerarCodigoPonto() {
+  const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  return Array.from({ length: 7 }, () => letras[Math.floor(Math.random() * letras.length)]).join("");
+}
+
+function normalizarNomeArquivo(nome) {
+  return String(nome || "arquivo")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .toLowerCase();
+}
+
+function escapeHtml(valor) {
+  return String(valor ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function iniciarSupabase() {
@@ -229,7 +292,7 @@ function mapearPontoSupabase(ponto, materiais) {
     cidade: ponto.cidade || ponto.city || "",
     endereco: ponto.endereco || ponto.address || "",
     disponivel: ponto.disponivel !== false,
-    imagem: ponto.imagem_url || ponto.imagem || "https://placehold.co/900x506/0f6b5a/ffffff/png?text=Ponto",
+    imagem: ponto.imagem_url || ponto.imagem || "",
     materiais: materiais
       .filter((material) => material.codigo === ponto.codigo)
       .map(mapearMaterialSupabase),
@@ -263,6 +326,9 @@ const els = {
   btnSalvarMaterial: document.querySelector("#btnSalvarMaterial"),
   btnCopiarPlaylist: document.querySelector("#btnCopiarPlaylist"),
   btnConfirmarCopiaPlaylist: document.querySelector("#btnConfirmarCopiaPlaylist"),
+  btnSalvarEdicao: document.querySelector("#btnSalvarEdicao"),
+  btnDeletarPonto: document.querySelector("#btnDeletarPonto"),
+  btnUpgradePlaylist: document.querySelector("#btnUpgradePlaylist"),
   modalEditar: document.querySelector("#modalEditar"),
   modalMaterial: document.querySelector("#modalMaterial"),
   modalCopiarPlaylist: document.querySelector("#modalCopiarPlaylist"),
@@ -285,6 +351,8 @@ const els = {
   editCidade: document.querySelector("#editCidade"),
   editEndereco: document.querySelector("#editEndereco"),
   previewImagem: document.querySelector("#previewImagem"),
+  inputImagem: document.querySelector("#inputImagem"),
+  inputUpgradePlaylist: document.querySelector("#inputUpgradePlaylist"),
   materialCliente: document.querySelector("#materialCliente"),
   materialNome: document.querySelector("#materialNome"),
   materialStoragePath: document.querySelector("#materialStoragePath"),
@@ -301,17 +369,31 @@ async function iniciar() {
 
 function vincularEventos() {
   els.btnVoltar?.addEventListener("click", fecharDetalhe);
-  els.btnNovoPonto?.addEventListener("click", () => alert("Criacao de ponto fica para conectar na base."));
+  els.btnNovoPonto?.addEventListener("click", abrirModalNovoPonto);
   els.btnEditarInfo?.addEventListener("click", abrirModalEdicao);
   els.btnNovoMaterial?.addEventListener("click", abrirModalMaterial);
   els.btnSalvarMaterial?.addEventListener("click", salvarMaterial);
   els.btnCopiarPlaylist?.addEventListener("click", abrirModalCopiarPlaylist);
   els.btnConfirmarCopiaPlaylist?.addEventListener("click", copiarPlaylistInteira);
+  els.btnSalvarEdicao?.addEventListener("click", salvarEdicaoPonto);
+  els.btnDeletarPonto?.addEventListener("click", deletarPontoAtual);
+  els.btnUpgradePlaylist?.addEventListener("click", () => els.inputUpgradePlaylist?.click());
+  els.inputImagem?.addEventListener("change", atualizarImagemPonto);
+  els.inputUpgradePlaylist?.addEventListener("change", uploadMidiaPlaylist);
   els.btnToggleDisponibilidade?.addEventListener("click", alternarDisponibilidade);
 }
 
 async function renderizarPontos() {
   const pontos = await api.listarPontos();
+
+  if (!pontos.length) {
+    els.pontosBox.innerHTML = `
+      <div class="estado-carregando">
+        Nenhum ponto foi carregado do banco. Verifique a tabela pontos e as politicas de leitura.
+      </div>
+    `;
+    return;
+  }
 
   els.pontosBox.innerHTML = pontos
     .map((ponto) => {
@@ -322,18 +404,18 @@ async function renderizarPontos() {
       return `
         <article class="ponto-card${ativo}">
           <div class="ponto-status ${ponto.disponivel ? "online" : "offline"}">
-            <span></span>${statusTexto}
+            <span></span>${escapeHtml(statusTexto)}
           </div>
           <div class="ponto-thumb">
-            <img src="${ponto.imagem}" alt="${ponto.nome}">
+            ${ponto.imagem ? `<img src="${escapeHtml(ponto.imagem)}" alt="${escapeHtml(ponto.nome)}">` : `<div class="sem-imagem">Sem imagem</div>`}
           </div>
-          <h3>${ponto.nome}</h3>
-          <p>${localizacao}</p>
+          <h3>${escapeHtml(ponto.nome)}</h3>
+          <p>${escapeHtml(localizacao)}</p>
           <div class="ponto-meta">
-            <span class="ponto-codigo">${ponto.codigo}</span>
+            <span class="ponto-codigo">${escapeHtml(ponto.codigo)}</span>
             <small>${ponto.materiais.length} materiais na playlist</small>
           </div>
-          <button class="abrir-pasta-btn" type="button" data-ponto-id="${ponto.id}">Abrir pasta</button>
+          <button class="abrir-pasta-btn" type="button" data-ponto-id="${escapeHtml(ponto.id)}">Abrir pasta</button>
         </article>
       `;
     })
@@ -347,11 +429,13 @@ async function renderizarPontos() {
 function abrirPonto(pontoId) {
   store.selectedPointId = pontoId;
   const ponto = pontoAtual();
+  if (!ponto) return;
 
   els.pontoDetalhe.style.display = "";
   document.body.classList.add("pasta-aberta");
   els.statusPonto.textContent = ponto.disponivel ? "Disponivel" : "Indisponivel";
-  els.imagemPonto.src = ponto.imagem;
+  els.imagemPonto.style.display = ponto.imagem ? "block" : "none";
+  els.imagemPonto.src = ponto.imagem || "";
   els.tituloPasta.textContent = ponto.nome;
   els.cidadePonto.textContent = ponto.cidade;
   els.enderecoPonto.textContent = ponto.endereco;
@@ -383,11 +467,11 @@ function renderizarMaterial(material) {
     <article class="material-card">
       <span class="material-posicao">${String(material.posicao).padStart(2, "0")}</span>
       <div>
-        <h5>${material.nome}</h5>
-        <p>${material.cliente} Â· ${material.storagePath}</p>
+        <h5>${escapeHtml(material.nome)}</h5>
+        <p>${escapeHtml(material.cliente || "Sem cliente")} Â· ${escapeHtml(material.storagePath)}</p>
       </div>
       <span class="material-repeticao">${material.repeticoes}x por ciclo</span>
-      <span class="material-status">${material.status}</span>
+      <span class="material-status">${escapeHtml(material.status)}</span>
     </article>
   `;
 }
@@ -434,15 +518,101 @@ function renderizarHistoricos() {
 }
 
 function abrirModalEdicao() {
+  criandoNovoPonto = false;
   preencherModalEdicao(pontoAtual());
   els.modalEditar.showModal();
 }
 
 function preencherModalEdicao(ponto) {
-  els.editNome.value = ponto.nome;
-  els.editCidade.value = ponto.cidade;
-  els.editEndereco.value = ponto.endereco;
-  els.previewImagem.src = ponto.imagem;
+  els.editNome.value = ponto?.nome || "";
+  els.editCidade.value = ponto?.cidade || "";
+  els.editEndereco.value = ponto?.endereco || "";
+  els.previewImagem.style.display = ponto?.imagem ? "block" : "none";
+  els.previewImagem.src = ponto?.imagem || "";
+  if (els.inputImagem) els.inputImagem.value = "";
+}
+
+function abrirModalNovoPonto() {
+  criandoNovoPonto = true;
+  preencherModalEdicao(null);
+  els.modalEditar.showModal();
+}
+
+async function salvarEdicaoPonto() {
+  const payload = {
+    nome: els.editNome.value.trim(),
+    cidade: els.editCidade.value.trim(),
+    endereco: els.editEndereco.value.trim(),
+  };
+
+  if (!payload.nome) {
+    alert("Informe o nome do ponto.");
+    return;
+  }
+
+  try {
+    const pontoSalvo = await api.salvarPonto(criandoNovoPonto ? "" : store.selectedPointId, payload);
+    els.modalEditar.close();
+    await renderizarPontos();
+
+    if (pontoSalvo?.id) {
+      abrirPonto(pontoSalvo.id);
+    } else if (store.selectedPointId) {
+      abrirPonto(store.selectedPointId);
+    }
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao salvar ponto no banco.");
+  }
+}
+
+async function deletarPontoAtual() {
+  const ponto = pontoAtual();
+  if (!ponto || criandoNovoPonto) return;
+
+  if (!confirm(`Deletar o ponto "${ponto.nome}" e sua playlist?`)) return;
+
+  try {
+    await api.deletarPonto(ponto.id);
+    els.modalEditar.close();
+    fecharDetalhe();
+    store.selectedPointId = "";
+    await renderizarPontos();
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao deletar ponto no banco.");
+  }
+}
+
+async function atualizarImagemPonto() {
+  const arquivo = els.inputImagem?.files?.[0];
+  if (!arquivo || criandoNovoPonto) return;
+
+  try {
+    const imagemUrl = await api.uploadImagemPonto(store.selectedPointId, arquivo);
+    els.previewImagem.style.display = imagemUrl ? "block" : "none";
+    els.previewImagem.src = imagemUrl;
+    await renderizarPontos();
+    abrirPonto(store.selectedPointId);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao enviar imagem para o Storage.");
+  }
+}
+
+async function uploadMidiaPlaylist() {
+  const arquivo = els.inputUpgradePlaylist?.files?.[0];
+  if (!arquivo || !store.selectedPointId) return;
+
+  try {
+    await api.uploadMidiaPlaylist(store.selectedPointId, arquivo);
+    els.inputUpgradePlaylist.value = "";
+    await renderizarPontos();
+    abrirPonto(store.selectedPointId);
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao enviar midia para o Storage.");
+  }
 }
 
 function abrirModalMaterial() {
