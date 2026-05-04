@@ -45,26 +45,65 @@ a {
 
 #conteudoPontos {
   min-height: 100vh;
-  padding: 56px 6vw 48px;
+  padding: 18px 24px 48px;
 }
 
 .topo-fixo {
-  position: relative;
-  max-width: 1500px;
-  margin: 0 auto 56px;
-  min-height: 130px;
+  position: sticky;
+  top: 14px;
+  z-index: 30;
+  max-width: none;
+  margin: 0 auto 42px;
+  min-height: 108px;
+  padding: 18px 22px;
   display: grid;
-  grid-template-columns: 170px minmax(0, 1fr) 220px;
+  grid-template-columns: 150px minmax(0, 1fr) 170px;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
+  border: 1px solid rgba(85, 201, 106, 0.22);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(18px);
 }
 
 .topo-centro {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+  text-align: left;
 }
 
 .produto-marca {
-  display: none;
+  min-width: 230px;
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border: 1px solid #dcebdd;
+  border-radius: 10px;
+  background: #fff;
+  color: #20242a;
+}
+
+.loop-symbol {
+  color: var(--green);
+  font-size: 58px;
+  font-weight: 950;
+  line-height: 0.7;
+}
+
+.produto-marca strong {
+  color: #20242a;
+  font-size: 28px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.produto-marca strong span {
+  color: var(--green);
 }
 
 .topo-centro h1,
@@ -77,16 +116,16 @@ h5 {
 }
 
 .topo-centro h1 {
-  font-size: clamp(34px, 4vw, 56px);
+  font-size: clamp(28px, 2.6vw, 42px);
   line-height: 1;
-  letter-spacing: 8px;
-  color: #fff;
+  letter-spacing: 0;
+  color: #142019;
 }
 
 .topo-centro p {
-  margin-top: 12px;
-  color: #c0c7d8;
-  font-size: clamp(20px, 2.2vw, 34px);
+  margin-top: 8px;
+  color: #66746b;
+  font-size: clamp(16px, 1.4vw, 22px);
 }
 
 .topo-direita {
@@ -95,13 +134,7 @@ h5 {
 }
 
 .topo-direita::before {
-  content: "Duna Branding";
-  align-self: center;
-  color: #fff;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 34px;
-  font-weight: 800;
-  white-space: nowrap;
+  content: none;
 }
 
 .status-topo {
@@ -128,21 +161,20 @@ h5 {
 .btn-upgrade-playlist,
 .btn-baixar-contrato,
 .edit-botoes button {
-  min-height: 54px;
-  border: 0;
+  min-height: 46px;
+  border: 1px solid #cfe8d4;
   border-radius: 14px;
-  padding: 0 28px;
+  padding: 0 18px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #222c45;
-  color: #fff;
+  background: #eefaf1;
+  color: #13713b;
   font-weight: 900;
 }
 
-.menu-topo-btn::before,
-.btn-secundario::before {
-  content: "â† ";
+body.pasta-aberta .status-topo {
+  display: none;
 }
 
 .btn-novo-ponto,
@@ -295,8 +327,8 @@ h5 {
 
 .playlist-box {
   position: fixed;
-  inset: 42px 6vw;
-  z-index: 15;
+  inset: 150px 6vw 42px;
+  z-index: 25;
   overflow: auto;
   padding: 34px;
   border: 1px solid var(--line);
