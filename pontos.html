@@ -8,9 +8,9 @@
     <meta http-equiv="Expires" content="0" />
 
     <title>Duna Branding | Pontos e Playlists</title>
-    <link rel="stylesheet" href="pontos.css" />
+    <link rel="stylesheet" href="pontos.css?v=6" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="pontos.js" defer></script>
+    <script src="pontos.js?v=6" defer></script>
   </head>
 
   <body>
@@ -47,23 +47,7 @@
           </div>
 
           <div class="pontos-box" id="pontosBox">
-            <article class="ponto-card ativo">
-              <button type="button" data-ponto-id="ponto-001">
-                <span class="ponto-codigo">DUNA-001</span>
-                <h3>Academia Prime Barra</h3>
-                <p>Salvador / Barra</p>
-                <small>3 materiais na playlist</small>
-              </button>
-            </article>
-
-            <article class="ponto-card">
-              <button type="button" data-ponto-id="ponto-002">
-                <span class="ponto-codigo">DUNA-002</span>
-                <h3>Restaurante Mar Azul</h3>
-                <p>Salvador / Pituba</p>
-                <small>0 materiais na playlist</small>
-              </button>
-            </article>
+            <div class="estado-carregando">Carregando pontos do banco...</div>
           </div>
 
           <div class="assinatura-duna">
@@ -79,25 +63,25 @@
             </div>
 
             <div class="topbar-direita">
-              <div id="statusPonto" class="status-destaque">Disponivel</div>
+              <div id="statusPonto" class="status-destaque"></div>
             </div>
           </div>
 
           <section class="playlist-header playlist-header-novo">
             <div class="playlist-topo-flex">
               <div class="playlist-imagem-box">
-                <img id="imagemPonto" src="https://placehold.co/900x506/0f6b5a/ffffff/png?text=Academia+Prime" alt="Imagem do ponto" />
+                <img id="imagemPonto" alt="Imagem do ponto" />
               </div>
 
               <div class="playlist-header-textos">
                 <div>
                   <span class="eyebrow">ponto selecionado</span>
-                  <h2 id="tituloPasta">Academia Prime Barra</h2>
+                  <h2 id="tituloPasta"></h2>
                 </div>
 
                 <div class="playlist-info-extra">
-                  <div id="cidadePonto" class="playlist-info-item">Salvador / Barra</div>
-                  <div id="enderecoPonto" class="playlist-info-item">Av. Oceanica, 1200</div>
+                  <div id="cidadePonto" class="playlist-info-item"></div>
+                  <div id="enderecoPonto" class="playlist-info-item"></div>
                 </div>
 
                 <div class="playlist-codigo-linha">
@@ -106,7 +90,7 @@
                     <span class="toggle-texto">Disponivel</span>
                   </button>
 
-                  <span id="codigoAtual">DUNA-001</span>
+                  <span id="codigoAtual"></span>
                 </div>
 
                 <div class="playlist-acoes-topo">
@@ -122,19 +106,19 @@
           <section class="manifesto-resumo" aria-label="Resumo do manifesto">
             <article>
               <small>Versao</small>
-              <strong id="manifestoVersao">v1</strong>
+              <strong id="manifestoVersao">v0</strong>
             </article>
             <article>
               <small>Materiais ativos</small>
-              <strong id="manifestoMateriais">3</strong>
+              <strong id="manifestoMateriais">0</strong>
             </article>
             <article>
               <small>Clientes</small>
-              <strong id="manifestoClientes">3</strong>
+              <strong id="manifestoClientes">0</strong>
             </article>
             <article>
               <small>Repeticoes/ciclo</small>
-              <strong id="manifestoRepeticoes">6</strong>
+              <strong id="manifestoRepeticoes">0</strong>
             </article>
           </section>
 
@@ -150,17 +134,7 @@
                   <button id="btnNovoMaterial" class="btn-novo-ponto" type="button">Adicionar material</button>
                 </div>
 
-                <div id="playlistAtiva" class="playlist-lista">
-                  <article class="material-card">
-                    <span class="material-posicao">01</span>
-                    <div>
-                      <h5>Institucional Duna</h5>
-                      <p>Duna Branding · r2://duna/institucional-duna.mp4</p>
-                    </div>
-                    <span class="material-repeticao">2x por ciclo</span>
-                    <span class="material-status">ativo</span>
-                  </article>
-                </div>
+                <div id="playlistAtiva" class="playlist-lista"></div>
               </div>
             </div>
 
@@ -207,6 +181,7 @@
           <div class="modal-grid-edicao">
             <div class="modal-secao modal-secao-contrato">
               <h4>Periodo</h4>
+
               <div class="contrato-periodo">
                 <input type="text" id="editContratoInicio" placeholder="Data inicial" inputmode="numeric" required />
                 <input type="text" id="editContratoFim" placeholder="Data final" inputmode="numeric" required />
@@ -217,25 +192,31 @@
               <div class="contrato-download-layout">
                 <div class="contrato-parceria">
                   <label class="parceria-titulo">Parceria?</label>
+
                   <div class="parceria-opcoes">
                     <label>
                       <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaSim" value="sim" />
                       <span>Sim</span>
                     </label>
+
                     <label>
                       <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaNao" value="nao" />
                       <span>Nao</span>
                     </label>
                   </div>
+
                   <input type="text" id="editValorContrato" placeholder="Valor / custo" />
                 </div>
 
-                <button id="btnBaixarContrato" class="btn-baixar-contrato" type="button">Baixar contrato</button>
+                <button id="btnBaixarContrato" class="btn-baixar-contrato" type="button">
+                  Baixar contrato
+                </button>
               </div>
             </div>
 
             <div class="modal-secao modal-secao-responsavel">
               <h4>Dados do responsavel pelo estabelecimento</h4>
+
               <input type="text" id="editResponsavelNome" placeholder="Nome completo" required />
               <input type="text" id="editResponsavelCpf" placeholder="CPF / CNPJ" inputmode="numeric" required />
               <input type="text" id="editResponsavelTelefone" placeholder="Telefone" inputmode="numeric" required />
