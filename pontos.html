@@ -9,6 +9,7 @@
 
     <title>Duna Branding | Pontos e Playlists</title>
     <link rel="stylesheet" href="pontos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="pontos.js" defer></script>
   </head>
 
@@ -45,14 +46,32 @@
             <button id="btnNovoPonto" class="btn-novo-ponto" type="button">Novo ponto</button>
           </div>
 
-          <div class="pontos-box" id="pontosBox"></div>
+          <div class="pontos-box" id="pontosBox">
+            <article class="ponto-card ativo">
+              <button type="button" data-ponto-id="ponto-001">
+                <span class="ponto-codigo">DUNA-001</span>
+                <h3>Academia Prime Barra</h3>
+                <p>Salvador / Barra</p>
+                <small>3 materiais na playlist</small>
+              </button>
+            </article>
+
+            <article class="ponto-card">
+              <button type="button" data-ponto-id="ponto-002">
+                <span class="ponto-codigo">DUNA-002</span>
+                <h3>Restaurante Mar Azul</h3>
+                <p>Salvador / Pituba</p>
+                <small>0 materiais na playlist</small>
+              </button>
+            </article>
+          </div>
 
           <div class="assinatura-duna">
             Desenvolvido por <strong>Duna Branding</strong>
           </div>
         </aside>
 
-        <section id="pontoDetalhe" class="playlist-box" style="display:none;" aria-label="Detalhe do ponto">
+        <section id="pontoDetalhe" class="playlist-box" aria-label="Detalhe do ponto">
           <div class="playlist-topbar playlist-topbar-novo">
             <div class="topbar-esquerda">
               <button id="btnVoltar" class="btn-secundario" type="button">Voltar</button>
@@ -60,25 +79,25 @@
             </div>
 
             <div class="topbar-direita">
-              <div id="statusPonto" class="status-destaque"></div>
+              <div id="statusPonto" class="status-destaque">Disponivel</div>
             </div>
           </div>
 
           <section class="playlist-header playlist-header-novo">
             <div class="playlist-topo-flex">
               <div class="playlist-imagem-box">
-                <img id="imagemPonto" src="https://placehold.co/600x320/png" alt="Imagem do ponto" />
+                <img id="imagemPonto" src="https://placehold.co/900x506/0f6b5a/ffffff/png?text=Academia+Prime" alt="Imagem do ponto" />
               </div>
 
               <div class="playlist-header-textos">
                 <div>
                   <span class="eyebrow">ponto selecionado</span>
-                  <h2 id="tituloPasta"></h2>
+                  <h2 id="tituloPasta">Academia Prime Barra</h2>
                 </div>
 
                 <div class="playlist-info-extra">
-                  <div id="cidadePonto" class="playlist-info-item"></div>
-                  <div id="enderecoPonto" class="playlist-info-item"></div>
+                  <div id="cidadePonto" class="playlist-info-item">Salvador / Barra</div>
+                  <div id="enderecoPonto" class="playlist-info-item">Av. Oceanica, 1200</div>
                 </div>
 
                 <div class="playlist-codigo-linha">
@@ -87,7 +106,7 @@
                     <span class="toggle-texto">Disponivel</span>
                   </button>
 
-                  <span id="codigoAtual"></span>
+                  <span id="codigoAtual">DUNA-001</span>
                 </div>
 
                 <div class="playlist-acoes-topo">
@@ -103,19 +122,19 @@
           <section class="manifesto-resumo" aria-label="Resumo do manifesto">
             <article>
               <small>Versao</small>
-              <strong id="manifestoVersao">v0</strong>
+              <strong id="manifestoVersao">v1</strong>
             </article>
             <article>
               <small>Materiais ativos</small>
-              <strong id="manifestoMateriais">0</strong>
+              <strong id="manifestoMateriais">3</strong>
             </article>
             <article>
               <small>Clientes</small>
-              <strong id="manifestoClientes">0</strong>
+              <strong id="manifestoClientes">3</strong>
             </article>
             <article>
               <small>Repeticoes/ciclo</small>
-              <strong id="manifestoRepeticoes">0</strong>
+              <strong id="manifestoRepeticoes">6</strong>
             </article>
           </section>
 
@@ -131,7 +150,37 @@
                   <button id="btnNovoMaterial" class="btn-novo-ponto" type="button">Adicionar material</button>
                 </div>
 
-                <div id="playlistAtiva" class="playlist-lista"></div>
+                <div id="playlistAtiva" class="playlist-lista">
+                  <article class="material-card">
+                    <span class="material-posicao">01</span>
+                    <div>
+                      <h5>Institucional Duna</h5>
+                      <p>Duna Branding · r2://duna/institucional-duna.mp4</p>
+                    </div>
+                    <span class="material-repeticao">2x por ciclo</span>
+                    <span class="material-status">ativo</span>
+                  </article>
+
+                  <article class="material-card">
+                    <span class="material-posicao">02</span>
+                    <div>
+                      <h5>Combo almoco</h5>
+                      <p>Mega Burger · r2://mega-burger/combo-almoco.mp4</p>
+                    </div>
+                    <span class="material-repeticao">1x por ciclo</span>
+                    <span class="material-status">ativo</span>
+                  </article>
+
+                  <article class="material-card">
+                    <span class="material-posicao">03</span>
+                    <div>
+                      <h5>Checkup preventivo</h5>
+                      <p>Clinica Vida · r2://clinica-vida/checkup.jpg</p>
+                    </div>
+                    <span class="material-repeticao">3x por ciclo</span>
+                    <span class="material-status">ativo</span>
+                  </article>
+                </div>
               </div>
             </div>
 
@@ -140,7 +189,29 @@
                 <div class="playlist-secao-topo">
                   <h4>Manifesto do dispositivo</h4>
                 </div>
-                <pre id="manifestoPreview" class="manifesto-preview">{}</pre>
+                <pre id="manifestoPreview" class="manifesto-preview">{
+  "point_code": "DUNA-001",
+  "version": 1,
+  "storage_provider": "cloudflare_r2",
+  "playback_strategy": "ordered_cycle_with_repetition",
+  "items": [
+    {
+      "media_id": "mat-001",
+      "order": 1,
+      "plays_per_cycle": 2
+    },
+    {
+      "media_id": "mat-002",
+      "order": 2,
+      "plays_per_cycle": 1
+    },
+    {
+      "media_id": "mat-003",
+      "order": 3,
+      "plays_per_cycle": 3
+    }
+  ]
+}</pre>
               </div>
 
               <div class="playlist-secao">
