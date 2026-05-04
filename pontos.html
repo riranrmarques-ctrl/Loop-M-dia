@@ -21,7 +21,8 @@
 
         <div class="topo-centro">
           <div class="produto-marca">
-            <img src="loop-player-logo.jpeg" alt="Loop Player" />
+            <span class="loop-symbol" aria-hidden="true">∞</span>
+            <strong><span>Loop</span> Player</strong>
           </div>
           <div>
             <h1>Gerenciador de Pontos</h1>
@@ -174,4 +175,106 @@
             <input type="text" id="editEndereco" placeholder="Endereco completo" />
           </div>
 
-          <div class="modal-grid-edicao
+          <div class="modal-grid-edicao">
+            <div class="modal-secao modal-secao-contrato">
+              <h4>Periodo</h4>
+
+              <div class="contrato-periodo">
+                <input type="text" id="editContratoInicio" placeholder="Data inicial" inputmode="numeric" required />
+                <input type="text" id="editContratoFim" placeholder="Data final" inputmode="numeric" required />
+              </div>
+            </div>
+
+            <div class="modal-secao modal-secao-download">
+              <div class="contrato-download-layout">
+                <div class="contrato-parceria">
+                  <label class="parceria-titulo">Parceria?</label>
+
+                  <div class="parceria-opcoes">
+                    <label>
+                      <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaSim" value="sim" />
+                      <span>Sim</span>
+                    </label>
+
+                    <label>
+                      <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaNao" value="nao" />
+                      <span>Nao</span>
+                    </label>
+                  </div>
+
+                  <input type="text" id="editValorContrato" placeholder="Valor / custo" />
+                </div>
+
+                <button id="btnBaixarContrato" class="btn-baixar-contrato" type="button">
+                  Baixar contrato
+                </button>
+              </div>
+            </div>
+
+            <div class="modal-secao modal-secao-responsavel">
+              <h4>Dados do responsavel pelo estabelecimento</h4>
+
+              <input type="text" id="editResponsavelNome" placeholder="Nome completo" required />
+              <input type="text" id="editResponsavelCpf" placeholder="CPF / CNPJ" inputmode="numeric" required />
+              <input type="text" id="editResponsavelTelefone" placeholder="Telefone" inputmode="numeric" required />
+              <input type="email" id="editResponsavelEmail" placeholder="E-mail" required />
+            </div>
+
+            <div class="edit-imagem-box modal-secao-imagem">
+              <h4>Imagem do ponto</h4>
+              <img id="previewImagem" alt="Previa da imagem do ponto" />
+              <input type="file" id="inputImagem" accept="image/*" />
+            </div>
+
+            <div class="edit-botoes">
+              <button id="btnSalvarEdicao" type="button">Salvar</button>
+              <button id="btnDeletarPonto" class="btn-deletar-ponto" type="button">Deletar ponto</button>
+            </div>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="modalMaterial" class="modal-editar">
+        <form method="dialog" class="modal-conteudo">
+          <div class="modal-titulo-linha">
+            <h3>Adicionar material</h3>
+            <button type="submit" class="btn-secundario">Voltar</button>
+          </div>
+
+          <div class="modal-secao">
+            <input type="text" id="materialCliente" placeholder="Cliente" />
+            <input type="text" id="materialNome" placeholder="Nome do material" />
+            <input type="text" id="materialStoragePath" placeholder="Caminho futuro no R2" />
+            <input type="number" id="materialRepeticoes" min="1" max="20" value="1" />
+          </div>
+
+          <div class="edit-botoes">
+            <button id="btnSalvarMaterial" type="button">Salvar material</button>
+          </div>
+        </form>
+      </dialog>
+
+      <dialog id="modalCopiarPlaylist" class="modal-editar">
+        <form method="dialog" class="modal-conteudo">
+          <div class="modal-titulo-linha">
+            <div>
+              <span class="eyebrow">playlist</span>
+              <h3>Copiar de outra pasta</h3>
+            </div>
+            <button type="submit" class="btn-secundario">Voltar</button>
+          </div>
+
+          <div class="modal-secao">
+            <label class="campo-label" for="playlistOrigemSelect">Pasta de origem</label>
+            <select id="playlistOrigemSelect"></select>
+            <p class="modal-ajuda">Os materiais da pasta escolhida serao copiados para o ponto aberto, mantendo ordem e repeticoes.</p>
+          </div>
+
+          <div class="edit-botoes">
+            <button id="btnConfirmarCopiaPlaylist" type="button">Copiar playlist inteira</button>
+          </div>
+        </form>
+      </dialog>
+    </main>
+  </body>
+</html>
