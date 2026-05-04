@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>Duna Branding | Pontos e Playlists</title>
+    <link rel="stylesheet" href="pontos.css" />
+    <script src="pontos.js" defer></script>
+  </head>
+
+  <body>
+    <main id="conteudoPontos">
+      <header class="topo-fixo novo-topo">
+        <div class="topo-esquerda">
+          <a href="centralpainel.html" class="menu-topo-btn">Voltar</a>
+        </div>
+
+        <div class="topo-centro">
+          <div class="produto-marca">
+            <img src="loop-player-logo.jpeg" alt="Loop Player" />
+          </div>
+          <div>
+            <h1>Gerenciador de Pontos</h1>
+            <p>Playlists, materiais e manifestos offline para o APK</p>
+          </div>
+        </div>
+
+        <div class="topo-direita">
+          <div class="status-topo">Painel Ativo</div>
+        </div>
+      </header>
+
+      <section class="painel-shell">
+        <aside id="listaPontos" aria-label="Lista de pontos">
+          <div class="lista-topo">
+            <div>
+              <span class="eyebrow">pontos</span>
+              <h2>Locais cadastrados</h2>
+            </div>
+            <button id="btnNovoPonto" class="btn-novo-ponto" type="button">Novo ponto</button>
+          </div>
+
+          <div class="pontos-box" id="pontosBox"></div>
+
+          <div class="assinatura-duna">
+            Desenvolvido por <strong>Duna Branding</strong>
+          </div>
+        </aside>
+
+        <section id="pontoDetalhe" class="playlist-box" style="display:none;" aria-label="Detalhe do ponto">
+          <div class="playlist-topbar playlist-topbar-novo">
+            <div class="topbar-esquerda">
+              <button id="btnVoltar" class="btn-secundario" type="button">Voltar</button>
+              <span class="topbar-titulo">Gerencie e organize a sua playlist</span>
+            </div>
+
+            <div class="topbar-direita">
+              <div id="statusPonto" class="status-destaque"></div>
+            </div>
+          </div>
+
+          <section class="playlist-header playlist-header-novo">
+            <div class="playlist-topo-flex">
+              <div class="playlist-imagem-box">
+                <img id="imagemPonto" src="https://placehold.co/600x320/png" alt="Imagem do ponto" />
+              </div>
+
+              <div class="playlist-header-textos">
+                <div>
+                  <span class="eyebrow">ponto selecionado</span>
+                  <h2 id="tituloPasta"></h2>
+                </div>
+
+                <div class="playlist-info-extra">
+                  <div id="cidadePonto" class="playlist-info-item"></div>
+                  <div id="enderecoPonto" class="playlist-info-item"></div>
+                </div>
+
+                <div class="playlist-codigo-linha">
+                  <button id="btnToggleDisponibilidade" class="toggle-ponto ativo" type="button">
+                    <span class="toggle-bolinha"></span>
+                    <span class="toggle-texto">Disponivel</span>
+                  </button>
+
+                  <span id="codigoAtual"></span>
+                </div>
+
+                <div class="playlist-acoes-topo">
+                  <button id="btnEditarInfo" class="btn-secundario" type="button">Editar informacoes</button>
+                  <button id="btnCopiarPlaylist" class="btn-secundario" type="button">Copiar playlist</button>
+                  <button id="btnUpgradePlaylist" class="btn-upgrade-playlist" type="button">Upload midia</button>
+                  <input id="inputUpgradePlaylist" type="file" hidden />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="manifesto-resumo" aria-label="Resumo do manifesto">
+            <article>
+              <small>Versao</small>
+              <strong id="manifestoVersao">v0</strong>
+            </article>
+            <article>
+              <small>Materiais ativos</small>
+              <strong id="manifestoMateriais">0</strong>
+            </article>
+            <article>
+              <small>Clientes</small>
+              <strong id="manifestoClientes">0</strong>
+            </article>
+            <article>
+              <small>Repeticoes/ciclo</small>
+              <strong id="manifestoRepeticoes">0</strong>
+            </article>
+          </section>
+
+          <section class="playlist-layout-novo">
+            <div class="playlist-coluna-ativa">
+              <div class="playlist-secao playlist-secao-ativa">
+                <div class="playlist-secao-topo">
+                  <div>
+                    <span class="eyebrow">ordem do apk</span>
+                    <h4>Playlist ativa</h4>
+                  </div>
+
+                  <button id="btnNovoMaterial" class="btn-novo-ponto" type="button">Adicionar material</button>
+                </div>
+
+                <div id="playlistAtiva" class="playlist-lista"></div>
+              </div>
+            </div>
+
+            <aside class="playlist-coluna-historico">
+              <div class="playlist-secao">
+                <div class="playlist-secao-topo">
+                  <h4>Manifesto do dispositivo</h4>
+                </div>
+                <pre id="manifestoPreview" class="manifesto-preview">{}</pre>
+              </div>
+
+              <div class="playlist-secao">
+                <div class="playlist-secao-topo">
+                  <h4>Historico de encerramento</h4>
+                </div>
+                <div id="historicoEncerramento" class="historico-lista"></div>
+              </div>
+
+              <div class="playlist-secao">
+                <div class="playlist-secao-topo">
+                  <h4>Historico de status</h4>
+                </div>
+                <div id="historicoStatus" class="historico-lista"></div>
+              </div>
+            </aside>
+          </section>
+        </section>
+      </section>
+
+      <dialog id="modalEditar" class="modal-editar">
+        <form method="dialog" class="modal-conteudo modal-conteudo-amplo">
+          <div class="modal-titulo-linha">
+            <h3>Editar Informacoes</h3>
+            <button id="btnFecharModal" type="submit" class="btn-secundario">Voltar</button>
+          </div>
+
+          <div class="modal-secao">
+            <h4>Dados do ponto</h4>
+            <input type="text" id="editNome" placeholder="Nome do ponto" />
+            <input type="text" id="editCidade" placeholder="Cidade / regiao" />
+            <input type="text" id="editEndereco" placeholder="Endereco completo" />
+          </div>
+
+          <div class="modal-grid-edicao
