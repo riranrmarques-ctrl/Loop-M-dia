@@ -71,7 +71,7 @@
           </div>
         </aside>
 
-        <section id="pontoDetalhe" class="playlist-box" aria-label="Detalhe do ponto">
+        <section id="pontoDetalhe" class="playlist-box" style="display:none;" aria-label="Detalhe do ponto">
           <div class="playlist-topbar playlist-topbar-novo">
             <div class="topbar-esquerda">
               <button id="btnVoltar" class="btn-secundario" type="button">Voltar</button>
@@ -160,26 +160,6 @@
                     <span class="material-repeticao">2x por ciclo</span>
                     <span class="material-status">ativo</span>
                   </article>
-
-                  <article class="material-card">
-                    <span class="material-posicao">02</span>
-                    <div>
-                      <h5>Combo almoco</h5>
-                      <p>Mega Burger · r2://mega-burger/combo-almoco.mp4</p>
-                    </div>
-                    <span class="material-repeticao">1x por ciclo</span>
-                    <span class="material-status">ativo</span>
-                  </article>
-
-                  <article class="material-card">
-                    <span class="material-posicao">03</span>
-                    <div>
-                      <h5>Checkup preventivo</h5>
-                      <p>Clinica Vida · r2://clinica-vida/checkup.jpg</p>
-                    </div>
-                    <span class="material-repeticao">3x por ciclo</span>
-                    <span class="material-status">ativo</span>
-                  </article>
                 </div>
               </div>
             </div>
@@ -189,29 +169,7 @@
                 <div class="playlist-secao-topo">
                   <h4>Manifesto do dispositivo</h4>
                 </div>
-                <pre id="manifestoPreview" class="manifesto-preview">{
-  "point_code": "DUNA-001",
-  "version": 1,
-  "storage_provider": "cloudflare_r2",
-  "playback_strategy": "ordered_cycle_with_repetition",
-  "items": [
-    {
-      "media_id": "mat-001",
-      "order": 1,
-      "plays_per_cycle": 2
-    },
-    {
-      "media_id": "mat-002",
-      "order": 2,
-      "plays_per_cycle": 1
-    },
-    {
-      "media_id": "mat-003",
-      "order": 3,
-      "plays_per_cycle": 3
-    }
-  ]
-}</pre>
+                <pre id="manifestoPreview" class="manifesto-preview">{}</pre>
               </div>
 
               <div class="playlist-secao">
@@ -249,7 +207,6 @@
           <div class="modal-grid-edicao">
             <div class="modal-secao modal-secao-contrato">
               <h4>Periodo</h4>
-
               <div class="contrato-periodo">
                 <input type="text" id="editContratoInicio" placeholder="Data inicial" inputmode="numeric" required />
                 <input type="text" id="editContratoFim" placeholder="Data final" inputmode="numeric" required />
@@ -260,31 +217,25 @@
               <div class="contrato-download-layout">
                 <div class="contrato-parceria">
                   <label class="parceria-titulo">Parceria?</label>
-
                   <div class="parceria-opcoes">
                     <label>
                       <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaSim" value="sim" />
                       <span>Sim</span>
                     </label>
-
                     <label>
                       <input type="radio" name="contratoParceriaOpcao" id="editContratoParceriaNao" value="nao" />
                       <span>Nao</span>
                     </label>
                   </div>
-
                   <input type="text" id="editValorContrato" placeholder="Valor / custo" />
                 </div>
 
-                <button id="btnBaixarContrato" class="btn-baixar-contrato" type="button">
-                  Baixar contrato
-                </button>
+                <button id="btnBaixarContrato" class="btn-baixar-contrato" type="button">Baixar contrato</button>
               </div>
             </div>
 
             <div class="modal-secao modal-secao-responsavel">
               <h4>Dados do responsavel pelo estabelecimento</h4>
-
               <input type="text" id="editResponsavelNome" placeholder="Nome completo" required />
               <input type="text" id="editResponsavelCpf" placeholder="CPF / CNPJ" inputmode="numeric" required />
               <input type="text" id="editResponsavelTelefone" placeholder="Telefone" inputmode="numeric" required />
