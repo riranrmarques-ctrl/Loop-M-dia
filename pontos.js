@@ -297,7 +297,6 @@ async function iniciar() {
   iniciarSupabase();
   vincularEventos();
   await renderizarPontos();
-  abrirPonto(store.selectedPointId);
 }
 
 function vincularEventos() {
@@ -317,15 +316,24 @@ async function renderizarPontos() {
   els.pontosBox.innerHTML = pontos
     .map((ponto) => {
       const ativo = ponto.id === store.selectedPointId ? " ativo" : "";
+      const statusTexto = ponto.disponivel ? "Ativo" : "Inativo";
+      const localizacao = [ponto.cidade, ponto.endereco].filter(Boolean).join(" | ") || "Localizacao nao definida";
 
       return `
         <article class="ponto-card${ativo}">
-          <button type="button" data-ponto-id="${ponto.id}">
+          <div class="ponto-status ${ponto.disponivel ? "online" : "offline"}">
+            <span></span>${statusTexto}
+          </div>
+          <div class="ponto-thumb">
+            <img src="${ponto.imagem}" alt="${ponto.nome}">
+          </div>
+          <h3>${ponto.nome}</h3>
+          <p>${localizacao}</p>
+          <div class="ponto-meta">
             <span class="ponto-codigo">${ponto.codigo}</span>
-            <h3>${ponto.nome}</h3>
-            <p>${ponto.cidade}</p>
             <small>${ponto.materiais.length} materiais na playlist</small>
-          </button>
+          </div>
+          <button class="abrir-pasta-btn" type="button" data-ponto-id="${ponto.id}">Abrir pasta</button>
         </article>
       `;
     })
@@ -340,8 +348,8 @@ function abrirPonto(pontoId) {
   store.selectedPointId = pontoId;
   const ponto = pontoAtual();
 
-  els.listaPontos.style.display = "";
   els.pontoDetalhe.style.display = "";
+  document.body.classList.add("pasta-aberta");
   els.statusPonto.textContent = ponto.disponivel ? "Disponivel" : "Indisponivel";
   els.imagemPonto.src = ponto.imagem;
   els.tituloPasta.textContent = ponto.nome;
@@ -354,11 +362,12 @@ function abrirPonto(pontoId) {
   renderizarPlaylist(ponto);
   renderizarHistoricos();
   renderizarManifesto(ponto);
-  renderizarPontos();
 }
 
 function fecharDetalhe() {
   els.pontoDetalhe.style.display = "none";
+  document.body.classList.remove("pasta-aberta");
+  renderizarPontos();
 }
 
 function renderizarPlaylist(ponto) {
