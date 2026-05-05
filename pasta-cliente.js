@@ -7,7 +7,7 @@ if (!codigo) {
 const SUPABASE_URL = "https://hhqqwjjdhzxqjuyazjwk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_8yHAzibYZJbW9PfdrOumkg_R7u2HWly";
 
-const BUCKET = "midias";
+const BUCKET = "pontos";
 const TABELA_CLIENTES = "dadosclientes";
 const TABELA_VINCULOS = "playercliente";
 const TABELA_PLAYLISTS = "playlists";
