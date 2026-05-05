@@ -53,7 +53,6 @@ const btnAplicarFiltroAgendamento = document.getElementById("btnAplicarFiltroAge
 const btnLimparFiltroAgendamento = document.getElementById("btnLimparFiltroAgendamento");
 const agendaAvancada = document.getElementById("agendaAvancada");
 const agendaResumo = document.getElementById("agendaResumo");
-const agendamentoDiaMes = document.getElementById("agendamentoDiaMes");
 const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
 const agendamentoHoraFim = document.getElementById("agendamentoHoraFim");
 
@@ -1294,15 +1293,46 @@ function obterDiasAgendamentoSelecionados() {
     .filter(Boolean);
 }
 
+function obterMesesAgendamentoSelecionados() {
+  return Array.from(document.querySelectorAll('input[name="agendamentoMeses"]:checked'))
+    .map((input) => String(input.value || "").trim())
+    .filter(Boolean);
+}
+
+function obterDiasMesAgendamentoSelecionados() {
+  return Array.from(document.querySelectorAll('input[name="agendamentoDiasMes"]:checked'))
+    .map((input) => String(input.value || "").trim())
+    .filter(Boolean);
+}
+
 function obterNomeDiaSemana(valor) {
   const nomes = {
     0: "domingo",
     1: "segunda",
-    2: "terÃ§a",
+    2: "terca",
     3: "quarta",
     4: "quinta",
     5: "sexta",
-    6: "sÃ¡bado"
+    6: "sabado"
+  };
+
+  return nomes[String(valor)] || "";
+}
+
+function obterNomeMes(valor) {
+  const nomes = {
+    1: "jan",
+    2: "fev",
+    3: "mar",
+    4: "abr",
+    5: "mai",
+    6: "jun",
+    7: "jul",
+    8: "ago",
+    9: "set",
+    10: "out",
+    11: "nov",
+    12: "dez"
   };
 
   return nomes[String(valor)] || "";
@@ -1311,27 +1341,32 @@ function obterNomeDiaSemana(valor) {
 function atualizarResumoAgendamento() {
   if (!agendaResumo) return;
 
+  const meses = obterMesesAgendamentoSelecionados().map(obterNomeMes).filter(Boolean);
   const dias = obterDiasAgendamentoSelecionados().map(obterNomeDiaSemana).filter(Boolean);
-  const diaMes = String(agendamentoDiaMes?.value || "").trim();
+  const diasMes = obterDiasMesAgendamentoSelecionados();
   const horaInicio = String(agendamentoHoraInicio?.value || "").trim();
   const horaFim = String(agendamentoHoraFim?.value || "").trim();
   const partes = [];
+
+  if (meses.length) {
+    partes.push(`meses: ${meses.join(", ")}`);
+  }
 
   if (dias.length) {
     partes.push(`dias: ${dias.join(", ")}`);
   }
 
-  if (diaMes) {
-    partes.push(`todo mÃªs no dia ${diaMes}`);
+  if (diasMes.length) {
+    partes.push(`dias do mes: ${diasMes.join(", ")}`);
   }
 
   if (horaInicio && horaFim) {
-    partes.push(`horÃ¡rio: ${horaInicio} Ã s ${horaFim}`);
+    partes.push(`horario: ${horaInicio} as ${horaFim}`);
   }
 
   agendaResumo.textContent = partes.length
     ? `Filtro aplicado para ${partes.join(" | ")}.`
-    : "Sem filtro aplicado. A mÃ­dia aparece durante todo o perÃ­odo escolhido.";
+    : "Sem filtro aplicado. A midia aparece durante todo o periodo escolhido.";
 }
 
 function obterConfiguracaoAgendamento() {
@@ -1339,9 +1374,10 @@ function obterConfiguracaoAgendamento() {
 
   return {
     ativo,
-    tipo: "completo",
+    tipo: "calendario",
+    meses: ativo ? obterMesesAgendamentoSelecionados() : [],
     diasSemana: ativo ? obterDiasAgendamentoSelecionados() : [],
-    diaMes: ativo ? String(agendamentoDiaMes?.value || "").trim() : "",
+    diasMes: ativo ? obterDiasMesAgendamentoSelecionados() : [],
     horaInicio: ativo ? String(agendamentoHoraInicio?.value || "").trim() : "",
     horaFim: ativo ? String(agendamentoHoraFim?.value || "").trim() : ""
   };
@@ -1353,8 +1389,10 @@ function montarCamposAgendamento() {
   return {
     agendamento_ativo: config.ativo,
     agendamento_tipo: config.tipo,
+    agendamento_meses: config.meses.join(","),
     agendamento_dias_semana: config.diasSemana.join(","),
-    agendamento_dia_mes: config.diaMes || null,
+    agendamento_dias_mes: config.diasMes.join(","),
+    agendamento_dia_mes: config.diasMes.join(",") || null,
     agendamento_hora_inicio: config.horaInicio || null,
     agendamento_hora_fim: config.horaFim || null
   };
@@ -1364,10 +1402,10 @@ function validarConfiguracaoAgendamento() {
   const config = obterConfiguracaoAgendamento();
   if (!config.ativo) return true;
 
-  if (config.diaMes) {
-    const dia = Number(config.diaMes);
+  for (const item of config.diasMes) {
+    const dia = Number(item);
     if (!Number.isInteger(dia) || dia < 1 || dia > 31) {
-      mostrarStatusUpload("Informe um dia do mÃªs entre 1 e 31.", "#ff6b6b");
+      mostrarStatusUpload("Escolha dias do mes entre 1 e 31.", "#ff6b6b");
       return false;
     }
   }
@@ -1388,8 +1426,9 @@ function validarConfiguracaoAgendamento() {
 function filtroAgendamentoTemRegra() {
   const config = obterConfiguracaoAgendamento();
   return Boolean(
+    config.meses.length ||
     config.diasSemana.length ||
-    config.diaMes ||
+    config.diasMes.length ||
     config.horaInicio ||
     config.horaFim
   );
@@ -1672,10 +1711,9 @@ function fecharFiltroAgendamento() {
 
 function limparFiltroAgendamento() {
   agendamentoAtivo = false;
-  if (agendamentoDiaMes) agendamentoDiaMes.value = "";
   if (agendamentoHoraInicio) agendamentoHoraInicio.value = "";
   if (agendamentoHoraFim) agendamentoHoraFim.value = "";
-  document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
+  document.querySelectorAll('input[name="agendamentoMeses"], input[name="agendamentoDias"], input[name="agendamentoDiasMes"]').forEach((input) => {
     input.checked = false;
   });
   atualizarResumoAgendamento();
@@ -1731,13 +1769,13 @@ if (agendaAvancada) {
   });
 }
 
-[agendamentoDiaMes, agendamentoHoraInicio, agendamentoHoraFim].forEach((campo) => {
+[agendamentoHoraInicio, agendamentoHoraFim].forEach((campo) => {
   if (campo) {
     campo.addEventListener("input", atualizarResumoAgendamento);
   }
 });
 
-document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
+document.querySelectorAll('input[name="agendamentoMeses"], input[name="agendamentoDias"], input[name="agendamentoDiasMes"]').forEach((input) => {
   input.addEventListener("change", atualizarResumoAgendamento);
 });
 
