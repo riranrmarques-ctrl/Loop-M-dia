@@ -48,10 +48,12 @@ const contratoPreview = document.getElementById("contratoPreview");
 const contratoStatus = document.getElementById("contratoStatus");
 const btnBaixarContrato = document.getElementById("btnBaixarContrato");
 const btnFiltroAgendamento = document.getElementById("btnFiltroAgendamento");
+const btnFecharFiltroAgendamento = document.getElementById("btnFecharFiltroAgendamento");
+const btnAplicarFiltroAgendamento = document.getElementById("btnAplicarFiltroAgendamento");
+const btnLimparFiltroAgendamento = document.getElementById("btnLimparFiltroAgendamento");
 const agendaAvancada = document.getElementById("agendaAvancada");
 const agendamentoTipo = document.getElementById("agendamentoTipo");
 const agendamentoDiaMes = document.getElementById("agendamentoDiaMes");
-const agendamentoJanelaMes = document.getElementById("agendamentoJanelaMes");
 const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
 const agendamentoHoraFim = document.getElementById("agendamentoHoraFim");
 
@@ -59,6 +61,7 @@ let pontosData = {};
 let codigoClienteAtual = "";
 let clausulasContrato = [];
 let clienteAtual = null;
+let agendamentoAtivo = false;
 
 let dadosDunaContrato = {
   empresa: "Duna Branding",
@@ -1282,7 +1285,7 @@ function limparNomeArquivo(nome) {
 }
 
 function agendaAvancadaEstaAtiva() {
-  return Boolean(agendaAvancada && !agendaAvancada.hidden);
+  return agendamentoAtivo;
 }
 
 function obterDiasAgendamentoSelecionados() {
@@ -1300,7 +1303,6 @@ function obterConfiguracaoAgendamento() {
     tipo,
     diasSemana: ativo ? obterDiasAgendamentoSelecionados() : [],
     diaMes: ativo ? String(agendamentoDiaMes?.value || "").trim() : "",
-    janelaMes: ativo ? String(agendamentoJanelaMes?.value || "").trim() : "",
     horaInicio: ativo ? String(agendamentoHoraInicio?.value || "").trim() : "",
     horaFim: ativo ? String(agendamentoHoraFim?.value || "").trim() : ""
   };
@@ -1314,7 +1316,6 @@ function montarCamposAgendamento() {
     agendamento_tipo: config.tipo,
     agendamento_dias_semana: config.diasSemana.join(","),
     agendamento_dia_mes: config.diaMes || null,
-    agendamento_janela_mes: config.janelaMes || null,
     agendamento_hora_inicio: config.horaInicio || null,
     agendamento_hora_fim: config.horaFim || null
   };
@@ -1335,11 +1336,6 @@ function validarConfiguracaoAgendamento() {
       mostrarStatusUpload("Informe um dia do mÃªs entre 1 e 31.", "#ff6b6b");
       return false;
     }
-  }
-
-  if (config.tipo === "janela_mensal" && !config.janelaMes) {
-    mostrarStatusUpload("Escolha qual inÃ­cio do mÃªs usar no filtro.", "#ff6b6b");
-    return false;
   }
 
   if ((config.horaInicio && !config.horaFim) || (!config.horaInicio && config.horaFim)) {
@@ -1616,10 +1612,67 @@ if (btnBaixarContrato) {
 
 if (btnFiltroAgendamento && agendaAvancada) {
   btnFiltroAgendamento.addEventListener("click", () => {
-    const abrir = agendaAvancada.hidden;
-    agendaAvancada.hidden = !abrir;
-    btnFiltroAgendamento.classList.toggle("ativo", abrir);
-    btnFiltroAgendamento.setAttribute("aria-expanded", abrir ? "true" : "false");
+    agendaAvancada.hidden = false;
+    btnFiltroAgendamento.setAttribute("aria-expanded", "true");
+  });
+}
+
+function fecharFiltroAgendamento() {
+  if (!agendaAvancada) return;
+  agendaAvancada.hidden = true;
+  if (btnFiltroAgendamento) {
+    btnFiltroAgendamento.setAttribute("aria-expanded", "false");
+  }
+}
+
+function limparFiltroAgendamento() {
+  agendamentoAtivo = false;
+  if (agendamentoTipo) agendamentoTipo.value = "sempre";
+  if (agendamentoDiaMes) agendamentoDiaMes.value = "";
+  if (agendamentoHoraInicio) agendamentoHoraInicio.value = "";
+  if (agendamentoHoraFim) agendamentoHoraFim.value = "";
+  document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
+    input.checked = false;
+  });
+  if (btnFiltroAgendamento) {
+    btnFiltroAgendamento.classList.remove("ativo");
+  }
+  fecharFiltroAgendamento();
+}
+
+function aplicarFiltroAgendamento() {
+  const estadoAnterior = agendamentoAtivo;
+  agendamentoAtivo = true;
+
+  if (!validarConfiguracaoAgendamento()) {
+    agendamentoAtivo = estadoAnterior;
+    return;
+  }
+
+  if (btnFiltroAgendamento) {
+    btnFiltroAgendamento.classList.add("ativo");
+  }
+
+  fecharFiltroAgendamento();
+}
+
+if (btnFecharFiltroAgendamento) {
+  btnFecharFiltroAgendamento.addEventListener("click", fecharFiltroAgendamento);
+}
+
+if (btnLimparFiltroAgendamento) {
+  btnLimparFiltroAgendamento.addEventListener("click", limparFiltroAgendamento);
+}
+
+if (btnAplicarFiltroAgendamento) {
+  btnAplicarFiltroAgendamento.addEventListener("click", aplicarFiltroAgendamento);
+}
+
+if (agendaAvancada) {
+  agendaAvancada.addEventListener("click", (event) => {
+    if (event.target === agendaAvancada) {
+      fecharFiltroAgendamento();
+    }
   });
 }
 
