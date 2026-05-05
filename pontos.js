@@ -50,10 +50,6 @@ limparCachesAntigos();
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-if (sessionStorage.getItem("painelLiberado") !== "1") {
-  window.location.replace("centralpainel.html");
-}
-
 const statusEl = document.querySelector(".status-topo") || document.getElementById("status");
 const listaPontos = document.getElementById("listaPontos");
 const btnBaixarContrato = document.getElementById("btnBaixarContrato");
