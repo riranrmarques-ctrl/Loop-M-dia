@@ -1283,6 +1283,37 @@ async function carregarPontosRemoto() {
   }
 }
 
+function lerCachePontos() {
+  try {
+    const bruto = sessionStorage.getItem(CACHE_PONTOS_KEY);
+    if (!bruto) return null;
+
+    const cache = JSON.parse(bruto);
+    const criadoEm = Number(cache.criadoEm || 0);
+    const pontos = Array.isArray(cache.pontos) ? cache.pontos : [];
+
+    if (!pontos.length) return null;
+
+    return {
+      pontos,
+      fresco: Date.now() - criadoEm < CACHE_PONTOS_TTL
+    };
+  } catch {
+    return null;
+  }
+}
+
+function salvarCachePontos(pontos) {
+  try {
+    sessionStorage.setItem(CACHE_PONTOS_KEY, JSON.stringify({
+      criadoEm: Date.now(),
+      pontos
+    }));
+  } catch {
+    return;
+  }
+}
+
 async function iniciarPainel() {
   if (painelIniciado) return;
   painelIniciado = true;
