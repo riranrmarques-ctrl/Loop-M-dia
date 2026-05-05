@@ -316,7 +316,7 @@ function mapearMaterialSupabase(material) {
 
 const els = {
   listaPontos: document.querySelector("#listaPontos"),
-  pontosBox: document.querySelector("#pontosBox"),
+  pontosBox: document.querySelector(".pontos-box"),
   pontoDetalhe: document.querySelector("#pontoDetalhe"),
   btnVoltar: document.querySelector("#btnVoltar"),
   btnNovoPonto: document.querySelector("#btnNovoPonto"),
@@ -329,6 +329,8 @@ const els = {
   btnSalvarEdicao: document.querySelector("#btnSalvarEdicao"),
   btnDeletarPonto: document.querySelector("#btnDeletarPonto"),
   btnUpgradePlaylist: document.querySelector("#btnUpgradePlaylist"),
+  btnFecharModal: document.querySelector("#btnFecharModal"),
+  btnFecharCopiaPlaylist: document.querySelector("#btnFecharCopiaPlaylist"),
   modalEditar: document.querySelector("#modalEditar"),
   modalMaterial: document.querySelector("#modalMaterial"),
   modalCopiarPlaylist: document.querySelector("#modalCopiarPlaylist"),
@@ -377,6 +379,8 @@ function vincularEventos() {
   els.btnConfirmarCopiaPlaylist?.addEventListener("click", copiarPlaylistInteira);
   els.btnSalvarEdicao?.addEventListener("click", salvarEdicaoPonto);
   els.btnDeletarPonto?.addEventListener("click", deletarPontoAtual);
+  els.btnFecharModal?.addEventListener("click", fecharModalEdicao);
+  els.btnFecharCopiaPlaylist?.addEventListener("click", fecharModalCopiarPlaylist);
   els.btnUpgradePlaylist?.addEventListener("click", () => els.inputUpgradePlaylist?.click());
   els.inputImagem?.addEventListener("change", atualizarImagemPonto);
   els.inputUpgradePlaylist?.addEventListener("change", uploadMidiaPlaylist);
@@ -501,11 +505,11 @@ function renderizarManifesto(ponto) {
       })),
   };
 
-  els.manifestoVersao.textContent = `v${store.manifestVersion}`;
-  els.manifestoMateriais.textContent = ponto.materiais.length;
-  els.manifestoClientes.textContent = clientes.size;
-  els.manifestoRepeticoes.textContent = repeticoes;
-  els.manifestoPreview.textContent = JSON.stringify(manifesto, null, 2);
+  if (els.manifestoVersao) els.manifestoVersao.textContent = `v${store.manifestVersion}`;
+  if (els.manifestoMateriais) els.manifestoMateriais.textContent = ponto.materiais.length;
+  if (els.manifestoClientes) els.manifestoClientes.textContent = clientes.size;
+  if (els.manifestoRepeticoes) els.manifestoRepeticoes.textContent = repeticoes;
+  if (els.manifestoPreview) els.manifestoPreview.textContent = JSON.stringify(manifesto, null, 2);
 }
 
 function renderizarHistoricos() {
@@ -520,7 +524,7 @@ function renderizarHistoricos() {
 function abrirModalEdicao() {
   criandoNovoPonto = false;
   preencherModalEdicao(pontoAtual());
-  els.modalEditar.showModal();
+  abrirModal(els.modalEditar);
 }
 
 function preencherModalEdicao(ponto) {
@@ -535,7 +539,7 @@ function preencherModalEdicao(ponto) {
 function abrirModalNovoPonto() {
   criandoNovoPonto = true;
   preencherModalEdicao(null);
-  els.modalEditar.showModal();
+  abrirModal(els.modalEditar);
 }
 
 async function salvarEdicaoPonto() {
@@ -552,7 +556,7 @@ async function salvarEdicaoPonto() {
 
   try {
     const pontoSalvo = await api.salvarPonto(criandoNovoPonto ? "" : store.selectedPointId, payload);
-    els.modalEditar.close();
+    fecharModal(els.modalEditar);
     await renderizarPontos();
 
     if (pontoSalvo?.id) {
@@ -574,7 +578,7 @@ async function deletarPontoAtual() {
 
   try {
     await api.deletarPonto(ponto.id);
-    els.modalEditar.close();
+    fecharModal(els.modalEditar);
     fecharDetalhe();
     store.selectedPointId = "";
     await renderizarPontos();
@@ -616,11 +620,12 @@ async function uploadMidiaPlaylist() {
 }
 
 function abrirModalMaterial() {
+  if (!els.modalMaterial) return;
   els.materialCliente.value = "";
   els.materialNome.value = "";
   els.materialStoragePath.value = "";
   els.materialRepeticoes.value = "1";
-  els.modalMaterial.showModal();
+  abrirModal(els.modalMaterial);
 }
 
 async function abrirModalCopiarPlaylist() {
@@ -638,7 +643,7 @@ async function abrirModalCopiarPlaylist() {
 
   els.playlistOrigemSelect.innerHTML = opcoes || `<option value="">Nenhuma pasta disponivel</option>`;
   els.btnConfirmarCopiaPlaylist.disabled = !opcoes;
-  els.modalCopiarPlaylist.showModal();
+  abrirModal(els.modalCopiarPlaylist);
 }
 
 async function copiarPlaylistInteira() {
@@ -654,7 +659,7 @@ async function copiarPlaylistInteira() {
     destinoId: store.selectedPointId,
   });
 
-  els.modalCopiarPlaylist.close();
+  fecharModal(els.modalCopiarPlaylist);
   abrirPonto(store.selectedPointId);
 }
 
@@ -676,7 +681,7 @@ async function salvarMaterial() {
     storagePath,
   });
 
-  els.modalMaterial.close();
+  fecharModal(els.modalMaterial);
   abrirPonto(store.selectedPointId);
 }
 
@@ -700,4 +705,30 @@ function atualizarToggle(disponivel) {
 
 function pontoAtual() {
   return store.pontos.find((ponto) => ponto.id === store.selectedPointId) || store.pontos[0];
+}
+
+function abrirModal(modal) {
+  if (!modal) return;
+  if (typeof modal.showModal === "function") {
+    modal.showModal();
+    return;
+  }
+  modal.style.display = "flex";
+}
+
+function fecharModal(modal) {
+  if (!modal) return;
+  if (typeof modal.close === "function") {
+    modal.close();
+    return;
+  }
+  modal.style.display = "none";
+}
+
+function fecharModalEdicao() {
+  fecharModal(els.modalEditar);
+}
+
+function fecharModalCopiarPlaylist() {
+  fecharModal(els.modalCopiarPlaylist);
 }
