@@ -1896,3 +1896,60 @@ body.modo-detalhe .topo-esquerda {
     border-radius: 20px;
   }
 }
+
+/* CORRECAO FINAL - MODAL CLARO COM TEXTO VISIVEL */
+.modal-conteudo {
+  background: linear-gradient(180deg, #fbfffc 0%, #eefaf1 100%) !important;
+  border: 1px solid #cfe8d4 !important;
+  color: #122018 !important;
+}
+
+.modal-conteudo h3 {
+  color: #122018 !important;
+}
+
+.modal-secao,
+.edit-imagem-box {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid #dcebdd !important;
+}
+
+.modal-secao h4,
+.edit-imagem-box h4 {
+  color: #176c36 !important;
+}
+
+.modal-conteudo input[type="text"],
+.modal-conteudo input[type="email"],
+.modal-conteudo input[type="file"],
+.modal-conteudo select {
+  background: #ffffff !important;
+  color: #122018 !important;
+  border: 1px solid #cfe8d4 !important;
+}
+
+.modal-conteudo option {
+  background: #ffffff !important;
+  color: #122018 !important;
+}
+
+.modal-ajuda {
+  color: #4a5f52 !important;
+}
+
+#btnFecharModal,
+#btnFecharCopiaPlaylist {
+  background: #ffffff !important;
+  color: #176c36 !important;
+  border: 1px solid #cfe8d4 !important;
+}
+
+#btnFecharModal:hover,
+#btnFecharCopiaPlaylist:hover {
+  background: #eefaf1 !important;
+}
+
+#btnConfirmarCopiaPlaylist {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+}
