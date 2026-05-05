@@ -52,6 +52,9 @@ const btnFecharFiltroAgendamento = document.getElementById("btnFecharFiltroAgend
 const btnAplicarFiltroAgendamento = document.getElementById("btnAplicarFiltroAgendamento");
 const btnLimparFiltroAgendamento = document.getElementById("btnLimparFiltroAgendamento");
 const agendaAvancada = document.getElementById("agendaAvancada");
+const agendaDiasBloco = document.getElementById("agendaDiasBloco");
+const agendaDiaMesBloco = document.getElementById("agendaDiaMesBloco");
+const agendaResumo = document.getElementById("agendaResumo");
 const agendamentoTipo = document.getElementById("agendamentoTipo");
 const agendamentoDiaMes = document.getElementById("agendamentoDiaMes");
 const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
@@ -1294,6 +1297,63 @@ function obterDiasAgendamentoSelecionados() {
     .filter(Boolean);
 }
 
+function obterNomeDiaSemana(valor) {
+  const nomes = {
+    0: "domingo",
+    1: "segunda",
+    2: "terÃ§a",
+    3: "quarta",
+    4: "quinta",
+    5: "sexta",
+    6: "sÃ¡bado"
+  };
+
+  return nomes[String(valor)] || "";
+}
+
+function atualizarResumoAgendamento() {
+  if (!agendaResumo) return;
+
+  const tipo = String(agendamentoTipo?.value || "sempre");
+  const dias = obterDiasAgendamentoSelecionados().map(obterNomeDiaSemana).filter(Boolean);
+  const diaMes = String(agendamentoDiaMes?.value || "").trim();
+  const horaInicio = String(agendamentoHoraInicio?.value || "").trim();
+  const horaFim = String(agendamentoHoraFim?.value || "").trim();
+  const horario = horaInicio && horaFim ? ` das ${horaInicio} Ã s ${horaFim}` : "";
+
+  if (tipo === "dias_semana") {
+    agendaResumo.textContent = dias.length
+      ? `Vai aparecer ${dias.join(", ")}${horario}.`
+      : `Escolha os dias da semana${horario}.`;
+    return;
+  }
+
+  if (tipo === "dia_mes") {
+    agendaResumo.textContent = diaMes
+      ? `Vai aparecer todo mÃªs no dia ${diaMes}${horario}.`
+      : `Informe o dia do mÃªs${horario}.`;
+    return;
+  }
+
+  agendaResumo.textContent = horario
+    ? `Vai aparecer todos os dias${horario}, dentro do perÃ­odo escolhido.`
+    : "Sem filtro aplicado. A mÃ­dia aparece durante todo o perÃ­odo escolhido.";
+}
+
+function atualizarVisibilidadeAgendamento() {
+  const tipo = String(agendamentoTipo?.value || "sempre");
+
+  if (agendaDiasBloco) {
+    agendaDiasBloco.hidden = tipo !== "dias_semana";
+  }
+
+  if (agendaDiaMesBloco) {
+    agendaDiaMesBloco.hidden = tipo !== "dia_mes";
+  }
+
+  atualizarResumoAgendamento();
+}
+
 function obterConfiguracaoAgendamento() {
   const ativo = agendaAvancadaEstaAtiva();
   const tipo = ativo ? String(agendamentoTipo?.value || "sempre") : "sempre";
@@ -1612,6 +1672,7 @@ if (btnBaixarContrato) {
 
 if (btnFiltroAgendamento && agendaAvancada) {
   btnFiltroAgendamento.addEventListener("click", () => {
+    atualizarVisibilidadeAgendamento();
     agendaAvancada.hidden = false;
     btnFiltroAgendamento.setAttribute("aria-expanded", "true");
   });
@@ -1634,6 +1695,7 @@ function limparFiltroAgendamento() {
   document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
     input.checked = false;
   });
+  atualizarVisibilidadeAgendamento();
   if (btnFiltroAgendamento) {
     btnFiltroAgendamento.classList.remove("ativo");
   }
@@ -1675,6 +1737,22 @@ if (agendaAvancada) {
     }
   });
 }
+
+if (agendamentoTipo) {
+  agendamentoTipo.addEventListener("change", atualizarVisibilidadeAgendamento);
+}
+
+[agendamentoDiaMes, agendamentoHoraInicio, agendamentoHoraFim].forEach((campo) => {
+  if (campo) {
+    campo.addEventListener("input", atualizarResumoAgendamento);
+  }
+});
+
+document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
+  input.addEventListener("change", atualizarResumoAgendamento);
+});
+
+atualizarVisibilidadeAgendamento();
 
 async function iniciar() {
   try {
