@@ -47,7 +47,13 @@ const historicoArquivos = document.getElementById("historicoArquivos");
 const contratoPreview = document.getElementById("contratoPreview");
 const contratoStatus = document.getElementById("contratoStatus");
 const btnBaixarContrato = document.getElementById("btnBaixarContrato");
-const btnBaixarQrCode = document.getElementById("btnBaixarQrCode");
+const btnFiltroAgendamento = document.getElementById("btnFiltroAgendamento");
+const agendaAvancada = document.getElementById("agendaAvancada");
+const agendamentoTipo = document.getElementById("agendamentoTipo");
+const agendamentoDiaMes = document.getElementById("agendamentoDiaMes");
+const agendamentoJanelaMes = document.getElementById("agendamentoJanelaMes");
+const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
+const agendamentoHoraFim = document.getElementById("agendamentoHoraFim");
 
 let pontosData = {};
 let codigoClienteAtual = "";
@@ -1275,46 +1281,110 @@ function limparNomeArquivo(nome) {
     .toLowerCase();
 }
 
-function montarUrlContatoQrCodeCliente() {
-  const codigoQr = normalizarCodigo(codigoClienteAtual || inputCodigo?.textContent);
-  if (!codigoQr) return "";
-  return `${window.location.origin}/contato-qrcode.html?cliente=${encodeURIComponent(codigoQr)}`;
+function agendaAvancadaEstaAtiva() {
+  return Boolean(agendaAvancada && !agendaAvancada.hidden);
 }
 
-function baixarArquivoUrl(url, nomeArquivo) {
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = nomeArquivo;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+function obterDiasAgendamentoSelecionados() {
+  return Array.from(document.querySelectorAll('input[name="agendamentoDias"]:checked'))
+    .map((input) => String(input.value || "").trim())
+    .filter(Boolean);
 }
 
-async function baixarQrCodeCliente() {
-  const codigoQr = normalizarCodigo(codigoClienteAtual || inputCodigo?.textContent);
+function obterConfiguracaoAgendamento() {
+  const ativo = agendaAvancadaEstaAtiva();
+  const tipo = ativo ? String(agendamentoTipo?.value || "sempre") : "sempre";
 
-  if (!codigoQr) {
-    mostrarMensagem("CÃ³digo do cliente nÃ£o encontrado.", "#ff6b6b");
-    return;
+  return {
+    ativo,
+    tipo,
+    diasSemana: ativo ? obterDiasAgendamentoSelecionados() : [],
+    diaMes: ativo ? String(agendamentoDiaMes?.value || "").trim() : "",
+    janelaMes: ativo ? String(agendamentoJanelaMes?.value || "").trim() : "",
+    horaInicio: ativo ? String(agendamentoHoraInicio?.value || "").trim() : "",
+    horaFim: ativo ? String(agendamentoHoraFim?.value || "").trim() : ""
+  };
+}
+
+function montarCamposAgendamento() {
+  const config = obterConfiguracaoAgendamento();
+
+  return {
+    agendamento_ativo: config.ativo,
+    agendamento_tipo: config.tipo,
+    agendamento_dias_semana: config.diasSemana.join(","),
+    agendamento_dia_mes: config.diaMes || null,
+    agendamento_janela_mes: config.janelaMes || null,
+    agendamento_hora_inicio: config.horaInicio || null,
+    agendamento_hora_fim: config.horaFim || null
+  };
+}
+
+function validarConfiguracaoAgendamento() {
+  const config = obterConfiguracaoAgendamento();
+  if (!config.ativo) return true;
+
+  if (config.tipo === "dias_semana" && !config.diasSemana.length) {
+    mostrarStatusUpload("Escolha ao menos um dia da semana no filtro.", "#ff6b6b");
+    return false;
   }
 
-  try {
-    mostrarMensagem("Gerando QR Code...", "#9fd2ff");
-    const urlContato = montarUrlContatoQrCodeCliente();
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=900x900&margin=40&format=png&data=${encodeURIComponent(urlContato)}`;
-    const resposta = await fetch(qrUrl);
-
-    if (!resposta.ok) throw new Error("NÃ£o foi possÃ­vel gerar o QR Code.");
-
-    const blob = await resposta.blob();
-    const urlBlob = URL.createObjectURL(blob);
-    baixarArquivoUrl(urlBlob, `qrcode-${codigoQr}.png`);
-    setTimeout(() => URL.revokeObjectURL(urlBlob), 1000);
-    mostrarMensagem("QR Code baixado com sucesso.", "#7CFC9A");
-  } catch (error) {
-    console.error(error);
-    mostrarMensagem(`Erro ao baixar QR Code: ${error.message || "falha desconhecida"}`, "#ff6b6b");
+  if (config.tipo === "dia_mes") {
+    const dia = Number(config.diaMes);
+    if (!Number.isInteger(dia) || dia < 1 || dia > 31) {
+      mostrarStatusUpload("Informe um dia do mÃªs entre 1 e 31.", "#ff6b6b");
+      return false;
+    }
   }
+
+  if (config.tipo === "janela_mensal" && !config.janelaMes) {
+    mostrarStatusUpload("Escolha qual inÃ­cio do mÃªs usar no filtro.", "#ff6b6b");
+    return false;
+  }
+
+  if ((config.horaInicio && !config.horaFim) || (!config.horaInicio && config.horaFim)) {
+    mostrarStatusUpload("Informe horÃ¡rio inicial e final.", "#ff6b6b");
+    return false;
+  }
+
+  if (config.horaInicio && config.horaFim && config.horaInicio >= config.horaFim) {
+    mostrarStatusUpload("O horÃ¡rio final precisa ser maior que o inicial.", "#ff6b6b");
+    return false;
+  }
+
+  return true;
+}
+
+function erroPareceColunaAgendamento(error) {
+  const texto = String(error?.message || error?.details || "").toLowerCase();
+  return texto.includes("agendamento_")
+    || texto.includes("schema cache")
+    || texto.includes("column")
+    || texto.includes("does not exist");
+}
+
+async function inserirPlaylistsComAgendamento(registrosBase) {
+  const camposAgendamento = montarCamposAgendamento();
+  const registrosComAgenda = registrosBase.map((registro) => ({
+    ...registro,
+    ...camposAgendamento
+  }));
+
+  const { error } = await supabaseClient
+    .from(TABELA_PLAYLISTS)
+    .insert(registrosComAgenda);
+
+  if (!error) return { agendaSalva: camposAgendamento.agendamento_ativo };
+  if (!camposAgendamento.agendamento_ativo || !erroPareceColunaAgendamento(error)) throw error;
+
+  console.warn("A tabela playlists ainda nÃ£o aceita campos de agendamento. Enviando mÃ­dia sem agenda avanÃ§ada.", error);
+
+  const { error: fallbackError } = await supabaseClient
+    .from(TABELA_PLAYLISTS)
+    .insert(registrosBase);
+
+  if (fallbackError) throw fallbackError;
+  return { agendaSalva: false };
 }
 
 async function uploadArquivoCliente() {
@@ -1334,6 +1404,7 @@ async function uploadArquivoCliente() {
   }
 
   if (!validarDadosParaMaterialOuContrato()) return;
+  if (!validarConfiguracaoAgendamento()) return;
 
   try {
     mostrarStatusUpload("Salvando cliente...", "#176c36");
@@ -1341,7 +1412,7 @@ async function uploadArquivoCliente() {
     if (!clienteSalvo) return;
 
     const dataFim = inputVencimento.value || null;
-    const agoraIso = new Date().toISOString();
+    const dataInicio = inputDataPostagem?.value || new Date().toISOString().split("T")[0];
     const baseOrdem = Date.now();
     const tipoFinal = detectarTipoArquivoPlaylist(file);
     let videoUrl = "";
@@ -1384,24 +1455,26 @@ async function uploadArquivoCliente() {
       video_url: videoUrl,
       storage_path: storagePath,
       tipo: tipoFinal,
-      data_inicio: agoraIso,
+      data_inicio: dataInicio,
       data_fim: dataFim,
       ordem: baseOrdem + index
     }));
 
-    const { error: insertError } = await supabaseClient
-      .from(TABELA_PLAYLISTS)
-      .insert(registros);
-
-    if (insertError) throw insertError;
+    const resultadoInsert = await inserirPlaylistsComAgendamento(registros);
 
     sessionStorage.removeItem(obterChaveCache("historico_arquivos"));
     await carregarHistoricoArquivos({ forcarAtualizacao: true });
     await sincronizarStatusCliente();
     gerarHistoricoContratoVisual();
     gerarContratoCliente();
-    mostrarStatusUpload("Material enviado para a playlist.", "#176c36");
-    mostrarMensagem("Material enviado para os pontos selecionados.", "#7CFC9A");
+    mostrarStatusUpload(
+      resultadoInsert.agendaSalva ? "Material enviado com agenda avanÃ§ada." : "Material enviado para a playlist.",
+      "#176c36"
+    );
+    mostrarMensagem(
+      resultadoInsert.agendaSalva ? "Material enviado com filtro de agenda." : "Material enviado para os pontos selecionados.",
+      "#7CFC9A"
+    );
     arquivoInput.value = "";
   } catch (error) {
     console.error("Erro ao enviar material:", error);
@@ -1541,9 +1614,12 @@ if (btnBaixarContrato) {
   });
 }
 
-if (btnBaixarQrCode) {
-  btnBaixarQrCode.addEventListener("click", () => {
-    executarComAnimacaoBotao(btnBaixarQrCode, baixarQrCodeCliente);
+if (btnFiltroAgendamento && agendaAvancada) {
+  btnFiltroAgendamento.addEventListener("click", () => {
+    const abrir = agendaAvancada.hidden;
+    agendaAvancada.hidden = !abrir;
+    btnFiltroAgendamento.classList.toggle("ativo", abrir);
+    btnFiltroAgendamento.setAttribute("aria-expanded", abrir ? "true" : "false");
   });
 }
 
