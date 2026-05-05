@@ -4,8 +4,8 @@ if (!codigo) {
   window.location.replace("/central-cliente.html");
 }
 
-const SUPABASE_URL = "https://hhqqwjjdhzxqjuyazjwk.supabase.co";
-const SUPABASE_KEY = "sb_publishable_8yHAzibYZJbW9PfdrOumkg_R7u2HWly";
+const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
 
 const BUCKET = "midias";
 const TABELA_CLIENTES = "dadosclientes";
