@@ -784,3 +784,194 @@ select {
     padding: 18px;
   }
 }
+
+/* Ajuste final da tela externa: verde escuro + cards completos */
+body:not(.pasta-aberta) {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(101, 210, 123, 0.22), transparent 34%),
+    linear-gradient(180deg, #0d2f1c 0%, #071d13 46%, #04120c 100%);
+  color: #132018;
+}
+
+body.pasta-aberta {
+  background: #050914;
+}
+
+body:not(.pasta-aberta) #conteudoPontos {
+  padding: 24px clamp(20px, 5vw, 70px) 56px;
+}
+
+body:not(.pasta-aberta) .topo-fixo {
+  position: sticky;
+  top: 16px;
+  max-width: 1500px;
+  min-height: 96px;
+  margin: 0 auto 54px;
+  border: 1px solid rgba(138, 222, 151, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.18);
+}
+
+body:not(.pasta-aberta) .topo-centro {
+  display: block;
+  text-align: center;
+}
+
+body:not(.pasta-aberta) .topo-centro h1 {
+  color: #102017;
+  font-size: clamp(30px, 3vw, 48px);
+  font-weight: 950;
+}
+
+body:not(.pasta-aberta) .topo-centro p {
+  color: #5c7062;
+  font-weight: 800;
+}
+
+body:not(.pasta-aberta) .menu-topo-btn {
+  min-height: 48px;
+  border: 1px solid rgba(47, 172, 88, 0.24);
+  border-radius: 14px;
+  background: #eefaf1;
+  color: #1f7a3c;
+  font-weight: 950;
+}
+
+body:not(.pasta-aberta) .logo-topo-img {
+  max-width: 150px;
+  max-height: 72px;
+  object-fit: contain;
+}
+
+body:not(.pasta-aberta) .painel-shell {
+  max-width: 1500px;
+}
+
+body:not(.pasta-aberta) .pontos-box {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(240px, 1fr));
+  gap: 28px;
+  align-items: stretch;
+}
+
+body:not(.pasta-aberta) .ponto-card,
+body:not(.pasta-aberta) .card-ponto {
+  width: 100%;
+  min-width: 0;
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(172, 232, 181, 0.45);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f4fbf5 100%);
+  color: #111827;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.2);
+}
+
+body:not(.pasta-aberta) .ponto-card.ativo,
+body:not(.pasta-aberta) .card-ponto.ativo {
+  outline: 2px solid rgba(106, 214, 126, 0.85);
+}
+
+body:not(.pasta-aberta) .ponto-thumb,
+body:not(.pasta-aberta) .card-imagem-box {
+  width: 100%;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  background: #e5e7eb;
+}
+
+body:not(.pasta-aberta) .ponto-thumb img,
+body:not(.pasta-aberta) .card-imagem {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+body:not(.pasta-aberta) .ponto-card h3,
+body:not(.pasta-aberta) .card-nome {
+  margin: 16px 0 0;
+  color: #111827;
+  font-size: 25px;
+  font-weight: 950;
+  line-height: 1.08;
+}
+
+body:not(.pasta-aberta) .ponto-card p,
+body:not(.pasta-aberta) .card-cidade {
+  margin: 10px 0 0;
+  color: #2e3948;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+body:not(.pasta-aberta) .ponto-meta,
+body:not(.pasta-aberta) .card-info-linha {
+  margin: 14px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+body:not(.pasta-aberta) .ponto-codigo,
+body:not(.pasta-aberta) .card-codigo {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 10px;
+  padding: 0 13px;
+  background: #e6f5ea;
+  color: #22693b;
+  font-weight: 950;
+  letter-spacing: 1px;
+}
+
+body:not(.pasta-aberta) .abrir-pasta-btn,
+body:not(.pasta-aberta) .btn-abrir {
+  width: 100%;
+  min-height: 60px;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2fac58, #67ca76);
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 950;
+  box-shadow: 0 18px 40px rgba(47, 172, 88, 0.26);
+}
+
+body:not(.pasta-aberta) .novo-ponto-area {
+  margin-top: 34px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+body:not(.pasta-aberta) .btn-novo-ponto {
+  min-height: 56px;
+  border: 0;
+  border-radius: 14px;
+  padding: 0 24px;
+  background: linear-gradient(135deg, #2fac58, #67ca76);
+  color: #ffffff;
+  font-weight: 950;
+}
+
+body:not(.pasta-aberta) .assinatura-duna {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 1180px) {
+  body:not(.pasta-aberta) .pontos-box {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  body:not(.pasta-aberta) .topo-fixo,
+  body:not(.pasta-aberta) .pontos-box {
+    grid-template-columns: 1fr;
+  }
+}
