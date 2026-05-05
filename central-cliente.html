@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Duna Branding | Clientes</title>
+  <link rel="stylesheet" href="central-cliente.css?v=2">
+</head>
+
+<body>
+  <main id="conteudoClientes">
+    <header class="topo-fixo novo-topo">
+      <div class="topo-esquerda">
+        <button id="botaoVoltarPainel" class="menu-topo-btn" type="button">
+          ← Voltar
+        </button>
+      </div>
+
+      <div class="topo-centro">
+        <h1>Central de Clientes</h1>
+        <p>Gerencie clientes, acessos e contratos</p>
+      </div>
+
+      <div class="topo-direita">
+        <img src="loop-player-logo.jpeg" class="logo-topo-img" alt="Loop Player">
+        <div id="mensagem" class="status-topo">Carregando...</div>
+      </div>
+    </header>
+
+    <section class="painel-shell">
+      <div class="barra-acoes">
+        <div class="busca-area">
+          <label for="buscaCliente">Buscar cliente</label>
+          <input id="buscaCliente" type="search" placeholder="Nome, código, telefone, e-mail...">
+        </div>
+
+        <div class="filtros-clientes" aria-label="Ordenação de clientes">
+          <button class="filtro-btn" type="button" data-filtro="status">Status</button>
+          <button class="filtro-btn" type="button" data-filtro="nome">Nome</button>
+          <button class="filtro-btn" type="button" data-filtro="data">Data</button>
+          <button class="filtro-btn" type="button" data-filtro="personalizado">Manual</button>
+        </div>
+
+        <div class="acoes-direita">
+          <button id="botaoAtualizar" class="btn-secundario" type="button">Atualizar</button>
+          <button id="botaoNovoCliente" class="btn-principal" type="button">+ Novo cliente</button>
+        </div>
+      </div>
+
+      <div id="listaClientes" class="clientes-grid">
+        <div class="vazio">Carregando clientes...</div>
+      </div>
+
+      <div class="assinatura-duna">
+        Desenvolvido por <strong>Duna Branding</strong>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="central-cliente.js?v=2"></script>
+</body>
+</html>
