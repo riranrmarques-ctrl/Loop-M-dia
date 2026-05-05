@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Duna Branding | Pontos</title>
-  <link rel="stylesheet" href="pontos.css?v=207">
+  <link rel="stylesheet" href="pontos.css?v=210">
 </head>
 
 <body>
@@ -17,6 +17,7 @@
 
   <div class="topo-fixo novo-topo">
 
+    <!-- BOTÃO VOLTAR (SUBSTITUIU MENU) -->
     <div class="topo-esquerda">
       <button onclick="window.location.href='centralpainel.html'" class="menu-topo-btn">
         ← Voltar
@@ -37,8 +38,11 @@
 
   <div class="painel-shell">
 
+    <!-- LISTA DE PONTOS -->
     <div id="listaPontos">
-      <div class="pontos-box"></div>
+      <div class="pontos-box">
+        <div class="estado-carregando">Carregando pontos do banco...</div>
+      </div>
 
       <div class="novo-ponto-area">
         <button id="btnNovoPonto" class="btn-novo-ponto">+ Novo ponto</button>
@@ -49,6 +53,7 @@
       </div>
     </div>
 
+    <!-- DETALHE DO PONTO -->
     <div id="pontoDetalhe" class="playlist-box" style="display:none;">
 
       <div class="playlist-topbar playlist-topbar-novo">
@@ -57,6 +62,7 @@
           <span class="topbar-titulo">Gerencie e organize a sua playlist</span>
         </div>
 
+        <!-- STATUS ORIGINAL MANTIDO -->
         <div class="topbar-direita">
           <div id="statusPonto" class="status-destaque"></div>
         </div>
@@ -66,7 +72,7 @@
         <div class="playlist-topo-flex">
 
           <div class="playlist-imagem-box">
-            <img id="imagemPonto" src="https://placehold.co/600x320/png" alt="Imagem do ponto">
+            <img id="imagemPonto" src="" alt="Imagem do ponto">
           </div>
 
           <div class="playlist-header-textos">
@@ -89,8 +95,6 @@
 
             <div class="playlist-acoes-topo">
               <button id="btnEditarInfo" class="btn-secundario">Editar informações</button>
-              <button id="btnUpgradePlaylist" class="btn-upgrade-playlist">upgrade</button>
-              <input id="inputUpgradePlaylist" type="file" hidden>
             </div>
 
           </div>
@@ -103,9 +107,18 @@
           <div class="playlist-secao playlist-secao-ativa">
             <div class="playlist-secao-topo">
               <h4>Playlist ativa</h4>
-              <button id="btnCopiarPlaylist" class="btn-copiar-playlist" type="button">
-                Copiar playlist
-              </button>
+              <div class="playlist-botoes-topo">
+                <button id="btnUpgradePlaylist" class="btn-playlist-topo btn-adicionar-material" type="button">
+                  Adicionar material
+                </button>
+                <button id="btnBiblioteca" class="btn-playlist-topo btn-biblioteca" type="button">
+                  Biblioteca
+                </button>
+                <button id="btnCopiarPlaylist" class="btn-playlist-topo btn-copiar-playlist" type="button">
+                  Copiar playlist
+                </button>
+              </div>
+              <input id="inputUpgradePlaylist" type="file" hidden>
             </div>
             <div id="playlistAtiva" class="playlist-lista"></div>
           </div>
@@ -134,62 +147,57 @@
     </div>
 
   </div>
+  
+ <!-- MODAL EDITAR -->
+<div id="modalEditar" class="modal-editar" style="display:none;">
+  <div class="modal-conteudo modal-conteudo-amplo">
 
-  <div id="modalEditar" class="modal-editar" style="display:none;">
-    <div class="modal-conteudo modal-conteudo-amplo">
+    <h3>Editar Informações</h3>
 
-      <h3>Editar Informações</h3>
+    <div class="modal-secao">
+      <h4>Dados do ponto</h4>
 
-      <div class="modal-secao">
-        <h4>Dados do ponto</h4>
-
-        <input type="text" id="editNome" placeholder="Nome do ponto">
-        <input type="text" id="editCidade" placeholder="Cidade / região">
-        <input type="text" id="editEndereco" placeholder="Endereço completo">
-      </div>
-
-      <div class="modal-grid-edicao">
-        <div class="edit-imagem-box modal-secao-imagem">
-          <h4>Imagem do ponto</h4>
-          <img id="previewImagem">
-          <input type="file" id="inputImagem" accept="image/*">
-        </div>
-
-        <div class="edit-botoes">
-          <button id="btnSalvarEdicao" type="button">Salvar</button>
-          <button id="btnDeletarPonto" class="btn-deletar-ponto" type="button">Deletar ponto</button>
-          <button id="btnFecharModal" type="button">Voltar</button>
-        </div>
-      </div>
-
+      <input type="text" id="editNome" placeholder="Nome do ponto">
+      <input type="text" id="editCidade" placeholder="Cidade / região">
+      <input type="text" id="editEndereco" placeholder="Endereço completo">
     </div>
-  </div>
 
-  <div id="modalCopiarPlaylist" class="modal-editar" style="display:none;">
-    <div class="modal-conteudo">
-
-      <h3>Copiar playlist</h3>
-
-      <div class="modal-secao">
-        <h4>Pasta de origem</h4>
-        <select id="playlistOrigemSelect"></select>
-        <p class="modal-ajuda">
-          Os materiais da pasta escolhida serão copiados para o ponto aberto.
-        </p>
+    <div class="modal-grid-edicao">
+      <div class="edit-imagem-box modal-secao-imagem">
+        <h4>Imagem do ponto</h4>
+        <img id="previewImagem">
+        <input type="file" id="inputImagem" accept="image/*">
       </div>
 
       <div class="edit-botoes">
-        <button id="btnConfirmarCopiaPlaylist" type="button">Copiar playlist inteira</button>
-        <button id="btnFecharCopiaPlaylist" type="button">Voltar</button>
+        <button id="btnSalvarEdicao" type="button">Salvar</button>
+        <button id="btnDeletarPonto" class="btn-deletar-ponto" type="button">Deletar ponto</button>
+        <button id="btnFecharModal" type="button">Voltar</button>
       </div>
-
     </div>
-  </div>
 
+  </div>
 </div>
 
+<div id="modalCopiarPlaylist" class="modal-editar" style="display:none;">
+  <div class="modal-conteudo">
+    <h3>Copiar playlist</h3>
+
+    <div class="modal-secao">
+      <h4>Pasta de origem</h4>
+      <select id="playlistOrigemSelect"></select>
+      <p class="modal-ajuda">Os materiais da pasta escolhida serão copiados para o ponto aberto.</p>
+    </div>
+
+    <div class="edit-botoes">
+      <button id="btnConfirmarCopiaPlaylist" type="button">Copiar playlist inteira</button>
+      <button id="btnFecharCopiaPlaylist" type="button">Voltar</button>
+    </div>
+  </div>
+</div>
+  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="pontos.js?v=207"></script>
+<script src="pontos.js?v=210"></script>
 
 </body>
 </html>
