@@ -173,7 +173,7 @@ function obterCidadePonto(ponto) {
 }
 
 function obterEnderecoPonto(ponto) {
-  return ponto?.endereco || ponto?.endereco_completo || ponto?.endereÃ§o || ponto?.local || "";
+  return ponto?.endereco || ponto?.endereco_completo || ponto?.["endereço"] || ponto?.local || "";
 }
 
 function obterUltimoPingPonto(ponto) {
