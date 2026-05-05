@@ -43,12 +43,12 @@ button {
 .topo-fixo.novo-topo {
   position: relative;
   display: grid;
-  grid-template-columns: 180px 1fr 180px;
+  grid-template-columns: 190px minmax(0, 1fr) 190px;
   align-items: center;
   max-width: 1120px;
   min-height: 132px;
   margin: 0 auto 28px;
-  padding: 24px 18px 22px;
+  padding: 24px 0 22px;
 }
 
 .topo-esquerda {
@@ -90,13 +90,14 @@ button {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 12px;
+  justify-self: end;
   min-width: 0;
+  min-height: 56px;
 }
 
 .logo-topo-img {
-  width: 150px;
-  max-width: 150px;
+  width: 190px;
+  max-width: 190px;
   height: auto;
   display: block;
   object-fit: contain;
@@ -125,17 +126,22 @@ button {
 }
 
 .status-topo {
-  min-width: 120px;
-  max-width: 180px;
-  background: #3d9147;
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 9999;
+  min-width: 126px;
+  max-width: min(280px, calc(100vw - 36px));
+  background: rgba(61, 145, 71, 0.96);
   color: #ffffff;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-size: 12px;
+  padding: 11px 16px;
+  border-radius: 12px;
+  font-size: 13px;
   font-weight: 800;
   text-align: center;
-  box-shadow: 0 10px 24px rgba(61, 145, 71, 0.24);
+  box-shadow: 0 14px 32px rgba(3, 17, 11, 0.32);
   transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
 .status-topo.saindo {
@@ -151,18 +157,23 @@ button {
 
 .barra-acoes {
   display: grid;
-  grid-template-columns: minmax(260px, 1fr) auto auto;
-  align-items: end;
-  gap: 14px;
-  margin-bottom: 18px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  grid-template-columns: minmax(320px, 1fr) auto;
+  grid-template-areas:
+    "busca acoes"
+    "busca filtros";
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 20px;
+  padding: 18px;
+  background: rgba(238, 250, 241, 0.12);
+  border: 1px solid rgba(207, 232, 212, 0.16);
   border-radius: 18px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(14px);
 }
 
 .busca-area {
+  grid-area: busca;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -179,14 +190,16 @@ button {
 
 #buscaCliente {
   width: 100%;
-  height: 46px;
-  border: 1px solid rgba(207, 232, 212, 0.28);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.92);
+  height: 54px;
+  border: 1px solid rgba(207, 232, 212, 0.72);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
   color: #122018;
-  padding: 0 14px;
+  padding: 0 18px;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 12px 28px rgba(3, 17, 11, 0.12);
 }
 
 #buscaCliente:focus {
@@ -194,20 +207,30 @@ button {
   box-shadow: 0 0 0 3px rgba(47, 172, 88, 0.18);
 }
 
-.filtros-clientes,
-.acoes-direita {
+.filtros-clientes {
+  grid-area: filtros;
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 8px;
+  flex-wrap: wrap;
+}
+
+.acoes-direita {
+  grid-area: acoes;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .filtro-btn,
 .btn-secundario,
 .btn-principal {
-  min-height: 42px;
+  min-height: 44px;
   border-radius: 12px;
-  padding: 0 14px;
+  padding: 0 18px;
   font-size: 0.82rem;
   font-weight: 900;
   border: 1px solid #cfe8d4;
@@ -218,6 +241,7 @@ button {
 .btn-secundario {
   background: #ffffff;
   color: var(--green-text);
+  box-shadow: 0 10px 22px rgba(3, 17, 11, 0.1);
 }
 
 .filtro-btn.ativo,
@@ -235,6 +259,20 @@ button {
   filter: brightness(1.04);
 }
 
+.filtros-clientes {
+  padding: 5px;
+  border: 1px solid rgba(207, 232, 212, 0.16);
+  border-radius: 14px;
+  background: rgba(3, 17, 11, 0.16);
+}
+
+.filtros-clientes .filtro-btn {
+  min-height: 38px;
+  padding: 0 16px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
 .clientes-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -243,11 +281,11 @@ button {
 }
 
 .cliente-card {
-  min-height: 190px;
+  min-height: 178px;
   background: var(--card-light);
   border: 1px solid var(--card-light-border);
-  border-radius: 14px;
-  padding: 14px;
+  border-radius: 16px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -342,7 +380,7 @@ button {
 .cliente-card h3 {
   margin-top: 6px;
   color: var(--card-text);
-  font-size: 19px;
+  font-size: 20px;
   line-height: 1.15;
   font-weight: 900;
   word-break: break-word;
@@ -399,6 +437,13 @@ button {
     grid-template-columns: 1fr;
   }
 
+  .barra-acoes {
+    grid-template-areas:
+      "busca"
+      "filtros"
+      "acoes";
+  }
+
   .topo-esquerda,
   .topo-centro,
   .topo-direita {
@@ -413,6 +458,7 @@ button {
   .filtros-clientes,
   .acoes-direita {
     width: 100%;
+    justify-content: stretch;
   }
 
   .filtro-btn,
@@ -458,6 +504,8 @@ button {
   .menu-topo-btn,
   .status-topo {
     width: 100%;
-    max-width: none;
+    max-width: calc(100vw - 28px);
+    right: 14px;
+    bottom: 14px;
   }
 }
