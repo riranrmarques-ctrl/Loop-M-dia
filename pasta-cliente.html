@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>Loop Midia | Pasta do Cliente</title>
+  <title>Duna Branding | Pasta do Cliente</title>
   <style>
     * {
       margin: 0;
@@ -614,6 +614,13 @@
       font-weight: 900;
       line-height: 1.35;
     }
+
+    .agenda-resumo-claro {
+      background: #ffffff;
+      border: 1px solid #dcebdd;
+      color: #4a5f52;
+      font-weight: 800;
+    }
     
     .ajuda-upload,
     .status-upload {
@@ -918,7 +925,7 @@
       </div>
 
       <div class="topo-direita">
-        <img src="logo.png" class="logo-topo-img" alt="Loop Player">
+        <img src="loop-player-logo.jpeg" class="logo-topo-img" alt="Loop Player">
       </div>
     </header>
 
@@ -1036,16 +1043,11 @@
                       </button>
                     </div>
 
-                  <div class="agenda-bloco">
-                    <label for="agendamentoTipo">Repetição</label>
-                    <select id="agendamentoTipo">
-                      <option value="sempre">Sempre dentro do período</option>
-                      <option value="dias_semana">Dias da semana</option>
-                      <option value="dia_mes">Dia do mês</option>
-                    </select>
+                  <div class="agenda-resumo agenda-resumo-claro">
+                    Combine dias da semana, dia do mês e horário. O que ficar vazio não entra no filtro.
                   </div>
 
-                  <div id="agendaDiasBloco" class="agenda-bloco">
+                  <div class="agenda-bloco">
                     <div class="agenda-bloco-titulo">
                       Dias da semana
                       <span class="agenda-chip">opcional</span>
@@ -1062,7 +1064,7 @@
                     </div>
                   </div>
 
-                  <div id="agendaDiaMesBloco" class="agenda-bloco">
+                  <div class="agenda-bloco">
                     <div class="agenda-bloco-titulo">
                       Todo mês
                       <span class="agenda-chip">dia fixo</span>
@@ -1138,6 +1140,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="pasta-cliente.js?v=5"></script>
+  <script src="pasta-cliente.js?v=6"></script>
 </body>
 </html>
