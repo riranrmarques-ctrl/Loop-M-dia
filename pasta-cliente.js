@@ -1314,20 +1314,60 @@ function limparSelecaoAgendamento(seletor) {
   });
 }
 
-function atualizarConcordanciaAgendamento(origem = "") {
-  if (origem === "semana" && obterDiasAgendamentoSelecionados().length) {
-    limparSelecaoAgendamento('input[name="agendamentoMeses"], input[name="agendamentoDiasMes"]');
+function obterDataLocalInput(campo) {
+  const valor = String(campo?.value || "").trim();
+  if (!valor) return null;
+
+  const partes = valor.split("-").map(Number);
+  if (partes.length !== 3 || partes.some((parte) => !Number.isFinite(parte))) return null;
+
+  return new Date(partes[0], partes[1] - 1, partes[2], 12, 0, 0, 0);
+}
+
+function obterMesesPeriodoMaterial() {
+  const inicio = obterDataLocalInput(inputDataPostagem);
+  const fim = obterDataLocalInput(inputVencimento);
+  if (!inicio || !fim || inicio > fim) return [];
+
+  const meses = [];
+  const cursor = new Date(inicio.getFullYear(), inicio.getMonth(), 1, 12, 0, 0, 0);
+  const limite = new Date(fim.getFullYear(), fim.getMonth(), 1, 12, 0, 0, 0);
+
+  while (cursor <= limite && meses.length < 12) {
+    const mes = String(cursor.getMonth() + 1);
+    if (!meses.includes(mes)) meses.push(mes);
+    cursor.setMonth(cursor.getMonth() + 1);
   }
 
-  if (origem === "calendario" && (obterMesesAgendamentoSelecionados().length || obterDiasMesAgendamentoSelecionados().length)) {
+  return meses;
+}
+
+function aplicarMesesDoPeriodoSeVazio() {
+  const mesesAtuais = obterMesesAgendamentoSelecionados();
+  if (agendamentoAtivo || mesesAtuais.length) return;
+
+  const mesesPeriodo = obterMesesPeriodoMaterial();
+  if (!mesesPeriodo.length) return;
+
+  document.querySelectorAll('input[name="agendamentoMeses"]').forEach((input) => {
+    input.checked = mesesPeriodo.includes(String(input.value || ""));
+  });
+}
+
+function atualizarConcordanciaAgendamento(origem = "") {
+  if (origem === "semana" && obterDiasAgendamentoSelecionados().length) {
+    limparSelecaoAgendamento('input[name="agendamentoDiasMes"]');
+  }
+
+  if (origem === "calendario" && obterDiasMesAgendamentoSelecionados().length) {
     limparSelecaoAgendamento('input[name="agendamentoDias"]');
   }
 
   const temSemana = obterDiasAgendamentoSelecionados().length > 0;
-  const temCalendario = obterMesesAgendamentoSelecionados().length > 0 || obterDiasMesAgendamentoSelecionados().length > 0;
+  const temDiasMes = obterDiasMesAgendamentoSelecionados().length > 0;
 
   if (agendaMesesBloco) {
-    agendaMesesBloco.hidden = temSemana;
+    agendaMesesBloco.hidden = false;
   }
 
   if (agendaCalendarioBloco) {
@@ -1335,7 +1375,7 @@ function atualizarConcordanciaAgendamento(origem = "") {
   }
 
   if (agendaSemanaBloco) {
-    agendaSemanaBloco.hidden = temCalendario;
+    agendaSemanaBloco.hidden = temDiasMes;
   }
 
   atualizarResumoAgendamento();
@@ -1664,7 +1704,27 @@ if (listaPontos) {
 if (inputNome) inputNome.addEventListener("input", () => { ativarBotaoSalvar(); gerarContratoCliente(); });
 if (inputEmail) inputEmail.addEventListener("input", () => { ativarBotSalvarContrato(); });
 if (inputVencimento) inputVencimento.addEventListener("input", () => { ativarBotaoSalvar(); gerarContratoCliente(); });
-if (inputDataPostagem) inputDataPostagem.addEventListener("change", () => { ativarBotaoSalvar(); gerarContratoCliente(); });
+if (inputDataPostagem) {
+  inputDataPostagem.addEventListener("change", () => {
+    if (!agendamentoAtivo) {
+      limparSelecaoAgendamento('input[name="agendamentoMeses"]');
+      aplicarMesesDoPeriodoSeVazio();
+      atualizarConcordanciaAgendamento();
+    }
+    ativarBotaoSalvar();
+    gerarContratoCliente();
+  });
+}
+
+if (inputVencimento) {
+  inputVencimento.addEventListener("change", () => {
+    if (!agendamentoAtivo) {
+      limparSelecaoAgendamento('input[name="agendamentoMeses"]');
+      aplicarMesesDoPeriodoSeVazio();
+      atualizarConcordanciaAgendamento();
+    }
+  });
+}
 
 function ativarBotSalvarContrato() {
   ativarBotaoSalvar();
@@ -1731,7 +1791,8 @@ if (btnBaixarContrato) {
 
 if (btnFiltroAgendamento && agendaAvancada) {
   btnFiltroAgendamento.addEventListener("click", () => {
-    atualizarResumoAgendamento();
+    aplicarMesesDoPeriodoSeVazio();
+    atualizarConcordanciaAgendamento();
     agendaAvancada.hidden = false;
     btnFiltroAgendamento.setAttribute("aria-expanded", "true");
   });
@@ -1752,6 +1813,7 @@ function limparFiltroAgendamento() {
   document.querySelectorAll('input[name="agendamentoMeses"], input[name="agendamentoDias"], input[name="agendamentoDiasMes"]').forEach((input) => {
     input.checked = false;
   });
+  aplicarMesesDoPeriodoSeVazio();
   atualizarConcordanciaAgendamento();
   if (btnFiltroAgendamento) {
     btnFiltroAgendamento.classList.remove("ativo");
