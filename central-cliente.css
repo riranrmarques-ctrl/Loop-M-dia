@@ -162,13 +162,13 @@ button {
 
 .barra-acoes {
   display: grid;
-  grid-template-columns: minmax(360px, 1fr) auto auto;
+  grid-template-columns: minmax(360px, 1fr) 190px auto;
   grid-template-areas:
     "busca filtros acoes";
-  align-items: center;
-  gap: 14px 18px;
+  align-items: end;
+  gap: 12px;
   margin-bottom: 24px;
-  padding: 18px;
+  padding: 16px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.11), rgba(238, 250, 241, 0.08)),
     rgba(238, 250, 241, 0.1);
@@ -182,7 +182,7 @@ button {
   grid-area: busca;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
   min-width: 0;
 }
 
@@ -196,9 +196,9 @@ button {
 
 #buscaCliente {
   width: 100%;
-  height: 58px;
+  height: 52px;
   border: 1px solid rgba(207, 232, 212, 0.72);
-  border-radius: 16px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.96);
   color: #122018;
   padding: 0 20px;
@@ -219,8 +219,8 @@ button {
   flex-direction: column;
   align-items: stretch;
   justify-content: flex-end;
-  gap: 8px;
-  min-width: 180px;
+  gap: 7px;
+  min-width: 0;
 }
 
 .filtros-clientes label {
@@ -233,9 +233,9 @@ button {
 
 #filtroClientes {
   width: 100%;
-  height: 58px;
+  height: 52px;
   border: 1px solid rgba(207, 232, 212, 0.72);
-  border-radius: 16px;
+  border-radius: 14px;
   background: #ffffff;
   color: var(--green-text);
   padding: 0 42px 0 16px;
@@ -249,7 +249,7 @@ button {
 .acoes-direita {
   grid-area: acoes;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-end;
   gap: 10px;
   flex-wrap: wrap;
@@ -257,9 +257,9 @@ button {
 
 .btn-secundario,
 .btn-principal {
-  min-height: 46px;
+  min-height: 52px;
   border-radius: 14px;
-  padding: 0 20px;
+  padding: 0 22px;
   font-size: 0.82rem;
   font-weight: 900;
   border: 1px solid #cfe8d4;
