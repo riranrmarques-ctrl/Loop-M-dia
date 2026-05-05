@@ -1702,7 +1702,7 @@ async function excluirClienteAtual() {
   if (!codigoClienteAtual) return;
 
   const confirmar = window.confirm(
-    `Tem certeza que deseja apagar o cliente ${codigoClienteAtual}? Essa aÃ§Ã£o tambÃ©m remove os vÃ­nculos e arquivos da playlist deste cliente.`
+    `Tem certeza que deseja apagar?.`
   );
 
   if (!confirmar) return;
