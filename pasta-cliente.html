@@ -464,7 +464,7 @@
     }
 
     .agenda-card {
-      width: min(100%, 620px);
+      width: min(100%, 760px);
       max-height: min(86vh, 720px);
       overflow-y: auto;
       display: flex;
@@ -550,13 +550,28 @@
       white-space: nowrap;
     }
 
-    .agenda-dias {
+    .agenda-meses,
+    .agenda-dias,
+    .agenda-calendario {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
-    .agenda-dias label {
+    .agenda-meses {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .agenda-dias {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .agenda-calendario {
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+
+    .agenda-meses label,
+    .agenda-dias label,
+    .agenda-calendario label {
       min-height: 44px;
       display: flex;
       align-items: center;
@@ -572,18 +587,29 @@
       transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
     }
 
-    .agenda-dias label:hover {
+    .agenda-calendario label {
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 6px;
+    }
+
+    .agenda-meses label:hover,
+    .agenda-dias label:hover,
+    .agenda-calendario label:hover {
       transform: translateY(-1px);
       border-color: rgba(47, 172, 88, 0.48);
       box-shadow: 0 8px 18px rgba(47, 172, 88, 0.1);
     }
 
-    .agenda-dias label:has(input:checked) {
+    .agenda-meses label:has(input:checked),
+    .agenda-dias label:has(input:checked),
+    .agenda-calendario label:has(input:checked) {
       background: var(--primary);
       border-color: transparent;
       color: #ffffff;
     }
 
+    .agenda-meses input,
     .agenda-dias input {
       width: 15px;
       height: 15px;
@@ -591,6 +617,13 @@
       flex-shrink: 0;
     }
 
+    .agenda-calendario input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .agenda-meses label:has(input:checked) input,
     .agenda-dias label:has(input:checked) input {
       accent-color: #ffffff;
     }
@@ -1044,7 +1077,29 @@
                     </div>
 
                   <div class="agenda-resumo agenda-resumo-claro">
-                    Combine dias da semana, dia do mês e horário. O que ficar vazio não entra no filtro.
+                    Selecione meses, dias do mês, dias da semana e horários. O que ficar vazio não entra no filtro.
+                  </div>
+
+                  <div class="agenda-bloco">
+                    <div class="agenda-bloco-titulo">
+                      Meses
+                      <span class="agenda-chip">opcional</span>
+                    </div>
+
+                    <div class="agenda-meses">
+                      <label><input type="checkbox" name="agendamentoMeses" value="1"> Jan</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="2"> Fev</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="3"> Mar</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="4"> Abr</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="5"> Mai</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="6"> Jun</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="7"> Jul</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="8"> Ago</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="9"> Set</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="10"> Out</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="11"> Nov</label>
+                      <label><input type="checkbox" name="agendamentoMeses" value="12"> Dez</label>
+                    </div>
                   </div>
 
                   <div class="agenda-bloco">
@@ -1066,13 +1121,42 @@
 
                   <div class="agenda-bloco">
                     <div class="agenda-bloco-titulo">
-                      Todo mês
-                      <span class="agenda-chip">dia fixo</span>
+                      Dias do mês
+                      <span class="agenda-chip">calendário</span>
                     </div>
 
-                    <div class="campo campo-compacto">
-                      <label for="agendamentoDiaMes">Dia do mês</label>
-                      <input id="agendamentoDiaMes" type="number" min="1" max="31" placeholder="1">
+                    <div class="agenda-calendario">
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="1">1</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="2">2</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="3">3</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="4">4</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="5">5</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="6">6</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="7">7</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="8">8</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="9">9</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="10">10</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="11">11</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="12">12</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="13">13</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="14">14</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="15">15</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="16">16</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="17">17</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="18">18</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="19">19</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="20">20</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="21">21</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="22">22</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="23">23</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="24">24</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="25">25</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="26">26</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="27">27</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="28">28</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="29">29</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="30">30</label>
+                      <label><input type="checkbox" name="agendamentoDiasMes" value="31">31</label>
                     </div>
                   </div>
 
@@ -1140,6 +1224,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="pasta-cliente.js?v=6"></script>
+  <script src="pasta-cliente.js?v=7"></script>
 </body>
 </html>
