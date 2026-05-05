@@ -53,6 +53,9 @@ const btnAplicarFiltroAgendamento = document.getElementById("btnAplicarFiltroAge
 const btnLimparFiltroAgendamento = document.getElementById("btnLimparFiltroAgendamento");
 const agendaAvancada = document.getElementById("agendaAvancada");
 const agendaResumo = document.getElementById("agendaResumo");
+const agendaMesesBloco = document.getElementById("agendaMesesBloco");
+const agendaSemanaBloco = document.getElementById("agendaSemanaBloco");
+const agendaCalendarioBloco = document.getElementById("agendaCalendarioBloco");
 const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
 const agendamentoHoraFim = document.getElementById("agendamentoHoraFim");
 
@@ -1305,6 +1308,39 @@ function obterDiasMesAgendamentoSelecionados() {
     .filter(Boolean);
 }
 
+function limparSelecaoAgendamento(seletor) {
+  document.querySelectorAll(seletor).forEach((input) => {
+    input.checked = false;
+  });
+}
+
+function atualizarConcordanciaAgendamento(origem = "") {
+  if (origem === "semana" && obterDiasAgendamentoSelecionados().length) {
+    limparSelecaoAgendamento('input[name="agendamentoMeses"], input[name="agendamentoDiasMes"]');
+  }
+
+  if (origem === "calendario" && (obterMesesAgendamentoSelecionados().length || obterDiasMesAgendamentoSelecionados().length)) {
+    limparSelecaoAgendamento('input[name="agendamentoDias"]');
+  }
+
+  const temSemana = obterDiasAgendamentoSelecionados().length > 0;
+  const temCalendario = obterMesesAgendamentoSelecionados().length > 0 || obterDiasMesAgendamentoSelecionados().length > 0;
+
+  if (agendaMesesBloco) {
+    agendaMesesBloco.hidden = temSemana;
+  }
+
+  if (agendaCalendarioBloco) {
+    agendaCalendarioBloco.hidden = temSemana;
+  }
+
+  if (agendaSemanaBloco) {
+    agendaSemanaBloco.hidden = temCalendario;
+  }
+
+  atualizarResumoAgendamento();
+}
+
 function obterNomeDiaSemana(valor) {
   const nomes = {
     0: "domingo",
@@ -1716,7 +1752,7 @@ function limparFiltroAgendamento() {
   document.querySelectorAll('input[name="agendamentoMeses"], input[name="agendamentoDias"], input[name="agendamentoDiasMes"]').forEach((input) => {
     input.checked = false;
   });
-  atualizarResumoAgendamento();
+  atualizarConcordanciaAgendamento();
   if (btnFiltroAgendamento) {
     btnFiltroAgendamento.classList.remove("ativo");
   }
@@ -1776,10 +1812,13 @@ if (agendaAvancada) {
 });
 
 document.querySelectorAll('input[name="agendamentoMeses"], input[name="agendamentoDias"], input[name="agendamentoDiasMes"]').forEach((input) => {
-  input.addEventListener("change", atualizarResumoAgendamento);
+  input.addEventListener("change", () => {
+    const origem = input.name === "agendamentoDias" ? "semana" : "calendario";
+    atualizarConcordanciaAgendamento(origem);
+  });
 });
 
-atualizarResumoAgendamento();
+atualizarConcordanciaAgendamento();
 
 async function iniciar() {
   try {
