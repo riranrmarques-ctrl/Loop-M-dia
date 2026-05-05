@@ -1,909 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
-
-  <title>Loop Midia | Pasta do Cliente</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    :root {
-      --bg-1: #062014;
-      --bg-2: #03110b;
-      --line: rgba(255, 255, 255, 0.08);
-      --text: #ffffff;
-      --muted: rgba(226, 234, 255, 0.78);
-      --primary: #2fac58;
-      --primary-hover: #63c873;
-      --danger: #dc2626;
-      --danger-hover: #ef4444;
-      --ice-panel: #fbfffc;
-      --ice-bg: #f6faf7;
-      --ice-line: #dcebdd;
-      --green-text: #176c36;
-      --card-text: #122018;
-      --card-muted: #4a5f52;
-    }
-    
-    body {
-      min-height: 100vh;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top center, rgba(74, 222, 128, 0.18), transparent 34%),
-        linear-gradient(180deg, #0b2f1a 0%, #061d11 58%, #03100a 100%);
-      padding: 28px 18px 70px;
-    }
-    
-    button,
-    input,
-    textarea {
-      font: inherit;
-    }
-    
-    button {
-      cursor: pointer;
-    }
-    
-    .topo-fixo.novo-topo {
-      position: relative;
-      display: grid;
-      grid-template-columns: 190px minmax(0, 1fr) 190px;
-      align-items: center;
-      max-width: 1120px;
-      min-height: 132px;
-      margin: 0 auto 28px;
-      padding: 24px 0 22px;
-    }
-    
-    .topo-esquerda {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      min-width: 120px;
-      min-height: 56px;
-    }
-    
-    .topo-centro {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-width: 0;
-    }
-    
-    .topo-centro h1 {
-      font-size: clamp(1.7rem, 2.7vw, 2.45rem);
-      line-height: 1;
-      letter-spacing: 0.075em;
-      white-space: nowrap;
-      color: #ffffff;
-      text-shadow: 0 12px 34px rgba(0, 0, 0, 0.35);
-      margin-bottom: 2px;
-    }
-    
-    .topo-centro p {
-      margin-top: 2px;
-      font-size: clamp(1.05rem, 1.65vw, 1.38rem);
-      color: var(--muted);
-      font-weight: 300;
-      letter-spacing: 0.01em;
-    }
-    
-    .topo-direita {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      justify-self: end;
-      min-height: 56px;
-    }
-    
-    .logo-topo-img {
-      width: 190px;
-      max-width: 190px;
-      height: auto;
-      display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.26));
-    }
-    
-    .menu-topo-btn {
-      min-width: 120px;
-      height: 48px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffff;
-      color: var(--green-text);
-      border-radius: 12px;
-      padding: 12px 18px;
-      font-weight: 900;
-      border: 1px solid #cfe8d4;
-      box-shadow: 0 12px 26px rgba(3, 17, 11, 0.16);
-      transition: 0.18s ease;
-    }
-    
-    .menu-topo-btn:hover {
-      background: #eefaf1;
-      transform: translateY(-1px);
-    }
-    
-    .painel-shell {
-      width: min(100%, 1120px);
-      max-width: 1120px;
-      margin: 0 auto;
-    }
-    
-    .acoes-topo {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 14px;
-      flex-wrap: wrap;
-    }
-    
-    .botao {
-      min-height: 44px;
-      border: none;
-      border-radius: 12px;
-      padding: 0 18px;
-      font-size: 0.85rem;
-      font-weight: 900;
-      color: #ffffff;
-      transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
-    }
-    
-    .botao:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.04);
-    }
-    
-    .botao:disabled,
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.58;
-      transform: none !important;
-      filter: grayscale(0.2) brightness(0.82);
-      box-shadow: none !important;
-    }
-    
-    .botao-salvar {
-      background: var(--primary);
-      box-shadow: 0 12px 26px rgba(47, 172, 88, 0.24);
-    }
-    
-    .botao-salvar:hover {
-      background: var(--primary-hover);
-    }
-    
-    .botao-secundario {
-      background: #ffffff;
-      color: var(--green-text);
-      border: 1px solid #cfe8d4;
-      box-shadow: 0 10px 22px rgba(3, 17, 11, 0.1);
-    }
-    
-    .botao-excluir-cliente {
-      background: var(--danger);
-      box-shadow: 0 12px 26px rgba(220, 38, 38, 0.2);
-    }
-    
-    .botao-excluir-cliente:hover {
-      background: var(--danger-hover);
-    }
-    
-    .botao-cheio {
-      width: 100%;
-    }
-    
-    .botao.carregando::after,
-    button.carregando::after {
-      content: "";
-      width: 15px;
-      height: 15px;
-      margin-left: 10px;
-      display: inline-block;
-      vertical-align: -2px;
-      border-radius: 999px;
-      border: 2px solid rgba(255, 255, 255, 0.45);
-      border-top-color: #fff;
-      animation: girarBotao 0.75s linear infinite;
-    }
-    
-    @keyframes girarBotao {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-    
-    .mensagem {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      z-index: 9999;
-      min-width: 126px;
-      max-width: min(320px, calc(100vw - 36px));
-      min-height: 0;
-      padding: 11px 16px;
-      border-radius: 12px;
-      background: rgba(61, 145, 71, 0.96);
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 800;
-      text-align: center;
-      box-shadow: 0 14px 32px rgba(3, 17, 11, 0.32);
-      pointer-events: none;
-    }
-    
-    .mensagem:empty {
-      display: none;
-    }
-    
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 380px;
-      gap: 20px;
-    }
-    
-    .grid-historicos {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-top: 20px;
-    }
-    
-    .box {
-      background: linear-gradient(180deg, #fbfffc 0%, #f4f9f5 100%);
-      color: var(--card-text);
-      border: 1px solid var(--ice-line);
-      border-radius: 22px;
-      padding: 20px;
-      box-shadow: 0 24px 70px rgba(2, 16, 9, 0.2);
-    }
-    
-    .box h2 {
-      font-size: 1.2rem;
-      margin: 0 0 16px;
-      color: #122018;
-    }
-    
-    .box-topo {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-    
-    .meta-cliente {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-    
-    .meta-badge,
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      border: 1px solid #cfe8d4;
-      border-radius: 999px;
-      background: #ffffff;
-      padding: 8px 12px;
-      color: #4a5f52;
-      font-size: 0.82rem;
-      font-weight: 900;
-    }
-    
-    .meta-badge span {
-      margin-left: 6px;
-      color: #122018;
-    }
-    
-    .campo {
-      margin-bottom: 16px;
-    }
-    
-    .campo label {
-      display: block;
-      margin-bottom: 8px;
-      color: #176c36;
-      font-size: 0.82rem;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    
-    .campo input,
-    .campo textarea,
-    .campo select {
-      width: 100%;
-      min-height: 46px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid #cfe8d4;
-      background: #ffffff;
-      color: #122018;
-      outline: none;
-      font-size: 1rem;
-      font-weight: 700;
-    }
-    
-    .campo input:focus,
-    .campo textarea:focus,
-    .campo select:focus {
-      border-color: rgba(99, 200, 115, 0.72);
-      box-shadow: 0 0 0 3px rgba(47, 172, 88, 0.18);
-    }
-
-    .campo-compacto {
-      margin-bottom: 0;
-    }
-    
-    .linha-dupla {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-    
-    .upload-box,
-    .pdf-box,
-    .pontos-grid {
-      background: rgba(255, 255, 255, 0.78);
-      border: 1px solid #dcebdd;
-      border-radius: 16px;
-      padding: 16px;
-    }
-    
-    .upload-box strong,
-    .pdf-box strong {
-      display: block;
-      color: #122018;
-      font-size: 1rem;
-      font-weight: 900;
-    }
-    
-    .box-mini-topo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 12px;
-    }
-    
-    #contratoStatus {
-      font-size: 0.82rem;
-      color: #176c36;
-      font-weight: 900;
-    }
-    
-    .contrato-preview {
-      color: #33443a;
-      font-size: 0.9rem;
-      line-height: 1.55;
-      max-height: 360px;
-      min-height: 280px;
-      overflow: auto;
-      padding: 12px;
-      border: 1px solid #dcebdd;
-      border-radius: 12px;
-      background: #ffffff;
-      margin-bottom: 12px;
-    }
-    
-    .contrato-preview strong,
-    .contrato-preview div {
-      color: inherit !important;
-    }
-    
-    .upload-acoes {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    
-    .upload-acoes input[type="file"] {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid #cfe8d4;
-      background: #ffffff;
-      color: #122018;
-      font-size: 0.95rem;
-    }
-
-    .botao-filtro {
-      min-height: 34px;
-      border: 1px solid #cfe8d4;
-      border-radius: 999px;
-      padding: 0 14px;
-      background: #ffffff;
-      color: var(--green-text);
-      font-size: 0.78rem;
-      font-weight: 900;
-      box-shadow: 0 8px 18px rgba(3, 17, 11, 0.08);
-      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
-    }
-
-    .botao-filtro:hover,
-    .botao-filtro.ativo {
-      background: var(--primary);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-
-    .agenda-modal[hidden] {
-      display: none;
-    }
-
-    .agenda-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 9998;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: rgba(1, 7, 18, 0.64);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-
-    .agenda-card {
-      width: min(100%, 560px);
-      max-height: min(86vh, 720px);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      padding: 22px;
-      border: 1px solid #dcebdd;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fbfffc 0%, #eefaf1 100%);
-      color: #122018;
-      box-shadow: 0 28px 80px rgba(2, 16, 9, 0.38);
-    }
-
-    .agenda-card-topo {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .agenda-card-topo strong {
-      color: #122018;
-      font-size: 1.18rem;
-      font-weight: 900;
-    }
-
-    .agenda-fechar {
-      width: 38px;
-      height: 38px;
-      border: 1px solid #cfe8d4;
-      border-radius: 999px;
-      background: #ffffff;
-      color: var(--green-text);
-      font-size: 1.2rem;
-      font-weight: 900;
-    }
-
-    .agenda-dias {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .agenda-dias label {
-      min-height: 38px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border: 1px solid #cfe8d4;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #176c36;
-      font-size: 0.82rem;
-      font-weight: 900;
-      cursor: pointer;
-    }
-
-    .agenda-dias input {
-      width: 15px;
-      height: 15px;
-      accent-color: var(--primary);
-      flex-shrink: 0;
-    }
-
-    .agenda-acoes {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 4px;
-    }
-    
-    .ajuda-upload,
-    .status-upload {
-      min-height: 20px;
-      font-size: 0.92rem;
-      color: #4a5f52;
-    }
-    
-    .pontos-grid {
-      max-height: 430px;
-      overflow-y: auto;
-    }
-    
-    .pontos-grupos {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    
-    .pontos-grupo {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    
-    .pontos-grupo-titulo {
-      color: var(--green-text);
-      font-size: 0.82rem;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    
-    .grid-pontos-grupo {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8px;
-    }
-    
-    .ponto-selecao {
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 12px;
-      border: 1px solid #cfe8d4;
-      border-radius: 12px;
-      background: #ffffff;
-      color: #122018;
-      font-size: 0.88rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-    }
-    
-    .ponto-selecao:hover {
-      transform: translateY(-1px);
-      border-color: rgba(47, 172, 88, 0.42);
-      box-shadow: 0 10px 22px rgba(47, 172, 88, 0.12);
-    }
-    
-    .ponto-selecao input {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      accent-color: var(--primary);
-    }
-    
-    .ponto-selecao span {
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    
-    .ponto-selecao.selecionado {
-      background: var(--primary);
-      border-color: transparent;
-      color: #ffffff;
-    }
-    
-    .ponto-selecao.indisponivel {
-      background: rgba(220, 38, 38, 0.1);
-      border-color: rgba(220, 38, 38, 0.22);
-      color: #8f1d1d;
-      cursor: not-allowed;
-      opacity: 0.78;
-    }
-    
-    .ponto-selecao.indisponivel:hover {
-      transform: none;
-      box-shadow: none;
-    }
-    
-    .historico-lista {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 120px;
-    }
-    
-    .historico-vazio,
-    .vazio {
-      color: #4a5f52;
-      background: rgba(238, 250, 241, 0.72);
-      border: 1px dashed rgba(12, 74, 40, 0.16);
-      border-radius: 14px;
-      padding: 16px;
-    }
-    
-    .historico-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px;
-      border: 1px solid var(--ice-line);
-      border-radius: 14px;
-      background: #ffffff;
-      color: #122018;
-      box-shadow: 0 10px 24px rgba(12, 74, 40, 0.06);
-    }
-    
-    .historico-card-info {
-      min-width: 0;
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-      gap: 6px;
-    }
-    
-    .historico-card-info strong {
-      color: #122018;
-      word-break: break-word;
-    }
-    
-    .historico-card-info span {
-      color: #4a5f52;
-      font-size: 0.88rem;
-      line-height: 1.35;
-    }
-    
-    .historico-card-info em {
-      width: fit-content;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-style: normal;
-      font-weight: 900;
-      text-transform: uppercase;
-    }
-    
-    .historico-card-info em.ok {
-      background: rgba(22, 163, 74, 0.14);
-      color: #15803d;
-    }
-    
-    .historico-card-info em.pendente {
-      background: rgba(245, 158, 11, 0.14);
-      color: #a16207;
-    }
-    
-    .historico-card-acoes {
-      display: flex;
-      flex-shrink: 0;
-      flex-wrap: wrap;
-      align-items: flex-start;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-    
-    .historico-card-acoes button,
-    .historico-card-acoes a {
-      min-height: 34px;
-      border: none;
-      border-radius: 10px;
-      padding: 0 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #eefaf1;
-      color: var(--green-text);
-      font-size: 0.78rem;
-      font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-      transition: transform 0.18s ease, filter 0.18s ease;
-    }
-    
-    .historico-card-acoes button:hover,
-    .historico-card-acoes a:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.03);
-    }
-    
-    .historico-card-acoes button:last-child {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
-    
-    @media (max-width: 980px) {
-      .topo-fixo.novo-topo,
-      .grid,
-      .grid-historicos,
-      .linha-dupla {
-        grid-template-columns: 1fr;
-      }
-    
-      .topo-esquerda,
-      .topo-centro,
-      .topo-direita {
-        justify-content: center;
-        text-align: center;
-      }
-    
-      .topo-centro h1 {
-        white-space: normal;
-      }
-    
-      .acoes-topo {
-        justify-content: stretch;
-      }
-    
-      .acoes-topo .botao {
-        flex: 1;
-      }
-    }
-    
-    @media (max-width: 700px) {
-      .grid-pontos-grupo {
-        grid-template-columns: 1fr !important;
-      }
-
-      .agenda-dias {
-        grid-template-columns: 1fr;
-      }
-    
-      .historico-card {
-        flex-direction: column;
-      }
-    
-      .historico-card-acoes {
-        width: 100%;
-        justify-content: stretch;
-      }
-    
-      .historico-card-acoes button,
-      .historico-card-acoes a {
-        flex: 1;
-      }
-    }
-    
-    @media (max-width: 560px) {
-      body {
-        padding: 18px 12px 70px;
-      }
-    
-      .topo-fixo.novo-topo {
-        padding: 16px 14px;
-        min-height: auto;
-      }
-    
-      .topo-centro h1 {
-        font-size: 1.75rem;
-      }
-    
-      .topo-centro p {
-        font-size: 14px;
-      }
-    
-      .logo-topo-img {
-        width: 160px;
-        max-width: 160px;
-      }
-    
-      .menu-topo-btn,
-      .botao {
-        width: 100%;
-      }
-    
-      .mensagem {
-        right: 14px;
-        bottom: 14px;
-        max-width: calc(100vw - 28px);
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <main id="conteudoPastaCliente">
-    <header class="topo-fixo novo-topo">
-      <div class="topo-esquerda">
-        <button id="botaoVoltar" class="menu-topo-btn" type="button">
-          ← Voltar
-        </button>
-      </div>
-
-      <div class="topo-centro">
-        <h1>Pasta do Cliente</h1>
-        <p>Edite dados, pontos, contratos e materiais</p>
-      </div>
-
-      <div class="topo-direita">
-        <img src="logo.png" class="logo-topo-img" alt="Loop Player">
-      </div>
-    </header>
-
-    <section class="painel-shell">
-      <div class="acoes-topo">
-        <button id="botaoExcluirCliente" class="botao botao-excluir-cliente" type="button">Apagar</button>
-        <button id="botaoSalvar" class="botao botao-salvar" type="button">Salvar</button>
-      </div>
-
-      <p id="mensagem" class="mensagem"></p>
-
-      <div class="grid">
-        <section class="box box-dados">
-          <div class="box-topo">
-            <h2>Dados do cliente</h2>
-
-            <div class="meta-cliente">
-              <div class="meta-badge">
-                Código:
-                <span id="codigo">-</span>
-              </div>
-
-              <div id="statusCliente" class="status-badge">Não ativo</div>
-            </div>
-          </div>
-
-          <div class="linha-dupla">
-            <div class="campo">
-              <label for="nome">Nome completo</label>
-              <input id="nome" type="text" placeholder="Nome completo do cliente" required>
-            </div>
-
-            <div class="campo">
-              <label for="telefone">Telefone</label>
-              <input id="telefone" type="text" placeholder="(XX) XXXXX-XXXX" maxlength="15" required>
-            </div>
-          </div>
-
-          <div class="linha-dupla">
-            <div class="campo">
-              <label for="email">Email</label>
-              <input id="email" type="email" placeholder="email@exemplo.com" required>
-            </div>
-
-            <div class="campo">
-              <label for="cpfCnpj">CPF / CNPJ</label>
-              <input id="cpfCnpj" type="text" placeholder="CPF ou CNPJ" required>
-            </div>
-          </div>
-
-          <div class="linha-dupla">
-            <div class="campo">
-              <label for="valorContratado">Valor contratado</label>
-              <input id="valorContratado" type="text" placeholder="R$ 0,00" inputmode="numeric">
-            </div>
-          </div>
-
           <div class="campo">
             <label>Pontos das telas</label>
             <div id="listaPontos" class="pontos-grid"></div>
           </div>
         </section>
-
         <aside class="box box-lateral">
           <div class="campo">
             <div class="pdf-box">
@@ -911,15 +10,12 @@
                 <strong>Contrato do cliente</strong>
                 <span id="contratoStatus">Carregando...</span>
               </div>
-
               <div id="contratoPreview" class="contrato-preview"></div>
-
               <button id="btnBaixarContrato" class="botao botao-salvar botao-cheio" type="button">
                 Enviar contrato
               </button>
             </div>
           </div>
-
           <div class="campo">
             <div class="upload-box">
               <div class="box-mini-topo">
@@ -928,22 +24,18 @@
                   Filtro
                 </button>
               </div>
-
               <div class="upload-acoes">
                 <input type="file" id="arquivoInput" accept=".mp4,.jpg,.jpeg,.png,.webp,.txt">
-
                 <div class="linha-dupla">
                   <div class="campo campo-compacto">
                     <label for="dataPostagem">Data de postagem</label>
                     <input type="date" id="dataPostagem">
                   </div>
-
                   <div class="campo campo-compacto">
                     <label for="vencimentoExibicao">Vencimento</label>
                     <input type="date" id="vencimentoExibicao">
                   </div>
                 </div>
-
                 <div id="agendaAvancada" class="agenda-modal" hidden>
                   <div class="agenda-card" role="dialog" aria-modal="true" aria-labelledby="tituloAgendaFiltro">
                     <div class="agenda-card-topo">
@@ -952,7 +44,6 @@
                         ×
                       </button>
                     </div>
-
                   <div class="campo campo-compacto">
                     <label for="agendamentoTipo">Repetição</label>
                     <select id="agendamentoTipo">
@@ -961,7 +52,6 @@
                       <option value="dia_mes">Dia do mês</option>
                     </select>
                   </div>
-
                   <div class="agenda-dias">
                     <label><input type="checkbox" name="agendamentoDias" value="1"> Segunda</label>
                     <label><input type="checkbox" name="agendamentoDias" value="2"> Terça</label>
@@ -971,26 +61,22 @@
                     <label><input type="checkbox" name="agendamentoDias" value="6"> Sábado</label>
                     <label><input type="checkbox" name="agendamentoDias" value="0"> Domingo</label>
                   </div>
-
                   <div class="linha-dupla">
                     <div class="campo campo-compacto">
                       <label for="agendamentoDiaMes">Dia do mês</label>
                       <input id="agendamentoDiaMes" type="number" min="1" max="31" placeholder="1">
                     </div>
                   </div>
-
                   <div class="linha-dupla">
                     <div class="campo campo-compacto">
                       <label for="agendamentoHoraInicio">Horário inicial</label>
                       <input id="agendamentoHoraInicio" type="time">
                     </div>
-
                     <div class="campo campo-compacto">
                       <label for="agendamentoHoraFim">Horário final</label>
                       <input id="agendamentoHoraFim" type="time">
                     </div>
                   </div>
-
                     <div class="agenda-acoes">
                       <button id="btnLimparFiltroAgendamento" class="botao botao-secundario" type="button">
                         Limpar filtro
@@ -1001,18 +87,15 @@
                     </div>
                   </div>
                 </div>
-
                 <button id="btnUploadCliente" class="botao botao-salvar botao-cheio" type="button">
                   Enviar
                 </button>
-
                 <div id="statusUpload" class="status-upload"></div>
               </div>
             </div>
           </div>
         </aside>
       </div>
-
       <div class="grid-historicos">
         <section class="box">
           <h2>Histórico de contrato</h2>
@@ -1020,7 +103,6 @@
             <div class="historico-vazio">Nenhum contrato gerado ainda.</div>
           </div>
         </section>
-
         <section class="box">
           <h2>Histórico de arquivo</h2>
           <div id="historicoArquivos" class="historico-lista">
@@ -1030,7 +112,6 @@
       </div>
     </section>
   </main>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="pasta-cliente.js?v=4"></script>
 </body>
