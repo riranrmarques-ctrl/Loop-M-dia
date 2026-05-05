@@ -1,5 +1,5 @@
-const SUPABASE_URL = "https://hhqqwjjdhzxqjuyazjwk.supabase.co";
-const SUPABASE_KEY = "sb_publishable_8yHAzibYZJbW9PfdrOumkg_R7u2HWly";
+const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
+const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
 
 const CACHE_CLIENTES_KEY = "central_clientes_cache_v4";
 const CACHE_CLIENTES_TTL = 30 * 60 * 1000;
