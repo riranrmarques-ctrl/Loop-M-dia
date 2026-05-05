@@ -21,6 +21,7 @@ const botaoNovoCliente = document.getElementById("botaoNovoCliente");
 const botaoAtualizar = document.getElementById("botaoAtualizar");
 const buscaCliente = document.getElementById("buscaCliente");
 const botoesFiltro = document.querySelectorAll("[data-filtro]");
+const filtroClientes = document.getElementById("filtroClientes");
 const botaoVoltarPainel = document.getElementById("botaoVoltarPainel");
 
 function verificarAcesso() {
@@ -43,6 +44,7 @@ function mostrarMensagem(texto, cor = "#ffffff") {
   mensagem.classList.remove("saindo");
   mensagem.textContent = texto || "";
   mensagem.style.color = cor;
+  mensagem.hidden = !texto;
 
   if (!texto) return;
 
@@ -52,6 +54,7 @@ function mostrarMensagem(texto, cor = "#ffffff") {
     timerLimparMensagem = setTimeout(() => {
       mensagem.textContent = "";
       mensagem.classList.remove("saindo");
+      mensagem.hidden = true;
     }, 300);
   }, 5000);
 }
@@ -155,6 +158,10 @@ function atualizarBotoesFiltro() {
   botoesFiltro.forEach((botao) => {
     botao.classList.toggle("ativo", botao.dataset.filtro === filtroAtual);
   });
+
+  if (filtroClientes) {
+    filtroClientes.value = filtroAtual;
+  }
 }
 
 function obterListaFiltrada() {
@@ -358,8 +365,16 @@ function renderizarClientes() {
         </div>
       </div>
 
-      <h3>${escaparHtml(cliente.nome_completo || "Novo Cliente")}</h3>
-      <p><strong>Telefone:</strong> ${escaparHtml(cliente.telefone || "-")}</p>
+      <div class="cliente-corpo">
+        <h3>${escaparHtml(cliente.nome_completo || "Novo Cliente")}</h3>
+        <p><strong>Telefone:</strong> ${escaparHtml(cliente.telefone || "-")}</p>
+        <p><strong>Email:</strong> ${escaparHtml(cliente.email || "-")}</p>
+      </div>
+
+      <div class="cliente-rodape">
+        <span>${personalizado ? "Arraste para ordenar" : "Abrir pasta"}</span>
+        <strong>â†’</strong>
+      </div>
     `;
 
     card.addEventListener("click", () => abrirCliente(cliente.codigo));
@@ -713,6 +728,14 @@ function iniciarPagina() {
       renderizarClientes();
     });
   });
+
+  if (filtroClientes) {
+    filtroClientes.addEventListener("change", () => {
+      filtroAtual = filtroClientes.value || "status";
+      sessionStorage.setItem(FILTRO_CLIENTES_KEY, filtroAtual);
+      renderizarClientes();
+    });
+  }
 
   atualizarBotoesFiltro();
   carregarClientes();
