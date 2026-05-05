@@ -1,6 +1,6 @@
 const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
-const BUCKET = "midias";
+const BUCKET = "pontos";
 
 const TABELA = "playlists";
 const TABELA_PONTOS = "pontos";
