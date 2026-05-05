@@ -7,7 +7,7 @@ if (!codigo) {
 const SUPABASE_URL = "https://hhqqwjjdhzxqjuyazjwk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_8yHAzibYZJbW9PfdrOumkg_R7u2HWly";
 
-const BUCKET = "pontos";
+const BUCKET = "midias";
 const TABELA_CLIENTES = "dadosclientes";
 const TABELA_VINCULOS = "playercliente";
 const TABELA_PLAYLISTS = "playlists";
@@ -252,6 +252,20 @@ function aplicarCampoDesativado(campo, desativado) {
   campo.disabled = desativado;
   campo.style.opacity = desativado ? "0.45" : "1";
   campo.style.cursor = desativado ? "not-allowed" : "";
+}
+
+function executarComTimeout(promessa, mensagemErro, tempoLimite = 12000) {
+  let timeoutId = null;
+
+  const timeout = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(mensagemErro || "A operaÃ§Ã£o demorou demais. Tente novamente."));
+    }, tempoLimite);
+  });
+
+  return Promise.race([promessa, timeout]).finally(() => {
+    if (timeoutId) clearTimeout(timeoutId);
+  });
 }
 
 function atualizarStatusClienteVisual(statusTexto) {
@@ -1191,10 +1205,13 @@ async function apagarVinculosCliente() {
   let ultimoErro = null;
 
   for (const [campo, valor] of tentativas) {
-    const { error } = await supabaseClient
-      .from(TABELA_VINCULOS)
-      .delete()
-      .eq(campo, valor);
+    const { error } = await executarComTimeout(
+      supabaseClient
+        .from(TABELA_VINCULOS)
+        .delete()
+        .eq(campo, valor),
+      "Tempo esgotado ao apagar vÃ­nculos do cliente."
+    );
 
     if (!error) return;
     ultimoErro = error;
@@ -1691,22 +1708,49 @@ async function excluirClienteAtual() {
   if (!confirmar) return;
 
   try {
-    mostrarMensagem("Apagando cliente...", "#9fd2ff");
-    await apagarVinculosCliente();
+    mostrarMensagem("Apagando vÃ­nculos do cliente...", "#9fd2ff");
 
-    const { error: erroPlaylists } = await supabaseClient
-      .from(TABELA_PLAYLISTS)
-      .delete()
-      .eq("codigo_cliente", codigoClienteAtual);
+    try {
+      await apagarVinculosCliente();
+    } catch (error) {
+      console.warn("NÃ£o foi possÃ­vel apagar vÃ­nculos antes do cliente:", error);
+    }
 
-    if (erroPlaylists) throw erroPlaylists;
+    mostrarMensagem("Apagando playlists do cliente...", "#9fd2ff");
 
-    const { error: erroCliente } = await supabaseClient
-      .from(TABELA_CLIENTES)
-      .delete()
-      .eq("codigo", codigoClienteAtual);
+    const { error: erroPlaylists } = await executarComTimeout(
+      supabaseClient
+        .from(TABELA_PLAYLISTS)
+        .delete()
+        .eq("codigo_cliente", codigoClienteAtual),
+      "Tempo esgotado ao apagar playlists do cliente."
+    );
+
+    if (erroPlaylists) {
+      console.warn("NÃ£o foi possÃ­vel apagar playlists antes do cliente:", erroPlaylists);
+    }
+
+    mostrarMensagem("Apagando pasta do cliente...", "#9fd2ff");
+
+    const { data: clienteApagado, error: erroCliente } = await executarComTimeout(
+      supabaseClient
+        .from(TABELA_CLIENTES)
+        .delete()
+        .eq("codigo", codigoClienteAtual)
+        .select("codigo"),
+      "Tempo esgotado ao apagar a pasta do cliente."
+    );
 
     if (erroCliente) throw erroCliente;
+    if (!clienteApagado || !clienteApagado.length) {
+      throw new Error("Nenhuma pasta foi apagada. Verifique se este cliente ainda existe ou se o Supabase bloqueou a exclusÃ£o.");
+    }
+
+    try {
+      sessionStorage.removeItem("central_clientes_cache_v4");
+    } catch {
+      // Ignora falha de cache local; o cliente jÃ¡ foi apagado no banco.
+    }
 
     sessionStorage.removeItem(obterChaveHistoricoContratos());
     limparCacheClienteAtual();
