@@ -52,10 +52,7 @@ const btnFecharFiltroAgendamento = document.getElementById("btnFecharFiltroAgend
 const btnAplicarFiltroAgendamento = document.getElementById("btnAplicarFiltroAgendamento");
 const btnLimparFiltroAgendamento = document.getElementById("btnLimparFiltroAgendamento");
 const agendaAvancada = document.getElementById("agendaAvancada");
-const agendaDiasBloco = document.getElementById("agendaDiasBloco");
-const agendaDiaMesBloco = document.getElementById("agendaDiaMesBloco");
 const agendaResumo = document.getElementById("agendaResumo");
-const agendamentoTipo = document.getElementById("agendamentoTipo");
 const agendamentoDiaMes = document.getElementById("agendamentoDiaMes");
 const agendamentoHoraInicio = document.getElementById("agendamentoHoraInicio");
 const agendamentoHoraFim = document.getElementById("agendamentoHoraFim");
@@ -1314,53 +1311,35 @@ function obterNomeDiaSemana(valor) {
 function atualizarResumoAgendamento() {
   if (!agendaResumo) return;
 
-  const tipo = String(agendamentoTipo?.value || "sempre");
   const dias = obterDiasAgendamentoSelecionados().map(obterNomeDiaSemana).filter(Boolean);
   const diaMes = String(agendamentoDiaMes?.value || "").trim();
   const horaInicio = String(agendamentoHoraInicio?.value || "").trim();
   const horaFim = String(agendamentoHoraFim?.value || "").trim();
-  const horario = horaInicio && horaFim ? ` das ${horaInicio} Ã s ${horaFim}` : "";
+  const partes = [];
 
-  if (tipo === "dias_semana") {
-    agendaResumo.textContent = dias.length
-      ? `Vai aparecer ${dias.join(", ")}${horario}.`
-      : `Escolha os dias da semana${horario}.`;
-    return;
+  if (dias.length) {
+    partes.push(`dias: ${dias.join(", ")}`);
   }
 
-  if (tipo === "dia_mes") {
-    agendaResumo.textContent = diaMes
-      ? `Vai aparecer todo mÃªs no dia ${diaMes}${horario}.`
-      : `Informe o dia do mÃªs${horario}.`;
-    return;
+  if (diaMes) {
+    partes.push(`todo mÃªs no dia ${diaMes}`);
   }
 
-  agendaResumo.textContent = horario
-    ? `Vai aparecer todos os dias${horario}, dentro do perÃ­odo escolhido.`
+  if (horaInicio && horaFim) {
+    partes.push(`horÃ¡rio: ${horaInicio} Ã s ${horaFim}`);
+  }
+
+  agendaResumo.textContent = partes.length
+    ? `Filtro aplicado para ${partes.join(" | ")}.`
     : "Sem filtro aplicado. A mÃ­dia aparece durante todo o perÃ­odo escolhido.";
-}
-
-function atualizarVisibilidadeAgendamento() {
-  const tipo = String(agendamentoTipo?.value || "sempre");
-
-  if (agendaDiasBloco) {
-    agendaDiasBloco.hidden = tipo !== "dias_semana";
-  }
-
-  if (agendaDiaMesBloco) {
-    agendaDiaMesBloco.hidden = tipo !== "dia_mes";
-  }
-
-  atualizarResumoAgendamento();
 }
 
 function obterConfiguracaoAgendamento() {
   const ativo = agendaAvancadaEstaAtiva();
-  const tipo = ativo ? String(agendamentoTipo?.value || "sempre") : "sempre";
 
   return {
     ativo,
-    tipo,
+    tipo: "completo",
     diasSemana: ativo ? obterDiasAgendamentoSelecionados() : [],
     diaMes: ativo ? String(agendamentoDiaMes?.value || "").trim() : "",
     horaInicio: ativo ? String(agendamentoHoraInicio?.value || "").trim() : "",
@@ -1385,12 +1364,7 @@ function validarConfiguracaoAgendamento() {
   const config = obterConfiguracaoAgendamento();
   if (!config.ativo) return true;
 
-  if (config.tipo === "dias_semana" && !config.diasSemana.length) {
-    mostrarStatusUpload("Escolha ao menos um dia da semana no filtro.", "#ff6b6b");
-    return false;
-  }
-
-  if (config.tipo === "dia_mes") {
+  if (config.diaMes) {
     const dia = Number(config.diaMes);
     if (!Number.isInteger(dia) || dia < 1 || dia > 31) {
       mostrarStatusUpload("Informe um dia do mÃªs entre 1 e 31.", "#ff6b6b");
@@ -1409,6 +1383,16 @@ function validarConfiguracaoAgendamento() {
   }
 
   return true;
+}
+
+function filtroAgendamentoTemRegra() {
+  const config = obterConfiguracaoAgendamento();
+  return Boolean(
+    config.diasSemana.length ||
+    config.diaMes ||
+    config.horaInicio ||
+    config.horaFim
+  );
 }
 
 function erroPareceColunaAgendamento(error) {
@@ -1672,7 +1656,7 @@ if (btnBaixarContrato) {
 
 if (btnFiltroAgendamento && agendaAvancada) {
   btnFiltroAgendamento.addEventListener("click", () => {
-    atualizarVisibilidadeAgendamento();
+    atualizarResumoAgendamento();
     agendaAvancada.hidden = false;
     btnFiltroAgendamento.setAttribute("aria-expanded", "true");
   });
@@ -1688,14 +1672,13 @@ function fecharFiltroAgendamento() {
 
 function limparFiltroAgendamento() {
   agendamentoAtivo = false;
-  if (agendamentoTipo) agendamentoTipo.value = "sempre";
   if (agendamentoDiaMes) agendamentoDiaMes.value = "";
   if (agendamentoHoraInicio) agendamentoHoraInicio.value = "";
   if (agendamentoHoraFim) agendamentoHoraFim.value = "";
   document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
     input.checked = false;
   });
-  atualizarVisibilidadeAgendamento();
+  atualizarResumoAgendamento();
   if (btnFiltroAgendamento) {
     btnFiltroAgendamento.classList.remove("ativo");
   }
@@ -1708,6 +1691,16 @@ function aplicarFiltroAgendamento() {
 
   if (!validarConfiguracaoAgendamento()) {
     agendamentoAtivo = estadoAnterior;
+    return;
+  }
+
+  if (!filtroAgendamentoTemRegra()) {
+    agendamentoAtivo = false;
+    if (btnFiltroAgendamento) {
+      btnFiltroAgendamento.classList.remove("ativo");
+    }
+    atualizarResumoAgendamento();
+    fecharFiltroAgendamento();
     return;
   }
 
@@ -1738,10 +1731,6 @@ if (agendaAvancada) {
   });
 }
 
-if (agendamentoTipo) {
-  agendamentoTipo.addEventListener("change", atualizarVisibilidadeAgendamento);
-}
-
 [agendamentoDiaMes, agendamentoHoraInicio, agendamentoHoraFim].forEach((campo) => {
   if (campo) {
     campo.addEventListener("input", atualizarResumoAgendamento);
@@ -1752,7 +1741,7 @@ document.querySelectorAll('input[name="agendamentoDias"]').forEach((input) => {
   input.addEventListener("change", atualizarResumoAgendamento);
 });
 
-atualizarVisibilidadeAgendamento();
+atualizarResumoAgendamento();
 
 async function iniciar() {
   try {
