@@ -7,7 +7,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
 
-  <title>Loop Midia | Pasta do Cliente</title>
+  <title>Loop Midia| Pasta do Cliente</title>
   <style>
     * {
       margin: 0;
@@ -279,11 +279,11 @@
     
     .box-topo {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      align-items: center;
+      gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
     }
     
     .meta-cliente {
@@ -327,7 +327,8 @@
     }
     
     .campo input,
-    .campo textarea {
+    .campo textarea,
+    .campo select {
       width: 100%;
       min-height: 46px;
       padding: 12px 14px;
@@ -341,9 +342,14 @@
     }
     
     .campo input:focus,
-    .campo textarea:focus {
+    .campo textarea:focus,
+    .campo select:focus {
       border-color: rgba(99, 200, 115, 0.72);
       box-shadow: 0 0 0 3px rgba(47, 172, 88, 0.18);
+    }
+
+    .campo-compacto {
+      margin-bottom: 0;
     }
     
     .linha-dupla {
@@ -418,6 +424,68 @@
       background: #ffffff;
       color: #122018;
       font-size: 0.95rem;
+    }
+
+    .botao-filtro {
+      min-height: 34px;
+      border: 1px solid #cfe8d4;
+      border-radius: 999px;
+      padding: 0 14px;
+      background: #ffffff;
+      color: var(--green-text);
+      font-size: 0.78rem;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(3, 17, 11, 0.08);
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease;
+    }
+
+    .botao-filtro:hover,
+    .botao-filtro.ativo {
+      background: var(--primary);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .agenda-avancada {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      border: 1px solid #dcebdd;
+      border-radius: 16px;
+      background: rgba(238, 250, 241, 0.72);
+    }
+
+    .agenda-avancada[hidden] {
+      display: none;
+    }
+
+    .agenda-dias {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .agenda-dias label {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid #cfe8d4;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #176c36;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .agenda-dias input {
+      width: 15px;
+      height: 15px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
     }
     
     .ajuda-upload,
@@ -651,6 +719,10 @@
       .grid-pontos-grupo {
         grid-template-columns: 1fr !important;
       }
+
+      .agenda-dias {
+        grid-template-columns: 1fr;
+      }
     
       .historico-card {
         flex-direction: column;
@@ -719,7 +791,7 @@
       </div>
 
       <div class="topo-direita">
-        <img src="logo.png" class="logo-topo-img" alt="Loop Player">
+        <img src="loop-player-logo.jpeg" class="logo-topo-img" alt="Loop Player">
       </div>
     </header>
 
@@ -775,16 +847,6 @@
               <label for="valorContratado">Valor contratado</label>
               <input id="valorContratado" type="text" placeholder="R$ 0,00" inputmode="numeric">
             </div>
-
-            <div class="campo">
-              <label for="dataPostagem">Data de postagem</label>
-              <input type="date" id="dataPostagem">
-            </div>
-          </div>
-
-          <div class="campo">
-            <label for="vencimentoExibicao">Vencimento da mídia</label>
-            <input type="date" id="vencimentoExibicao">
           </div>
 
           <div class="campo">
@@ -811,26 +873,78 @@
 
           <div class="campo">
             <div class="upload-box">
-              <strong>QR Code do cliente</strong>
-
-              <div class="upload-acoes">
-                <button id="btnBaixarQrCode" class="botao botao-secundario botao-cheio" type="button">
-                  Baixar QR Code
+              <div class="box-mini-topo">
+                <strong>Adicionar mídia</strong>
+                <button id="btnFiltroAgendamento" class="botao-filtro" type="button" aria-expanded="false">
+                  Filtro
                 </button>
-
-                <div class="ajuda-upload">
-                  Use este QR Code no material do cliente.
-                </div>
               </div>
-            </div>
-          </div>
-
-          <div class="campo">
-            <div class="upload-box">
-              <strong>Adicionar material</strong>
 
               <div class="upload-acoes">
                 <input type="file" id="arquivoInput" accept=".mp4,.jpg,.jpeg,.png,.webp,.txt">
+
+                <div class="linha-dupla">
+                  <div class="campo campo-compacto">
+                    <label for="dataPostagem">Data de postagem</label>
+                    <input type="date" id="dataPostagem">
+                  </div>
+
+                  <div class="campo campo-compacto">
+                    <label for="vencimentoExibicao">Vencimento</label>
+                    <input type="date" id="vencimentoExibicao">
+                  </div>
+                </div>
+
+                <div id="agendaAvancada" class="agenda-avancada" hidden>
+                  <div class="campo campo-compacto">
+                    <label for="agendamentoTipo">Repetição</label>
+                    <select id="agendamentoTipo">
+                      <option value="sempre">Sempre dentro do período</option>
+                      <option value="dias_semana">Dias da semana</option>
+                      <option value="dia_mes">Dia do mês</option>
+                      <option value="janela_mensal">Início do mês</option>
+                    </select>
+                  </div>
+
+                  <div class="agenda-dias">
+                    <label><input type="checkbox" name="agendamentoDias" value="1"> Segunda</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="2"> Terça</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="3"> Quarta</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="4"> Quinta</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="5"> Sexta</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="6"> Sábado</label>
+                    <label><input type="checkbox" name="agendamentoDias" value="0"> Domingo</label>
+                  </div>
+
+                  <div class="linha-dupla">
+                    <div class="campo campo-compacto">
+                      <label for="agendamentoDiaMes">Dia do mês</label>
+                      <input id="agendamentoDiaMes" type="number" min="1" max="31" placeholder="1">
+                    </div>
+
+                    <div class="campo campo-compacto">
+                      <label for="agendamentoJanelaMes">Início do mês</label>
+                      <select id="agendamentoJanelaMes">
+                        <option value="">Não usar</option>
+                        <option value="primeiro_dia">Primeiro dia</option>
+                        <option value="primeira_semana">Primeira semana</option>
+                        <option value="primeiros_5_dias">Primeiros 5 dias</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="linha-dupla">
+                    <div class="campo campo-compacto">
+                      <label for="agendamentoHoraInicio">Horário inicial</label>
+                      <input id="agendamentoHoraInicio" type="time">
+                    </div>
+
+                    <div class="campo campo-compacto">
+                      <label for="agendamentoHoraFim">Horário final</label>
+                      <input id="agendamentoHoraFim" type="time">
+                    </div>
+                  </div>
+                </div>
 
                 <button id="btnUploadCliente" class="botao botao-salvar botao-cheio" type="button">
                   Enviar
@@ -862,6 +976,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="pasta-cliente.js?v=2"></script>
+  <script src="pasta-cliente.js?v=3"></script>
 </body>
 </html>
