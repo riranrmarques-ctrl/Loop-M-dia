@@ -1159,30 +1159,30 @@ async function carregarCliente() {
   if (inputCodigo) inputCodigo.textContent = codigoClienteAtual;
   clienteAtual = data || null;
 
-  if (!data) {
-    if (inputNome) inputNome.value = "";
-    if (inputTelefone) inputTelefone.value = "";
-    if (inputEmail) inputEmail.value = "";
-    if (inputCpfCnpj) inputCpfCnpj.value = "";
-    if (inputVencimento) inputVencimento.value = data.vencimento_exibicao || data.vencimento_midia || "";
-    if (inputValorContratado) inputValorContratado.value = formatarMoedaBR(0);
-    if (inputDataPostagem) inputDataPostagem.value = new Date().toISOString().split("T")[0];
+if (!data) {
+  if (inputNome) inputNome.value = "";
+  if (inputTelefone) inputTelefone.value = "";
+  if (inputEmail) inputEmail.value = "";
+  if (inputCpfCnpj) inputCpfCnpj.value = "";
+  if (inputVencimento) inputVencimento.value = "";
+  if (inputValorContratado) inputValorContratado.value = formatarMoedaBR(0);
+  if (inputDataPostagem) inputDataPostagem.value = new Date().toISOString().split("T")[0];
 
-    atualizarStatusClienteVisual("NÃ£o ativo");
-    renderizarPontosSelecionaveis([]);
-    renderizarHistoricoArquivos([]);
-    gerarHistoricoContratoVisual();
-    gerarContratoCliente();
-    ativarBotaoSalvar();
-    mostrarMensagem(`Cliente ${codigoClienteAtual} ainda nÃ£o existe no banco. Preencha e clique em Salvar.`, "#ffb86b");
-    return;
-  }
+  atualizarStatusClienteVisual("Não ativo");
+  renderizarPontosSelecionaveis([]);
+  renderizarHistoricoArquivos([]);
+  gerarHistoricoContratoVisual();
+  gerarContratoCliente();
+  ativarBotaoSalvar();
+  mostrarMensagem(`Cliente ${codigoClienteAtual} ainda não existe no banco. Preencha e clique em Salvar.`, "#ffb86b");
+  return;
+}
 
   if (inputNome) inputNome.value = data.nome_completo || data.nome || "";
   if (inputTelefone) inputTelefone.value = formatarTelefone(data.telefone || "");
   if (inputEmail) inputEmail.value = data.email || "";
   if (inputCpfCnpj) inputCpfCnpj.value = formatarCpfCnpj(data.cpf_cnpj || "");
-  if (inputVencimento) inputVencimento.value = data.vencimento_midia || "";
+  if (inputVencimento) inputVencimento.value = data.vencimento_exibicao || data.vencimento_midia || "";
   if (inputValorContratado) inputValorContratado.value = formatarMoedaBR(data.valor_contratado ?? 0);
   if (inputDataPostagem) inputDataPostagem.value = data.data_postagem || new Date().toISOString().split("T")[0];
 
