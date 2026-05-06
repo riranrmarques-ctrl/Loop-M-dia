@@ -8,7 +8,7 @@ const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
 
 const BUCKET = "midias";
-const TABELA_CLIENTES = "dadosclientes";
+const TABELA_CLIENTES = "clientes_app";
 const TABELA_VINCULOS = "playercliente";
 const TABELA_PLAYLISTS = "playlists";
 const TABELA_PONTOS = "pontos";
@@ -308,14 +308,39 @@ async function carregarPontos(opcoes = {}) {
     if (cache.fresco) return;
   }
 
-  const { data, error } = await supabaseClient
-    .from(TABELA_PONTOS)
-    .select("*")
-    .order("created_at", { ascending: false });
+  const tentativas = [
+    () => supabaseClient
+      .from(TABELA_PONTOS)
+      .select("*")
+      .order("codigo", { ascending: true }),
+    () => supabaseClient
+      .from(TABELA_PONTOS)
+      .select("*")
+      .order("nome", { ascending: true }),
+    () => supabaseClient
+      .from(TABELA_PONTOS)
+      .select("*")
+  ];
 
-  if (error) {
+  let data = [];
+  let erroFinal = null;
+
+  for (const tentarBuscar of tentativas) {
+    const { data: resultado, error } = await tentarBuscar();
+
+    if (!error) {
+      data = resultado || [];
+      erroFinal = null;
+      break;
+    }
+
+    erroFinal = error;
+    console.warn("Tentativa de buscar pontos falhou:", error);
+  }
+
+  if (erroFinal) {
     if (cache?.dados) return;
-    throw error;
+    throw erroFinal;
   }
 
   pontosData = {};
@@ -1139,7 +1164,7 @@ async function carregarCliente() {
     if (inputTelefone) inputTelefone.value = "";
     if (inputEmail) inputEmail.value = "";
     if (inputCpfCnpj) inputCpfCnpj.value = "";
-    if (inputVencimento) inputVencimento.value = "";
+    if (inputVencimento) inputVencimento.value = data.vencimento_exibicao || data.vencimento_midia || "";
     if (inputValorContratado) inputValorContratado.value = formatarMoedaBR(0);
     if (inputDataPostagem) inputDataPostagem.value = new Date().toISOString().split("T")[0];
 
@@ -1248,7 +1273,7 @@ async function salvarCliente() {
     email: inputEmail.value.trim(),
     cpf_cnpj: inputCpfCnpj.value.trim(),
     valor_contratado: extrairNumeroMoeda(inputValorContratado.value),
-    vencimento_midia: inputVencimento.value || null,
+    vencimento_exibicao: inputVencimento.value || null,
     data_postagem: inputDataPostagem.value || new Date().toISOString().split("T")[0],
     status: statusBanco,
     statuscliente: statusBanco,
