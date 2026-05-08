@@ -805,7 +805,7 @@ function montarCardPonto(ponto) {
   const imagem = obterImagemPonto(ponto);
 
   return `
-    <div class="card-ponto ${statusInfo.classe === "indisponivel" ? "card-indisponivel" : ""}" data-codigo="${escapeHtml(codigo)}">
+    <div class="card-ponto painel-card ${statusInfo.classe === "indisponivel" ? "card-indisponivel" : ""}" data-codigo="${escapeHtml(codigo)}">
       <div class="card-status-topo">
         <span class="status-bolinha ${statusInfo.classe}"></span>
         <span class="card-status ${statusInfo.classe}">${escapeHtml(statusInfo.texto)}</span>
