@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Loop Player | Biblioteca</title>
-  <link rel="stylesheet" href="biblioteca.css?v=1">
+  <link rel="stylesheet" href="biblioteca.css?v=2">
 </head>
 
 <body>
@@ -26,12 +26,12 @@
       </a>
 
       <a href="/pontos.html">
-        <i data-lucide="map-pin"></i>
+        <i data-lucide="monitor"></i>
         Pontos
       </a>
 
       <a href="/central-cliente.html">
-        <i data-lucide="megaphone"></i>
+        <i data-lucide="users"></i>
         Anunciantes
       </a>
 
@@ -46,7 +46,7 @@
       </a>
 
       <a href="/biblioteca.html" class="ativo">
-        <i data-lucide="folder-play"></i>
+        <i data-lucide="folder-open"></i>
         Biblioteca
       </a>
     </nav>
@@ -82,7 +82,8 @@
   <main id="conteudoBiblioteca">
     <header class="biblioteca-topo">
       <div>
-        <h1>Gerencie os conteudos da biblioteca</h1>
+        <h1>Biblioteca</h1>
+        <p>Gerencie os conteúdos da biblioteca</p>
       </div>
 
       <div class="topo-status">
@@ -100,7 +101,10 @@
     <section class="biblioteca-layout">
       <section class="biblioteca-card biblioteca-lista-card">
         <div class="biblioteca-card-topo">
-          <div></div>
+          <div>
+            <strong>Arquivos</strong>
+            <span>Arraste uma mídia para um ponto</span>
+          </div>
 
           <button id="btnAdicionarMidia" class="btn-adicionar" type="button">
             <i data-lucide="plus"></i>
@@ -128,14 +132,14 @@
         <div class="pontos-card-titulo">
           <i data-lucide="map-pin"></i>
           <div>
-            <strong>Pasta dos Pontos</strong>
-            <p>Arraste os arquivos da biblioteca</p>
+            <strong>Pastas dos Pontos</strong>
+            <p>Escolha onde o arquivo deve entrar</p>
           </div>
         </div>
 
         <label class="campo-busca-pontos" for="buscaPonto">
           <i data-lucide="search"></i>
-          <input id="buscaPonto" type="search" placeholder="Buscar pasta ou ponto...">
+          <input id="buscaPonto" type="search" placeholder="Buscar pasta ou ponto">
         </label>
 
         <div id="listaPontosBiblioteca" class="lista-pontos"></div>
@@ -153,7 +157,8 @@
     <div id="mensagemBiblioteca" class="status-flutuante" hidden></div>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="biblioteca.js?v=1"></script>
+  <script src="biblioteca.js?v=216"></script>
 </body>
 </html>
