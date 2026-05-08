@@ -102,7 +102,7 @@ function obterNomePonto(ponto) {
 }
 
 async function buscarMidiasRemoto() {
-  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const { data, error } = await supabaseClient
     .from(TABELA_MIDIAS)
@@ -114,7 +114,7 @@ async function buscarMidiasRemoto() {
 }
 
 async function buscarPontosRemoto() {
-  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const tentativas = [
     () => supabaseClient.from(TABELA_PONTOS).select("*").order("nome", { ascending: true }),
@@ -134,7 +134,7 @@ async function buscarPontosRemoto() {
 }
 
 async function salvarMidiaRemota(midia) {
-  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const payloads = [
     {
@@ -166,7 +166,7 @@ async function salvarMidiaRemota(midia) {
     ultimoErro = error;
   }
 
-  throw ultimoErro || new Error("NÃ£o foi possÃ­vel salvar mÃ­dia.");
+  throw ultimoErro || new Error("Não foi possível salvar mídia.");
 }
 
 function obterTipoArquivo(nome) {
@@ -214,7 +214,7 @@ function renderizarMidias() {
 
   listaMidias.innerHTML = midias.length
     ? midias.map(montarLinhaMidia).join("")
-    : `<div class="linha-vazia">Nenhuma mÃ­dia adicionada.</div>`;
+    : `<div class="linha-vazia">Nenhuma mídia adicionada.</div>`;
 
   document.querySelectorAll(".midia-linha").forEach((linha) => {
     linha.addEventListener("dragstart", () => {
@@ -297,7 +297,7 @@ async function registrarEnvio(ponto, midia, nomePonto = "") {
   if (!ponto || !midia) return;
 
   try {
-    if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+    if (!supabaseClient) throw new Error("Supabase não carregou.");
 
     const { error } = await supabaseClient
       .from(TABELA_PLAYLISTS)
@@ -351,7 +351,7 @@ async function adicionarArquivos(files) {
         videoUrl = data.publicUrl;
       }
     } catch (error) {
-      console.warn("Upload da mÃ­dia falhou, mantendo local:", error);
+      console.warn("Upload da mídia falhou, mantendo local:", error);
     }
 
     const midiaBase = {
@@ -367,7 +367,7 @@ async function adicionarArquivos(files) {
     try {
       novasMidias.push(await salvarMidiaRemota(midiaBase));
     } catch (error) {
-      console.warn("NÃ£o foi possÃ­vel salvar mÃ­dia no Supabase:", error);
+      console.warn("Não foi possível salvar mídia no Supabase:", error);
       novasMidias.push(midiaBase);
     }
   }
@@ -376,7 +376,7 @@ async function adicionarArquivos(files) {
   salvarMidias();
   renderizarMidias();
   formatarDataAtualizacao();
-  mostrarMensagem(`${novasMidias.length} mÃ­dia(s) adicionada(s).`);
+  mostrarMensagem(`${novasMidias.length} mídia(s) adicionada(s).`);
 }
 
 function iniciarEventos() {
