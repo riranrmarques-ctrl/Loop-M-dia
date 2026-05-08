@@ -8,10 +8,72 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Loop Midia | Clientes</title>
-  <link rel="stylesheet" href="central-cliente.css?v=6">
+  <link rel="stylesheet" href="central-cliente.css?v=7">
 </head>
 
 <body>
+  <aside class="sidebar-app">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Loop Player">
+    </div>
+
+    <div class="sidebar-label">Navegação</div>
+
+    <nav class="sidebar-nav">
+      <a href="/centralpainel.html">
+        <i data-lucide="home"></i>
+        Dashboard
+      </a>
+
+      <a href="/central-cliente.html" class="ativo">
+        <i data-lucide="monitor"></i>
+        Minhas Telas
+      </a>
+
+      <a href="/playlists.html">
+        <i data-lucide="sliders-horizontal"></i>
+        Playlists
+      </a>
+
+      <a href="/midias.html">
+        <i data-lucide="image"></i>
+        Mídias
+      </a>
+
+      <a href="/configuracoes.html">
+        <i data-lucide="settings"></i>
+        Configurações
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-ajuda">
+      <div class="whatsapp-icon">
+        <i data-lucide="message-circle"></i>
+      </div>
+
+      <strong>Precisa de ajuda?</strong>
+      <p>Fale com o suporte pelo WhatsApp.</p>
+
+      <a href="https://wa.me/5531000000000" target="_blank" rel="noopener">
+        Abrir WhatsApp
+        <i data-lucide="external-link"></i>
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar-user">V</div>
+
+      <div>
+        <strong>Vitor</strong>
+        <span>Administrador</span>
+      </div>
+
+      <i data-lucide="chevron-down"></i>
+    </div>
+  </aside>
+
   <main id="conteudoClientes">
     <header class="topo-fixo novo-topo">
       <div class="topo-esquerda">
@@ -65,6 +127,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="central-cliente.js?v=6"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="central-cliente.js?v=7"></script>
 </body>
 </html>
