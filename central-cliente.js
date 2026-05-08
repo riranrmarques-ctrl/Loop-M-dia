@@ -343,7 +343,7 @@ function renderizarClientes() {
     const ativo = statusReal === "Ativo";
     const supervisor = clienteEhSupervisor(cliente);
 
-    card.className = `cliente-card ${supervisor ? "supervisor" : ativo ? "ativo" : "nao-ativo"} ${personalizado ? "personalizado" : ""} ${!supervisor && cliente.contrato_ativo === false ? "contrato-off" : ""}`;
+    card.className = `cliente-card painel-card ${supervisor ? "supervisor" : ativo ? "ativo" : "nao-ativo"} ${personalizado ? "personalizado" : ""} ${!supervisor && cliente.contrato_ativo === false ? "contrato-off" : ""}`;
     card.dataset.codigo = cliente.codigo;
     card.draggable = personalizado;
 
