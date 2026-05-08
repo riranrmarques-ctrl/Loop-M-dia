@@ -1,109 +1,40 @@
 const telas = [
-  {
-    nome: "Tela 01 - Entrada",
-    ponto: "Salão de Beleza",
-    status: "Online",
-    conexao: "agora",
-    cor: "orange-dot"
-  },
-  {
-    nome: "Tela 02 - Recepção",
-    ponto: "Mercado",
-    status: "Online",
-    conexao: "1 min atrás",
-    cor: "orange-dot"
-  },
-  {
-    nome: "Tela 01 - Balcão",
-    ponto: "Padaria",
-    status: "Inativo",
-    conexao: "12 min atrás",
-    cor: "red-dot"
-  },
-  {
-    nome: "Tela 01 - Área Funcional",
-    ponto: "Academia Alpha",
-    status: "Online",
-    conexao: "2 min atrás",
-    cor: "orange-dot"
-  },
-  {
-    nome: "Tela 02 - Cardio",
-    ponto: "Academia Alpha",
-    status: "Online",
-    conexao: "2 min atrás",
-    cor: "orange-dot"
-  },
-  {
-    nome: "Tela 01 - Caixa",
-    ponto: "Posto Central",
-    status: "Online",
-    conexao: "3 min atrás",
-    cor: "orange-dot"
-  }
+  ["Tela 01 - Entrada", "Salão de Beleza", "Online", "agora", "amarelo-dot"],
+  ["Tela 02 - Recepção", "Mercado", "Online", "1 min atrás", "amarelo-dot"],
+  ["Tela 01 - Balcão", "Padaria", "Inativo", "12 min atrás", "vermelho-dot"],
+  ["Tela 01 - Área Funcional", "Academia Alpha", "Online", "2 min atrás", "amarelo-dot"],
+  ["Tela 02 - Cardio", "Academia Alpha", "Online", "2 min atrás", "amarelo-dot"],
+  ["Tela 01 - Caixa", "Posto Central", "Online", "3 min atrás", "amarelo-dot"]
 ];
 
-const historico = [
-  {
-    texto: "Salão de Beleza ficou online",
-    hora: "10:24",
-    cor: "green-dot"
-  },
-  {
-    texto: "Mercado ficou offline",
-    hora: "10:12",
-    cor: "red-dot"
-  },
-  {
-    texto: "Academia Alpha voltou online",
-    hora: "10:08",
-    cor: "green-dot"
-  },
-  {
-    texto: "Playlist atualizada",
-    hora: "10:03",
-    cor: "green-dot"
-  },
-  {
-    texto: "Campanha alterada",
-    hora: "09:58",
-    cor: "green-dot"
-  }
+const historicos = [
+  ["Salão de Beleza ficou online", "10:24", "verde-dot"],
+  ["Mercado ficou offline", "10:12", "vermelho-dot"],
+  ["Academia Alpha voltou online", "10:08", "verde-dot"],
+  ["Playlist atualizada", "10:03", "verde-dot"],
+  ["Campanha alterada", "09:58", "verde-dot"]
 ];
 
-const tbody = document.getElementById("screenTable");
+const listaTelas = document.getElementById("listaTelas");
+const historicoStatus = document.getElementById("historicoStatus");
 
-telas.forEach((tela) => {
-  const tr = document.createElement("tr");
+listaTelas.innerHTML = telas.map(([nome, ponto, status, conexao, cor]) => `
+  <div class="tela-linha">
+    <span><i class="dot ${cor}"></i>${nome}</span>
+    <span>${ponto}</span>
+    <span class="status ${status === "Online" ? "online" : "inativo"}">${status}</span>
+    <span>${conexao}</span>
+  </div>
+`).join("");
 
-  tr.innerHTML = `
-    <td>
-      <b class="dot ${tela.cor}"></b>
-      ${tela.nome}
-    </td>
-    <td>${tela.ponto}</td>
-    <td>
-      <span class="status ${tela.status === "Online" ? "online" : "offline"}">
-        ${tela.status}
-      </span>
-    </td>
-    <td>${tela.conexao}</td>
-  `;
+historicoStatus.innerHTML = historicos.map(([texto, hora, cor]) => `
+  <div class="historico-item">
+    <i class="dot ${cor}"></i>
+    <strong>${texto}</strong>
+    <span>${hora}</span>
+  </div>
+`).join("");
 
-  tbody.appendChild(tr);
-});
-
-const historyList = document.getElementById("historyList");
-
-historico.forEach((item) => {
-  const div = document.createElement("div");
-  div.className = "history-item";
-
-  div.innerHTML = `
-    <b class="dot ${item.cor}"></b>
-    <strong>${item.texto}</strong>
-    <span>${item.hora}</span>
-  `;
-
-  historyList.appendChild(div);
-});
+if (window.lucide) {
+  lucide.createIcons();
+}
