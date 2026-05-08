@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Loop Midia | Biblioteca</title>
+  <link rel="stylesheet" href="biblioteca.css?v=1">
+</head>
+
+<body>
+  <aside class="sidebar-app">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Loop Player">
+    </div>
+
+    <div class="sidebar-label">Navegação</div>
+
+    <nav class="sidebar-nav">
+      <a href="/centralpainel.html">
+        <i data-lucide="layout-dashboard"></i>
+        Geral
+      </a>
+
+      <a href="/pontos.html">
+        <i data-lucide="map-pin"></i>
+        Pontos
+      </a>
+
+      <a href="/central-cliente.html">
+        <i data-lucide="megaphone"></i>
+        Anunciantes
+      </a>
+
+      <a href="/empresas.html">
+        <i data-lucide="building-2"></i>
+        Empresas
+      </a>
+
+      <a href="/contratos.html">
+        <i data-lucide="file-text"></i>
+        Contratos
+      </a>
+
+      <a href="/biblioteca.html" class="ativo">
+        <i data-lucide="folder-play"></i>
+        Biblioteca
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-ajuda">
+      <div class="whatsapp-icon">
+        <i data-lucide="message-circle"></i>
+      </div>
+
+      <strong>Precisa de ajuda?</strong>
+      <p>Fale com o suporte pelo WhatsApp.</p>
+
+      <a href="https://wa.me/5531000000000" target="_blank" rel="noopener">
+        Abrir WhatsApp
+        <i data-lucide="external-link"></i>
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar-user">V</div>
+
+      <div>
+        <strong>Vitor</strong>
+        <span>Administrador</span>
+      </div>
+
+      <i data-lucide="chevron-down"></i>
+    </div>
+  </aside>
+
+  <main id="conteudoBiblioteca">
+    <header class="biblioteca-topo">
+      <div>
+        <h1>Gerencie seus conteúdos de mídia</h1>
+      </div>
+
+      <div class="topo-status">
+        <div>
+          <span>Atualizado agora</span>
+          <strong id="dataAtualizacao">Carregando...</strong>
+        </div>
+
+        <button id="btnAtualizarBiblioteca" class="btn-icon" type="button" aria-label="Atualizar biblioteca">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="biblioteca-layout">
+      <section class="biblioteca-card biblioteca-lista-card">
+        <div class="biblioteca-card-topo">
+          <div></div>
+
+          <button id="btnAdicionarMidia" class="btn-adicionar" type="button">
+            <i data-lucide="plus"></i>
+            Adicionar mídia
+          </button>
+
+          <input id="inputMidia" type="file" accept=".mp4,.jpg,.jpeg,.png,.webp,.txt" multiple hidden>
+        </div>
+
+        <div class="tabela-midias" role="table" aria-label="Biblioteca de mídias">
+          <div class="tabela-cabecalho" role="row">
+            <span>Nome do arquivo</span>
+            <span>Tipo</span>
+            <span>Duração</span>
+            <span>Tamanho</span>
+          </div>
+
+          <div id="listaMidias" class="lista-midias">
+            <div class="linha-vazia">Carregando biblioteca...</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="biblioteca-card pontos-card">
+        <div class="pontos-card-titulo">
+          <i data-lucide="map-pin"></i>
+          <div>
+            <strong>Pontos de Telas</strong>
+            <p>Arraste os arquivos da biblioteca para enviar para os pontos</p>
+          </div>
+        </div>
+
+        <label class="campo-busca-pontos" for="buscaPonto">
+          <i data-lucide="search"></i>
+          <input id="buscaPonto" type="search" placeholder="Buscar pasta ou ponto...">
+        </label>
+
+        <div id="listaPontosBiblioteca" class="lista-pontos"></div>
+
+        <div id="dropGlobalBiblioteca" class="drop-global">
+          Arraste e solte os arquivos aqui
+        </div>
+      </aside>
+    </section>
+
+    <div class="assinatura-duna">
+      Desenvolvido por <strong>Duna Branding</strong>
+    </div>
+
+    <div id="mensagemBiblioteca" class="status-flutuante" hidden></div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="biblioteca.js?v=1"></script>
+</body>
+</html>
