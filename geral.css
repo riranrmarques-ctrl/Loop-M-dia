@@ -115,46 +115,52 @@ button {
 }
 
 .sidebar-ajuda {
-  padding: 20px;
-  margin-bottom: 18px;
+  padding: 14px;
+  margin-bottom: 14px;
 }
 
 .whatsapp-icon {
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
   display: grid;
   place-items: center;
-  margin-bottom: 12px;
-  border-radius: 10px;
-  background: #075f2a;
+  margin-bottom: 10px;
+  border-radius: 9px;
+  background: rgba(7, 95, 42, 0.72);
   color: #22c55e;
+}
+
+.whatsapp-icon svg {
+  width: 20px;
+  height: 20px;
 }
 
 .sidebar-ajuda strong,
 .sidebar-user strong {
   display: block;
-  font-size: 0.95rem;
+  font-size: 0.84rem;
 }
 
 .sidebar-ajuda p,
 .sidebar-user span {
-  margin-top: 6px;
+  margin-top: 4px;
   color: rgba(255, 255, 255, 0.68);
-  font-size: 0.86rem;
-  line-height: 1.45;
+  font-size: 0.76rem;
+  line-height: 1.35;
 }
 
 .sidebar-ajuda a {
-  min-height: 46px;
-  margin-top: 16px;
+  min-height: 36px;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background: #075f2a;
+  background: rgba(7, 95, 42, 0.82);
   color: #ffffff;
   text-decoration: none;
   font-weight: 900;
+  font-size: 0.78rem;
 }
 
 .sidebar-user {
@@ -727,9 +733,9 @@ button {
   padding-bottom: 0;
   text-align: center;
   color: rgba(16, 32, 21, 0.58);
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
   text-transform: uppercase;
 }
 
