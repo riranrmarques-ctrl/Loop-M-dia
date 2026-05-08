@@ -2154,14 +2154,64 @@ body {
   font-weight: 700;
 }
 
-.topo-fixo.novo-topo .status-topo {
-  position: static;
-  padding: 10px 14px;
-  border: 1px solid var(--soft-line);
-  border-radius: 12px;
-  background: #ffffff;
-  color: var(--dark-text);
-  box-shadow: var(--soft-shadow);
+.topo-status {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 10px 12px 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: #061014;
+  color: #ffffff;
+  box-shadow: 0 16px 34px rgba(16, 32, 21, 0.14);
+}
+
+.topo-status div {
+  text-align: right;
+}
+
+.topo-status span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.82rem;
+  line-height: 1.15;
+  font-weight: 900;
+}
+
+.topo-status span::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #22c55e;
+}
+
+.topo-status strong {
+  display: block;
+  margin-top: 7px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  font-weight: 900;
+}
+
+.btn-icon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+}
+
+.btn-icon svg {
+  width: 22px;
+  height: 22px;
 }
 
 .painel-shell {
@@ -2260,10 +2310,16 @@ body {
   max-width: none;
   margin: 18px 0 0;
   padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   color: rgba(16, 32, 21, 0.58);
   font-size: 0.64rem;
   font-weight: 900;
   letter-spacing: 0.07em;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .assinatura-duna strong {
