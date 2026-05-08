@@ -1,36 +1,11 @@
-const STORAGE_EMPRESAS_KEY = "loop_empresas_v1";
+const SUPABASE_URL = "https://rgrwoboqryvwnqsvlrtj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_PYvzQu5T5Xzl_QF1J_qI4w_b9XF-aa3";
 
-const empresasPadrao = [
-  {
-    id: "fulano-indoor",
-    nome: "Fulano Indoor",
-    email: "contato@fulanoindoor.com",
-    telas: 18,
-    pontos: 6,
-    armazenamento: 320,
-    usado: 220,
-    status: "Ativa",
-    contato: "Fulano da Silva",
-    telefone: "(11) 99999-9999",
-    vencimento: "2025-05-12",
-    valor: "R$ 599,00"
-  },
-  {
-    id: "norte-midia-tv",
-    nome: "Norte MÃ­dia TV",
-    email: "admin@nortemidiatv.com",
-    telas: 12,
-    pontos: 4,
-    armazenamento: 220,
-    usado: 138,
-    status: "Ativa",
-    contato: "Marina Costa",
-    telefone: "(31) 98888-1212",
-    vencimento: "2025-05-18",
-    valor: "R$ 449,00"
-  }
-];
+const STORAGE_EMPRESAS_KEY = "loop_empresas_v2";
+const TABELAS_EMPRESAS = ["empresas"];
 
+let supabaseClient = null;
+let tabelaEmpresasAtual = localStorage.getItem("loop_empresas_tabela_atual") || "";
 let empresas = [];
 let empresaAtual = null;
 let timerMensagem = null;
@@ -60,22 +35,81 @@ const btnAlterarSenha = document.getElementById("btnAlterarSenha");
 const btnBaixarContrato = document.getElementById("btnBaixarContrato");
 const btnSalvarEmpresa = document.getElementById("btnSalvarEmpresa");
 
-function lerEmpresas() {
-  try {
-    const salvas = JSON.parse(localStorage.getItem(STORAGE_EMPRESAS_KEY) || "null");
-    return Array.isArray(salvas) && salvas.length ? salvas : empresasPadrao;
-  } catch {
-    return empresasPadrao;
-  }
+function iniciarSupabase() {
+  if (!window.supabase) return null;
+  return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 }
 
-function salvarEmpresas() {
-  localStorage.setItem(STORAGE_EMPRESAS_KEY, JSON.stringify(empresas));
+function slugify(texto) {
+  return String(texto || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function numero(valor, fallback = 0) {
+  const final = Number(valor);
+  return Number.isFinite(final) ? final : fallback;
+}
+
+function primeiroValor(obj, chaves, fallback = "") {
+  for (const chave of chaves) {
+    if (obj?.[chave] !== undefined && obj?.[chave] !== null && String(obj[chave]).trim() !== "") {
+      return obj[chave];
+    }
+  }
+
+  return fallback;
+}
+
+function normalizarEmpresa(row = {}, tabela = tabelaEmpresasAtual) {
+  const nome = String(primeiroValor(row, ["nome", "nome_franquia", "empresa", "razao_social", "titulo"], "Nova franquia")).trim();
+  const idOriginal = primeiroValor(row, ["id", "uuid", "codigo", "slug"], "");
+  const id = String(idOriginal || slugify(nome) || `empresa-${Date.now()}`).trim();
+
+  return {
+    ...row,
+    id,
+    rowId: row.id ?? row.uuid ?? row.codigo ?? id,
+    tabelaOrigem: tabela,
+    nome,
+    email: String(primeiroValor(row, ["email", "email_acesso", "login", "contato_email"], "")).trim(),
+    telas: numero(primeiroValor(row, ["telas", "numero_telas", "limite_telas", "qtd_telas"], 0)),
+    pontos: numero(primeiroValor(row, ["pontos", "numero_pontos", "limite_pontos", "qtd_pontos"], 0)),
+    armazenamento: numero(primeiroValor(row, ["armazenamento", "armazenamento_gb", "limite_gb", "storage_gb"], 0)),
+    usado: numero(primeiroValor(row, ["usado", "armazenamento_usado", "usado_gb", "storage_usado_gb"], 0)),
+    status: String(primeiroValor(row, ["status", "situacao"], "Ativa")).trim(),
+    contato: String(primeiroValor(row, ["contato", "responsavel", "contato_responsavel"], "")).trim(),
+    telefone: String(primeiroValor(row, ["telefone", "celular", "whatsapp"], "")).trim(),
+    vencimento: String(primeiroValor(row, ["vencimento", "proximo_vencimento", "data_vencimento"], "")).trim(),
+    valor: String(primeiroValor(row, ["valor", "valor_mensal", "mensalidade"], "")).trim()
+  };
 }
 
 function obterIdEmpresa() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("id") || "fulano-indoor";
+  return params.get("id") || "";
+}
+
+function criarEmpresaVazia(id = "") {
+  const codigo = String(id || `empresa-${Date.now()}`).trim();
+
+  return normalizarEmpresa({
+    id: codigo,
+    nome: "",
+    email: "",
+    telas: 0,
+    pontos: 0,
+    armazenamento: 0,
+    usado: 0,
+    status: "Ativa",
+    contato: "",
+    telefone: "",
+    vencimento: "",
+    valor: ""
+  });
 }
 
 function obterClasseStatus(status) {
@@ -83,6 +117,19 @@ function obterClasseStatus(status) {
   if (valor.includes("suspensa")) return "suspensa";
   if (valor.includes("limite")) return "limite";
   return "ativa";
+}
+
+function lerEmpresasCache() {
+  try {
+    const salvas = JSON.parse(localStorage.getItem(STORAGE_EMPRESAS_KEY) || "null");
+    return Array.isArray(salvas) ? salvas.map((item) => normalizarEmpresa(item)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function salvarEmpresasCache() {
+  localStorage.setItem(STORAGE_EMPRESAS_KEY, JSON.stringify(empresas));
 }
 
 function formatarDataAtualizacao() {
@@ -151,45 +198,128 @@ function preencherFormulario() {
   atualizarStorage();
 }
 
-function salvarFormulario() {
-  if (!empresaAtual) return;
+async function buscarEmpresasRemoto() {
+  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
 
-  empresaAtual = {
-    ...empresaAtual,
+  const tabelas = tabelaEmpresasAtual
+    ? [tabelaEmpresasAtual, ...TABELAS_EMPRESAS.filter((tabela) => tabela !== tabelaEmpresasAtual)]
+    : TABELAS_EMPRESAS;
+
+  let ultimoErro = null;
+
+  for (const tabela of tabelas) {
+    const { data, error } = await supabaseClient
+      .from(tabela)
+      .select("*");
+
+    if (!error) {
+      tabelaEmpresasAtual = tabela;
+      localStorage.setItem("loop_empresas_tabela_atual", tabela);
+      return (data || []).map((row) => normalizarEmpresa(row, tabela));
+    }
+
+    ultimoErro = error;
+    console.warn(`Falha ao buscar empresas na tabela ${tabela}:`, error);
+  }
+
+  throw ultimoErro || new Error("Nenhuma tabela de empresas encontrada.");
+}
+
+function montarPayloadEmpresa() {
+  return {
     nome: nomeEmpresa?.value.trim() || "Nova franquia",
     email: emailEmpresa?.value.trim() || "",
     telas: Number(numeroTelas?.value || 0),
     pontos: Number(numeroPontos?.value || 0),
     armazenamento: Number(armazenamentoEmpresa?.value || 0),
+    usado: Number(empresaAtual?.usado || 0),
     contato: contatoEmpresa?.value.trim() || "",
     telefone: telefoneEmpresa?.value.trim() || "",
     status: statusEmpresa?.value || "Ativa",
-    vencimento: vencimentoEmpresa?.value || "",
+    vencimento: vencimentoEmpresa?.value || null,
     valor: valorEmpresa?.value.trim() || ""
   };
+}
 
-  empresas = empresas.map((empresa) => {
-    return empresa.id === empresaAtual.id ? empresaAtual : empresa;
-  });
+async function salvarEmpresaRemota(payload) {
+  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
 
-  salvarEmpresas();
+  const tabela = empresaAtual?.tabelaOrigem || tabelaEmpresasAtual || TABELAS_EMPRESAS[0];
+  const id = empresaAtual?.rowId || empresaAtual?.id;
+  const tentativas = [
+    () => supabaseClient.from(tabela).update(payload).eq("id", id).select("*").limit(1),
+    () => supabaseClient.from(tabela).update(payload).eq("codigo", empresaAtual.id).select("*").limit(1),
+    () => supabaseClient.from(tabela).upsert([{ id: empresaAtual.id, ...payload }]).select("*").limit(1),
+    () => supabaseClient.from(tabela).upsert([{ codigo: empresaAtual.id, ...payload }]).select("*").limit(1)
+  ];
+
+  let ultimoErro = null;
+
+  for (const tentarSalvar of tentativas) {
+    const { data, error } = await tentarSalvar();
+
+    if (!error) {
+      return normalizarEmpresa(data?.[0] || { ...empresaAtual, ...payload }, tabela);
+    }
+
+    ultimoErro = error;
+    console.warn("Falha ao salvar empresa:", error);
+  }
+
+  throw ultimoErro || new Error("NÃ£o foi possÃ­vel salvar empresa.");
+}
+
+async function carregarEmpresa(forcarAtualizacao = false) {
+  const id = obterIdEmpresa();
+
+  if (!forcarAtualizacao) {
+    empresas = lerEmpresasCache();
+    empresaAtual = empresas.find((empresa) => empresa.id === id) || criarEmpresaVazia(id);
+    preencherFormulario();
+  }
+
+  try {
+    mostrarMensagem("Buscando empresa no Supabase...");
+    const remotas = await buscarEmpresasRemoto();
+
+    empresas = remotas.length ? remotas : lerEmpresasCache();
+    empresaAtual = empresas.find((empresa) => empresa.id === id) || criarEmpresaVazia(id);
+    salvarEmpresasCache();
+    formatarDataAtualizacao();
+    preencherFormulario();
+    mostrarMensagem("Empresa carregada do Supabase.");
+  } catch (error) {
+    console.error(error);
+    mostrarMensagem("Usando dados locais. Verifique a tabela no Supabase.");
+  }
+}
+
+async function salvarFormulario() {
+  if (!empresaAtual) return;
+
+  const payload = montarPayloadEmpresa();
+  empresaAtual = { ...empresaAtual, ...payload };
+
+  try {
+    mostrarMensagem("Salvando no Supabase...");
+    empresaAtual = await salvarEmpresaRemota(payload);
+    mostrarMensagem("AlteraÃ§Ãµes salvas no Supabase.");
+  } catch (error) {
+    console.error(error);
+    mostrarMensagem("AlteraÃ§Ãµes salvas localmente. Ajuste a tabela no Supabase.");
+  }
+
+  empresas = empresas.map((empresa) => empresa.id === empresaAtual.id ? empresaAtual : empresa);
+  if (!empresas.find((empresa) => empresa.id === empresaAtual.id)) empresas.unshift(empresaAtual);
+  salvarEmpresasCache();
   preencherFormulario();
   formatarDataAtualizacao();
-  mostrarMensagem("AlteraÃ§Ãµes salvas.");
 }
 
 function iniciarDetalhe() {
-  empresas = lerEmpresas();
-  const id = obterIdEmpresa();
-  empresaAtual = empresas.find((empresa) => empresa.id === id) || empresas[0] || empresasPadrao[0];
-
-  if (!empresas.find((empresa) => empresa.id === empresaAtual.id)) {
-    empresas = [empresaAtual, ...empresas];
-    salvarEmpresas();
-  }
-
+  supabaseClient = iniciarSupabase();
   formatarDataAtualizacao();
-  preencherFormulario();
+  carregarEmpresa(false);
 
   armazenamentoEmpresa?.addEventListener("input", atualizarStorage);
   statusEmpresa?.addEventListener("change", () => {
@@ -198,13 +328,7 @@ function iniciarDetalhe() {
     statusEmpresaTopo.className = `status-pill ${obterClasseStatus(statusEmpresa.value)}`;
   });
 
-  btnAtualizarDetalhe?.addEventListener("click", () => {
-    empresas = lerEmpresas();
-    empresaAtual = empresas.find((empresa) => empresa.id === empresaAtual.id) || empresaAtual;
-    formatarDataAtualizacao();
-    preencherFormulario();
-    mostrarMensagem("Empresa atualizada.");
-  });
+  btnAtualizarDetalhe?.addEventListener("click", () => carregarEmpresa(true));
 
   btnAlterarSenha?.addEventListener("click", () => {
     if (senhaEmpresa) senhaEmpresa.value = "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢";
