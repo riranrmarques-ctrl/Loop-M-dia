@@ -331,6 +331,25 @@ button {
   height: 22px;
 }
 
+.icone-card i[data-lucide]::before {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.icone-card i[data-lucide="radio-tower"]::before {
+  content: "⌁";
+}
+
+.icone-card i[data-lucide="monitor"]::before {
+  content: "□";
+}
+
+.icone-card i[data-lucide="layers"]::before {
+  content: "▱";
+}
+
 .icone-card.amarelo {
   background: var(--yellow-soft);
   color: var(--yellow);
@@ -412,9 +431,9 @@ button {
 
 .card-info.storage {
   display: grid;
-  grid-template-columns: 54px minmax(0, 1fr) minmax(116px, auto);
+  grid-template-columns: minmax(160px, 1fr) 54px 1px minmax(130px, auto);
   align-items: center;
-  gap: 14px;
+  gap: 18px;
 }
 
 .storage .card-principal {
@@ -428,6 +447,7 @@ button {
 
 .storage .card-principal span {
   white-space: nowrap;
+  overflow: visible;
 }
 
 .storage-box {
@@ -435,6 +455,7 @@ button {
 }
 
 .storage-circle {
+  grid-column: 2;
   width: 54px;
   height: 54px;
   display: flex;
@@ -477,9 +498,22 @@ button {
 }
 
 .storage-texto {
+  grid-column: 4;
   min-width: 0;
-  padding-left: 14px;
-  border-left: 1px solid var(--line);
+  padding-left: 0;
+  border-left: none;
+  position: relative;
+}
+
+.storage-texto::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 1px;
+  height: 30px;
+  transform: translateY(-50%);
+  background: var(--line);
 }
 
 .storage-texto span {
