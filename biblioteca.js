@@ -9,14 +9,13 @@ const TABELA_STATUS_PONTOS = "statuspontos";
 const TABELA_VINCULOS = "playercliente";
 
 const STORAGE_MIDIAS_KEY = "biblioteca_cache_v2";
+const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
 
 let midias = [];
 let pontosBiblioteca = [];
 let midiaArrastada = null;
 let timerMensagem = null;
-let supabaseClient = window.supabase
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-  : null;
+let supabaseClient = null;
 
 const dataAtualizacao = document.getElementById("dataAtualizacao");
 const btnAtualizarBiblioteca = document.getElementById("btnAtualizarBiblioteca");
@@ -27,6 +26,40 @@ const listaPontosBiblioteca = document.getElementById("listaPontosBiblioteca");
 const buscaPonto = document.getElementById("buscaPonto");
 const dropGlobalBiblioteca = document.getElementById("dropGlobalBiblioteca");
 const mensagemBiblioteca = document.getElementById("mensagemBiblioteca");
+
+function carregarScript(src) {
+  return new Promise((resolve, reject) => {
+    const existente = document.querySelector(`script[src="${src}"]`);
+
+    if (existente) {
+      existente.addEventListener("load", resolve, { once: true });
+      existente.addEventListener("error", reject, { once: true });
+      if (window.supabase) resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.appendChild(script);
+  });
+}
+
+async function garantirSupabase() {
+  if (supabaseClient) return supabaseClient;
+
+  if (!window.supabase) {
+    await carregarScript(SUPABASE_CDN);
+  }
+
+  if (!window.supabase) {
+    throw new Error("Supabase não carregou. Confira o CDN no HTML.");
+  }
+
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return supabaseClient;
+}
 
 function escaparHtml(texto) {
   return String(texto || "")
@@ -132,9 +165,9 @@ function normalizarPontoBiblioteca(ponto = {}) {
 }
 
 async function buscarMidiasRemoto() {
-  if (!supabaseClient) throw new Error("Supabase não carregou.");
+  const client = await garantirSupabase();
 
-  const { data, error } = await supabaseClient
+  const { data, error } = await client
     .from(TABELA_MIDIAS)
     .select("*")
     .order("created_at", { ascending: false });
@@ -144,7 +177,7 @@ async function buscarMidiasRemoto() {
 }
 
 async function buscarPontosRemoto() {
-  if (!supabaseClient) throw new Error("Supabase não carregou.");
+  const client = await garantirSupabase();
 
   const mapa = new Map();
   const adicionar = (ponto = {}, somenteAtivo = false) => {
@@ -197,7 +230,7 @@ async function buscarPontosRemoto() {
   const erros = [];
 
   for (const consulta of consultas) {
-    const { data, error } = await supabaseClient
+    const { data, error } = await client
       .from(consulta.tabela)
       .select("*");
 
@@ -220,7 +253,7 @@ async function buscarPontosRemoto() {
 }
 
 async function salvarMidiaRemota(midia) {
-  if (!supabaseClient) throw new Error("Supabase não carregou.");
+  const client = await garantirSupabase();
 
   const payloads = [
     {
@@ -242,7 +275,7 @@ async function salvarMidiaRemota(midia) {
   let ultimoErro = null;
 
   for (const payload of payloads) {
-    const { data, error } = await supabaseClient
+      const { data, error } = await client
       .from(TABELA_MIDIAS)
       .insert([payload])
       .select("*")
@@ -383,9 +416,9 @@ async function registrarEnvio(ponto, midia, nomePonto = "") {
   if (!ponto || !midia) return;
 
   try {
-    if (!supabaseClient) throw new Error("Supabase não carregou.");
+    const client = await garantirSupabase();
 
-    const { error } = await supabaseClient
+    const { error } = await client
       .from(TABELA_PLAYLISTS)
       .insert([{
         codigo: ponto,
@@ -422,9 +455,11 @@ async function adicionarArquivos(files) {
     let videoUrl = "";
 
     try {
-      if (supabaseClient) {
+      const client = await garantirSupabase();
+
+      if (client) {
         storagePath = `biblioteca/${Date.now()}-${nomeLimpo}`;
-        const { error: uploadError } = await supabaseClient.storage
+        const { error: uploadError } = await client.storage
           .from(BUCKET)
           .upload(storagePath, file, {
             cacheControl: "86400",
@@ -433,7 +468,7 @@ async function adicionarArquivos(files) {
 
         if (uploadError) throw uploadError;
 
-        const { data } = supabaseClient.storage.from(BUCKET).getPublicUrl(storagePath);
+        const { data } = client.storage.from(BUCKET).getPublicUrl(storagePath);
         videoUrl = data.publicUrl;
       }
     } catch (error) {
