@@ -716,3 +716,98 @@ button {
   background: transparent;
 }
 
+/* Ajuste fino biblioteca: sem rolagem horizontal e sem caixa grande */
+.biblioteca-card {
+  overflow: hidden;
+}
+
+.tabela-midias {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tabela-cabecalho,
+.midia-linha {
+  grid-template-columns: minmax(0, 1fr) 64px 78px 80px;
+  gap: 8px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.lista-midias {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.lista-midias::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.midia-nome {
+  min-width: 0;
+  gap: 10px;
+}
+
+.midia-nome span:last-child {
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.midia-linha > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.lista-pontos {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+
+.lista-pontos::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.ponto-linha {
+  min-width: 0;
+}
+
+.ponto-linha span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Remove a caixa grande tracejada */
+.drop-global {
+  min-height: 0;
+  height: auto;
+  margin-top: 2px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.drop-global.ativo {
+  border: none;
+  background: rgba(47, 172, 88, 0.12);
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: none;
+}
+
+
