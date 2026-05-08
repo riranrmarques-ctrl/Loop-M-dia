@@ -2166,3 +2166,62 @@ body {
     text-align: center;
   }
 }
+
+/* Ajuste final da tela Pontos com sidebar */
+body {
+  padding: 26px 26px 60px 340px;
+}
+
+#conteudoPontos {
+  width: 100%;
+  max-width: none;
+}
+
+.topo-fixo.novo-topo,
+.painel-shell {
+  width: 100%;
+  max-width: 1120px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.pontos-box {
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  gap: 18px;
+  max-width: 900px;
+}
+
+.card-ponto {
+  max-width: 100%;
+}
+
+.novo-ponto-area {
+  max-width: 900px;
+  justify-content: flex-end;
+}
+
+.assinatura-duna {
+  max-width: 900px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+@media (min-width: 1500px) {
+  .pontos-box,
+  .novo-ponto-area,
+  .assinatura-duna {
+    max-width: 940px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .pontos-box {
+    grid-template-columns: repeat(2, minmax(250px, 1fr));
+    max-width: 100%;
+  }
+
+  .novo-ponto-area,
+  .assinatura-duna {
+    max-width: 100%;
+  }
+}
