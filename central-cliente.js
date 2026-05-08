@@ -88,8 +88,8 @@ function normalizarStatusTexto(status) {
   const valor = String(status || "").trim().toLowerCase();
 
   if (valor === "ativo") return "Ativo";
-  if (valor === "inativo") return "NÃ£o ativo";
-  return status ? String(status).trim() : "NÃ£o ativo";
+  if (valor === "inativo") return "inativo";
+  return status ? String(status).trim() : "inativo";
 }
 
 function obterNomeCliente(cliente) {
@@ -337,7 +337,7 @@ function renderizarClientes() {
 
   filtrados.forEach((cliente) => {
     const card = document.createElement("div");
-    const statusReal = cliente.status_real || "NÃ£o ativo";
+    const statusReal = cliente.status_real || inativo;
     const ativo = statusReal === "Ativo";
     const supervisor = clienteEhSupervisor(cliente);
 
