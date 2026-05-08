@@ -337,7 +337,7 @@ function renderizarClientes() {
 
   filtrados.forEach((cliente) => {
     const card = document.createElement("div");
-    const statusReal = cliente.status_real || inativo;
+    const statusReal = cliente.status_real || "inativo";
     const ativo = statusReal === "Ativo";
     const supervisor = clienteEhSupervisor(cliente);
 
