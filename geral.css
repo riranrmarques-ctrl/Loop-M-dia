@@ -299,12 +299,13 @@ button {
 }
 
 .card-info {
-  height: 126px;
+  height: 96px;
   min-height: 0;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
+  gap: 0;
   overflow: hidden;
 }
 
@@ -373,16 +374,11 @@ button {
 }
 
 .linha-card {
-  height: 1px;
-  width: 100%;
-  background: var(--line);
+  display: none;
 }
 
 .legenda {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-  margin-top: auto;
+  display: none;
 }
 
 .legenda-unica {
@@ -415,12 +411,42 @@ button {
 .verde-dot { background: #4ec86d; }
 
 .storage {
-  gap: 10px;
+  justify-content: center;
+  gap: 0;
 }
 
 .storage-box {
-  flex: 1;
+  display: block;
   min-height: 0;
+  padding-top: 0;
+}
+
+.storage-circle {
+  display: none;
+}
+
+.storage-texto {
+  min-width: 0;
+  padding-left: 57px;
+  border-left: none;
+}
+
+.storage-texto span {
+  display: none;
+}
+
+.storage-texto strong {
+  margin-top: 4px;
+  color: var(--text);
+  font-size: clamp(1.55rem, 2vw, 2rem);
+  line-height: 1;
+}
+
+/*
+  Elementos visuais antigos do armazenamento ficam escondidos para manter
+  os cards do topo com o mesmo padrão: título + número.
+*/
+/*
   display: grid;
   grid-template-columns: 54px minmax(0, 1fr);
   align-items: center;
@@ -485,13 +511,14 @@ button {
   font-size: clamp(1.2rem, 1.65vw, 1.55rem);
   line-height: 1;
 }
+*/
 
 .geral-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
   gap: var(--gap);
   align-items: stretch;
-  height: calc(100vh - 44px - 72px - 18px - 126px - 14px - 34px - 22px);
+  height: calc(100vh - 44px - 72px - 18px - 96px - 14px - 34px - 22px);
   max-height: 430px;
   min-height: 0;
 }
