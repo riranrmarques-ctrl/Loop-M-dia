@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loop Player | Painel Geral</title>
-  <link rel="stylesheet" href="geral.css?v=1">
+  <link rel="stylesheet" href="geral.css?v=2">
 </head>
 
 <body>
@@ -32,7 +32,7 @@
       </div>
       <strong>Precisa de ajuda?</strong>
       <p>Fale com o suporte pelo WhatsApp.</p>
-      <a href="https://wa.me/5531000000000" target="_blank">
+      <a href="https://wa.me/5531000000000" target="_blank" rel="noopener">
         Abrir WhatsApp
       </a>
     </div>
@@ -49,8 +49,8 @@
 
   <main id="conteudoGeral">
     <header class="geral-topo">
-      <div>
-        <h1>Bem-Vindo Vitor 👋</h1>
+      <div class="geral-titulo">
+        <h1>Bem-Vindo Vitor</h1>
         <p>Controle e monitoramento da rede indoor</p>
       </div>
 
@@ -60,18 +60,20 @@
           <strong>12 de Mai, 10:24</strong>
         </div>
 
-        <button class="btn-icon" type="button">
+        <button class="btn-icon" type="button" aria-label="Atualizar painel">
           <i data-lucide="refresh-cw"></i>
         </button>
       </div>
     </header>
 
-    <section class="cards-geral">
+    <section class="cards-geral" aria-label="Resumo da rede">
       <div class="card-info">
-        <div class="icone-card amarelo"><i data-lucide="radio-tower"></i></div>
-        <div>
-          <span>Pontos Ativos</span>
-          <strong><b>18</b>/20</strong>
+        <div class="card-principal">
+          <div class="icone-card amarelo"><i data-lucide="radio-tower"></i></div>
+          <div>
+            <span>Pontos Ativos</span>
+            <strong><b>18</b>/20</strong>
+          </div>
         </div>
         <div class="linha-card"></div>
         <div class="legenda">
@@ -81,10 +83,12 @@
       </div>
 
       <div class="card-info">
-        <div class="icone-card roxo"><i data-lucide="monitor"></i></div>
-        <div>
-          <span>Telas Ativas</span>
-          <strong><b class="roxo-texto">56</b>/72</strong>
+        <div class="card-principal">
+          <div class="icone-card roxo"><i data-lucide="monitor"></i></div>
+          <div>
+            <span>Telas Ativas</span>
+            <strong><b class="roxo-texto">56</b>/72</strong>
+          </div>
         </div>
         <div class="linha-card"></div>
         <div class="legenda">
@@ -94,39 +98,43 @@
       </div>
 
       <div class="card-info">
-        <div class="icone-card amarelo"><i data-lucide="layers"></i></div>
-        <div>
-          <span>Campanhas</span>
-          <strong>34</strong>
+        <div class="card-principal">
+          <div class="icone-card amarelo"><i data-lucide="layers"></i></div>
+          <div>
+            <span>Campanhas</span>
+            <strong>34</strong>
+          </div>
         </div>
         <div class="linha-card"></div>
-        <div class="legenda">
+        <div class="legenda legenda-unica">
           <p><i class="dot amarelo-dot"></i>Atualizadas hoje</p>
         </div>
       </div>
 
       <div class="card-info storage">
-        <div class="icone-card verde"><i data-lucide="hard-drive"></i></div>
-        <div>
-          <span>Gigas consumidos</span>
+        <div class="card-principal storage-topo">
+          <div class="icone-card verde"><i data-lucide="hard-drive"></i></div>
+          <div>
+            <span>Gigas consumidos</span>
+          </div>
+        </div>
 
-          <div class="storage-box">
-            <div class="storage-circle">
-              <strong>128,4 GB</strong>
-              <small>Utilizado</small>
-            </div>
+        <div class="storage-box">
+          <div class="storage-circle">
+            <strong>128,4 GB</strong>
+            <small>Utilizado</small>
+          </div>
 
-            <div class="storage-texto">
-              <span>Espaço disponível</span>
-              <strong>371,6 GB</strong>
-            </div>
+          <div class="storage-texto">
+            <span>Espaço disponível</span>
+            <strong>371,6 GB</strong>
           </div>
         </div>
       </div>
     </section>
 
     <section class="geral-layout">
-      <section class="painel-card">
+      <section class="painel-card painel-telas">
         <div class="painel-titulo">
           <i data-lucide="radio-tower"></i>
           <div>
@@ -146,13 +154,13 @@
           <div id="listaTelas"></div>
         </div>
 
-        <button class="btn-ver-telas">
+        <button class="btn-ver-telas" type="button">
           Ver todas as telas
           <i data-lucide="chevron-right"></i>
         </button>
       </section>
 
-      <section class="painel-card">
+      <section class="painel-card painel-historico">
         <div class="painel-titulo">
           <i data-lucide="clock-3"></i>
           <div>
@@ -171,6 +179,6 @@
   </main>
 
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="geral.js?v=1"></script>
+  <script src="geral.js?v=2"></script>
 </body>
 </html>
