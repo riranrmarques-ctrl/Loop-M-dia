@@ -1,93 +1,13 @@
-const STORAGE_EMPRESAS_KEY = "loop_empresas_v1";
+const SUPABASE_URL = "https://rgrwoboqryvwnqsvlrtj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_PYvzQu5T5Xzl_QF1J_qI4w_b9XF-aa3";
 
-const empresasPadrao = [
-  {
-    id: "fulano-indoor",
-    nome: "Fulano Indoor",
-    email: "contato@fulanoindoor.com",
-    telas: 18,
-    pontos: 6,
-    armazenamento: 320,
-    usado: 220,
-    status: "Ativa",
-    contato: "Fulano da Silva",
-    telefone: "(11) 99999-9999",
-    vencimento: "2025-05-12",
-    valor: "R$ 599,00"
-  },
-  {
-    id: "norte-midia-tv",
-    nome: "Norte MÃ­dia TV",
-    email: "admin@nortemidiatv.com",
-    telas: 12,
-    pontos: 4,
-    armazenamento: 220,
-    usado: 138,
-    status: "Ativa",
-    contato: "Marina Costa",
-    telefone: "(31) 98888-1212",
-    vencimento: "2025-05-18",
-    valor: "R$ 449,00"
-  },
-  {
-    id: "conecta-indoor",
-    nome: "Conecta Indoor",
-    email: "suporte@conectaindoor.com",
-    telas: 8,
-    pontos: 3,
-    armazenamento: 150,
-    usado: 86,
-    status: "Ativa",
-    contato: "Rafael Nunes",
-    telefone: "(21) 97777-3434",
-    vencimento: "2025-05-22",
-    valor: "R$ 329,00"
-  },
-  {
-    id: "play-tv",
-    nome: "Play TV",
-    email: "contato@playtv.com.br",
-    telas: 6,
-    pontos: 2,
-    armazenamento: 100,
-    usado: 78,
-    status: "Limite prÃ³ximo",
-    contato: "Bianca Melo",
-    telefone: "(71) 96666-5656",
-    vencimento: "2025-05-25",
-    valor: "R$ 249,00"
-  },
-  {
-    id: "visual-indoor",
-    nome: "Visual Indoor",
-    email: "contato@visualindoor.com",
-    telas: 4,
-    pontos: 1,
-    armazenamento: 80,
-    usado: 64,
-    status: "Limite prÃ³ximo",
-    contato: "Lucas Ramos",
-    telefone: "(85) 95555-7878",
-    vencimento: "2025-05-27",
-    valor: "R$ 199,00"
-  },
-  {
-    id: "smart-midia-tv",
-    nome: "Smart MÃ­dia TV",
-    email: "contato@smartmidiatv.com",
-    telas: 10,
-    pontos: 3,
-    armazenamento: 90,
-    usado: 42,
-    status: "Suspensa",
-    contato: "Camila Prado",
-    telefone: "(51) 94444-9090",
-    vencimento: "2025-06-02",
-    valor: "R$ 299,00"
-  }
-];
+const STORAGE_EMPRESAS_KEY = "loop_empresas_v2";
+const TABELAS_EMPRESAS = ["empresas"];
 
+let supabaseClient = null;
+let tabelaEmpresasAtual = localStorage.getItem("loop_empresas_tabela_atual") || "";
 let empresas = [];
+let carregandoEmpresas = false;
 let timerMensagem = null;
 
 const listaEmpresas = document.getElementById("listaEmpresas");
@@ -96,6 +16,11 @@ const btnAdicionarEmpresa = document.getElementById("btnAdicionarEmpresa");
 const btnAtualizarEmpresas = document.getElementById("btnAtualizarEmpresas");
 const dataAtualizacao = document.getElementById("dataAtualizacao");
 const mensagemEmpresas = document.getElementById("mensagemEmpresas");
+
+function iniciarSupabase() {
+  if (!window.supabase) return null;
+  return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
 
 function escaparHtml(texto) {
   return String(texto || "")
@@ -115,16 +40,55 @@ function slugify(texto) {
     .replace(/^-|-$/g, "");
 }
 
-function lerEmpresas() {
+function numero(valor, fallback = 0) {
+  const final = Number(valor);
+  return Number.isFinite(final) ? final : fallback;
+}
+
+function primeiroValor(obj, chaves, fallback = "") {
+  for (const chave of chaves) {
+    if (obj?.[chave] !== undefined && obj?.[chave] !== null && String(obj[chave]).trim() !== "") {
+      return obj[chave];
+    }
+  }
+
+  return fallback;
+}
+
+function normalizarEmpresa(row = {}, tabela = tabelaEmpresasAtual) {
+  const nome = String(primeiroValor(row, ["nome", "nome_franquia", "empresa", "razao_social", "titulo"], "Nova franquia")).trim();
+  const idOriginal = primeiroValor(row, ["id", "uuid", "codigo", "slug"], "");
+  const id = String(idOriginal || slugify(nome) || `empresa-${Date.now()}`).trim();
+
+  return {
+    ...row,
+    id,
+    rowId: row.id ?? row.uuid ?? row.codigo ?? id,
+    tabelaOrigem: tabela,
+    nome,
+    email: String(primeiroValor(row, ["email", "email_acesso", "login", "contato_email"], "")).trim(),
+    telas: numero(primeiroValor(row, ["telas", "numero_telas", "limite_telas", "qtd_telas"], 0)),
+    pontos: numero(primeiroValor(row, ["pontos", "numero_pontos", "limite_pontos", "qtd_pontos"], 0)),
+    armazenamento: numero(primeiroValor(row, ["armazenamento", "armazenamento_gb", "limite_gb", "storage_gb"], 0)),
+    usado: numero(primeiroValor(row, ["usado", "armazenamento_usado", "usado_gb", "storage_usado_gb"], 0)),
+    status: String(primeiroValor(row, ["status", "situacao"], "Ativa")).trim(),
+    contato: String(primeiroValor(row, ["contato", "responsavel", "contato_responsavel"], "")).trim(),
+    telefone: String(primeiroValor(row, ["telefone", "celular", "whatsapp"], "")).trim(),
+    vencimento: String(primeiroValor(row, ["vencimento", "proximo_vencimento", "data_vencimento"], "")).trim(),
+    valor: String(primeiroValor(row, ["valor", "valor_mensal", "mensalidade"], "")).trim()
+  };
+}
+
+function lerEmpresasCache() {
   try {
     const salvas = JSON.parse(localStorage.getItem(STORAGE_EMPRESAS_KEY) || "null");
-    return Array.isArray(salvas) && salvas.length ? salvas : empresasPadrao;
+    return Array.isArray(salvas) ? salvas.map((item) => normalizarEmpresa(item)) : [];
   } catch {
-    return empresasPadrao;
+    return [];
   }
 }
 
-function salvarEmpresas() {
+function salvarEmpresasCache() {
   localStorage.setItem(STORAGE_EMPRESAS_KEY, JSON.stringify(empresas));
 }
 
@@ -240,7 +204,118 @@ function renderizarEmpresas() {
   }
 }
 
-function adicionarEmpresa() {
+async function buscarEmpresasRemoto() {
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
+
+  const tabelas = tabelaEmpresasAtual
+    ? [tabelaEmpresasAtual, ...TABELAS_EMPRESAS.filter((tabela) => tabela !== tabelaEmpresasAtual)]
+    : TABELAS_EMPRESAS;
+
+  let ultimoErro = null;
+
+  for (const tabela of tabelas) {
+    const { data, error } = await supabaseClient
+      .from(tabela)
+      .select("*");
+
+    if (!error) {
+      tabelaEmpresasAtual = tabela;
+      localStorage.setItem("loop_empresas_tabela_atual", tabela);
+      return (data || []).map((row) => normalizarEmpresa(row, tabela));
+    }
+
+    ultimoErro = error;
+    console.warn(`Falha ao buscar empresas na tabela ${tabela}:`, error);
+  }
+
+  throw ultimoErro || new Error("Nenhuma tabela de empresas encontrada.");
+}
+
+function montarPayloadEmpresa(empresa) {
+  return {
+    nome: empresa.nome,
+    email: empresa.email,
+    telas: empresa.telas,
+    pontos: empresa.pontos,
+    armazenamento: empresa.armazenamento,
+    usado: empresa.usado,
+    status: empresa.status,
+    contato: empresa.contato,
+    telefone: empresa.telefone,
+    vencimento: empresa.vencimento || null,
+    valor: empresa.valor
+  };
+}
+
+async function inserirEmpresaRemota(empresa) {
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
+
+  const tabelas = tabelaEmpresasAtual ? [tabelaEmpresasAtual] : TABELAS_EMPRESAS;
+  const payloads = [
+    { id: empresa.id, ...montarPayloadEmpresa(empresa) },
+    { codigo: empresa.id, nome: empresa.nome, email: empresa.email, status: empresa.status },
+    { nome: empresa.nome, email: empresa.email, status: empresa.status }
+  ];
+
+  let ultimoErro = null;
+
+  for (const tabela of tabelas) {
+    for (const payload of payloads) {
+      const { data, error } = await supabaseClient
+        .from(tabela)
+        .insert([payload])
+        .select("*")
+        .limit(1);
+
+      if (!error) {
+        tabelaEmpresasAtual = tabela;
+        localStorage.setItem("loop_empresas_tabela_atual", tabela);
+        return normalizarEmpresa(data?.[0] || empresa, tabela);
+      }
+
+      ultimoErro = error;
+      console.warn(`Falha ao inserir empresa em ${tabela}:`, payload, error);
+    }
+  }
+
+  throw ultimoErro || new Error("Não foi possível inserir empresa.");
+}
+
+async function carregarEmpresas(opcoes = {}) {
+  if (carregandoEmpresas) return;
+
+  const forcarAtualizacao = opcoes.forcarAtualizacao === true;
+  carregandoEmpresas = true;
+
+  if (!forcarAtualizacao) {
+    empresas = lerEmpresasCache();
+    renderizarEmpresas();
+  }
+
+  try {
+    mostrarMensagem("Buscando empresas no Supabase...");
+    const remotas = await buscarEmpresasRemoto();
+
+    empresas = remotas;
+    salvarEmpresasCache();
+    formatarDataAtualizacao();
+    renderizarEmpresas();
+    mostrarMensagem("Empresas carregadas do Supabase.");
+  } catch (error) {
+    console.error(error);
+
+    if (!empresas.length) {
+      empresas = lerEmpresasCache();
+      renderizarEmpresas();
+    }
+
+    mostrarMensagem("Usando dados locais. Verifique a tabela no Supabase.");
+  } finally {
+    carregandoEmpresas = false;
+  }
+}
+
+async function adicionarEmpresa() {
   const numero = empresas.length + 1;
   const nome = `Nova Franquia ${numero}`;
   const novaEmpresa = {
@@ -252,31 +327,39 @@ function adicionarEmpresa() {
     armazenamento: 50,
     usado: 0,
     status: "Ativa",
-    contato: "ResponsÃ¡vel",
+    contato: "Responsável",
     telefone: "",
     vencimento: "2025-12-12",
     valor: "R$ 0,00"
   };
 
-  empresas = [novaEmpresa, ...empresas];
-  salvarEmpresas();
+  try {
+    mostrarMensagem("Criando franquia no Supabase...");
+    const criada = await inserirEmpresaRemota(novaEmpresa);
+    empresas = [criada, ...empresas];
+    mostrarMensagem("Franquia adicionada no Supabase.");
+  } catch (error) {
+    console.error(error);
+    empresas = [novaEmpresa, ...empresas];
+    mostrarMensagem("Franquia salva localmente. Ajuste a tabela no Supabase.");
+  }
+
+  salvarEmpresasCache();
   renderizarEmpresas();
-  mostrarMensagem("Franquia adicionada.");
+  formatarDataAtualizacao();
 }
 
 function iniciarEmpresas() {
-  empresas = lerEmpresas();
+  supabaseClient = iniciarSupabase();
+  empresas = lerEmpresasCache();
   formatarDataAtualizacao();
   renderizarEmpresas();
 
   buscaEmpresa?.addEventListener("input", renderizarEmpresas);
   btnAdicionarEmpresa?.addEventListener("click", adicionarEmpresa);
-  btnAtualizarEmpresas?.addEventListener("click", () => {
-    empresas = lerEmpresas();
-    formatarDataAtualizacao();
-    renderizarEmpresas();
-    mostrarMensagem("Empresas atualizadas.");
-  });
+  btnAtualizarEmpresas?.addEventListener("click", () => carregarEmpresas({ forcarAtualizacao: true }));
+
+  carregarEmpresas();
 
   if (window.lucide) {
     window.lucide.createIcons();
