@@ -103,10 +103,6 @@ function normalizarCodigo(codigo) {
   return String(codigo || "").trim().toUpperCase();
 }
 
-function somenteNumeros(valor) {
-  return String(valor || "").replace(/\D/g, "");
-}
-
 function limparNomeArquivo(nome) {
   return String(nome || "arquivo")
     .normalize("NFD")
@@ -173,7 +169,7 @@ function obterCidadePonto(ponto) {
 }
 
 function obterEnderecoPonto(ponto) {
-  return ponto?.endereco || ponto?.endereco_completo || ponto?.["endere\u00e7o"] || ponto?.local || "";
+  return ponto?.endereco || ponto?.endereco_completo || ponto?.["endereÃ§o"] || ponto?.local || "";
 }
 
 function obterUltimoPingPonto(ponto) {
@@ -198,7 +194,7 @@ function obterLocalizacaoPonto(cidade, endereco = "") {
   if (cidadeFinal) return `<strong>${escapeHtml(cidadeFinal)}</strong>`;
   if (enderecoFinal) return escapeHtml(enderecoFinal);
 
-  return "Localizacao nao definida";
+  return "LocalizaÃ§Ã£o nÃ£o definida";
 }
 
 function pontoEstaDisponivel(ponto) {
@@ -232,8 +228,8 @@ function statusEhInativo(status) {
 function calcularStatusInfo(ponto) {
   if (!pontoEstaDisponivel(ponto)) {
     return {
-      texto: "Indisponivel",
-      detalhe: "Indisponivel",
+      texto: "IndisponÃ­vel",
+      detalhe: "IndisponÃ­vel",
       ativo: false,
       classe: "indisponivel"
     };
@@ -244,7 +240,7 @@ function calcularStatusInfo(ponto) {
     .trim();
 
   const ultimoPing = ponto?.ultimo_ping || obterUltimoPingPonto(ponto);
-  const horario = ultimoPing ? formatarDataHora(ultimoPing) : "sem historico";
+  const horario = ultimoPing ? formatarDataHora(ultimoPing) : "sem histÃ³rico";
 
   if (statusEhAtivo(status)) {
     return {
@@ -257,7 +253,7 @@ function calcularStatusInfo(ponto) {
 
   return {
     texto: "Inativo",
-    detalhe: statusEhInativo(status) ? `Inativo desde ${horario}` : "Inativo desde sem historico",
+    detalhe: statusEhInativo(status) ? `Inativo desde ${horario}` : "Inativo desde sem histÃ³rico",
     ativo: false,
     classe: "inativo"
   };
@@ -266,8 +262,8 @@ function calcularStatusInfo(ponto) {
 function calcularStatusPorHistorico(historicoStatus = [], ponto = {}) {
   if (!pontoEstaDisponivel(ponto)) {
     return {
-      texto: "Indisponivel",
-      detalhe: "Indisponivel",
+      texto: "IndisponÃ­vel",
+      detalhe: "IndisponÃ­vel",
       ativo: false,
       classe: "indisponivel"
     };
@@ -276,7 +272,7 @@ function calcularStatusPorHistorico(historicoStatus = [], ponto = {}) {
   const ultimoEvento = Array.isArray(historicoStatus) ? historicoStatus[0] : null;
   const status = normalizarStatusHistorico(ultimoEvento);
   const dataEventoRaw = obterDataHistorico(ultimoEvento);
-  const horario = dataEventoRaw ? formatarDataHora(dataEventoRaw) : "sem historico";
+  const horario = dataEventoRaw ? formatarDataHora(dataEventoRaw) : "sem histÃ³rico";
 
   if (statusEhAtivo(status)) {
     return {
@@ -526,7 +522,7 @@ async function obterCodigoPontoUnico() {
     if (!data) return codigo;
   }
 
-  throw new Error("Nao foi possivel gerar um codigo de ponto unico.");
+  throw new Error("NÃ£o foi possÃ­vel gerar um cÃ³digo de ponto Ãºnico.");
 }
 
 async function criarNovoPonto() {
@@ -597,7 +593,7 @@ async function obterProximaOrdemPlaylist() {
     .limit(1);
 
   if (error) {
-    console.warn("Nao foi possivel buscar ordem da playlist:", error);
+    console.warn("NÃ£o foi possÃ­vel buscar ordem da playlist:", error);
     return 1;
   }
 
@@ -673,7 +669,7 @@ function atualizarVisualDisponibilidade(disponivel) {
   btnToggleDisponibilidade.setAttribute("aria-pressed", disponivel ? "true" : "false");
 
   if (texto) {
-    texto.textContent = disponivel ? "Disponivel" : "Indisponivel";
+    texto.textContent = disponivel ? "DisponÃ­vel" : "IndisponÃ­vel";
   }
 }
 
@@ -691,7 +687,7 @@ async function alternarDisponibilidadePonto() {
   });
 
   try {
-    setStatus(novoStatus ? "Marcando como disponivel..." : "Marcando como indisponivel...", "normal");
+    setStatus(novoStatus ? "Marcando como disponÃ­vel..." : "Marcando como indisponÃ­vel...", "normal");
 
     const tentativas = [
       { disponivel: novoStatus },
@@ -721,7 +717,7 @@ async function alternarDisponibilidadePonto() {
     sessionStorage.removeItem(CACHE_PONTOS_KEY);
     renderizarCardsPontos(Object.values(pontosMap));
     atualizarStatusDetalhePonto(calcularStatusInfo(pontosMap[codigoSelecionado]));
-    setStatus(novoStatus ? "Ponto disponivel" : "Ponto indisponivel", "ok");
+    setStatus(novoStatus ? "Ponto disponÃ­vel" : "Ponto indisponÃ­vel", "ok");
   } catch (error) {
     console.error("Erro ao atualizar disponibilidade:", error);
 
@@ -738,8 +734,8 @@ async function alternarDisponibilidadePonto() {
 }
 
 async function buscarStatusPontosRemoto() {
-  // A tabela statuspontos nao existe em alguns ambientes. Manter vazio evita
-  // erro 404 no console e nao bloqueia o carregamento dos pontos.
+  // A tabela statuspontos nÃ£o existe em alguns ambientes. Manter vazio evita
+  // erro 404 no console e nÃ£o bloqueia o carregamento dos pontos.
   if (!TABELA_STATUS_PONTOS) return {};
 
   return {};
@@ -863,9 +859,9 @@ function ativarEventosCardsRenderizados() {
 
       try {
         await navigator.clipboard.writeText(codigo);
-        setStatus("Codigo copiado", "ok");
+        setStatus("CÃ³digo copiado", "ok");
       } catch {
-        setStatus("Erro ao copiar codigo", "erro");
+        setStatus("Erro ao copiar cÃ³digo", "erro");
       }
     };
   });
@@ -980,7 +976,7 @@ function obterNomeClientePlaylist(item) {
     return `Cliente ${String(item.codigo_cliente).trim()}`;
   }
 
-  return "Cliente nao informado";
+  return "Cliente nÃ£o informado";
 }
 
 function obterUrlDownloadPlaylist(item) {
@@ -1079,13 +1075,13 @@ function renderizarPlaylistDados(lista, historicoStatus) {
   if (historicoEncerramento) {
     historicoEncerramento.innerHTML = inativos.length
       ? inativos.map((item, index) => montarItemHistoricoEncerramento(item, index)).join("")
-      : `<div class="playlist-vazia">Sem historico</div>`;
+      : `<div class="playlist-vazia">Sem histÃ³rico</div>`;
   }
 
   if (historicoStatusEl) {
     historicoStatusEl.innerHTML = historicoStatus.length
       ? historicoStatus.map((item, index) => montarItemHistoricoStatus(item, index)).join("")
-      : `<div class="playlist-vazia">Sem historico</div>`;
+      : `<div class="playlist-vazia">Sem histÃ³rico</div>`;
   }
 
   ativarDrag(ativos);
@@ -1110,7 +1106,7 @@ async function buscarHistoricoStatusPonto(codigo) {
 
     if (!error) return data || [];
 
-    console.warn(`Erro ao buscar historico usando ${consulta.ordem}:`, error);
+    console.warn(`Erro ao buscar histÃ³rico usando ${consulta.ordem}:`, error);
   }
 
   return [];
@@ -1142,7 +1138,7 @@ async function carregarPlaylist(opcoes = {}) {
 
   if (!forcarAtualizacao && cache) {
     renderizarPlaylistDados(cache.playlist, cache.historico);
-    setStatus(cache.fresco ? "Painel Ativo" : "Playlist em cache. Atualizacao pendente.", cache.fresco ? "ok" : "normal");
+    setStatus(cache.fresco ? "Painel Ativo" : "Playlist em cache. AtualizaÃ§Ã£o pendente.", cache.fresco ? "ok" : "normal");
 
     if (cache.fresco) return;
   } else if (!cache) {
@@ -1189,7 +1185,7 @@ function ativarRenomearItens() {
       const nomeFinal = novoNome.trim();
 
       if (!nomeFinal) {
-        setStatus("Digite um nome valido", "erro");
+        setStatus("Digite um nome vÃ¡lido", "erro");
         return;
       }
 
@@ -1251,7 +1247,7 @@ function ativarExclusaoItens() {
       }
 
       limparCachePlaylist(codigoSelecionado);
-      setStatus("Item excluido", "ok");
+      setStatus("Item excluÃ­do", "ok");
       carregarPlaylist({ forcarAtualizacao: true });
     };
   });
@@ -1373,12 +1369,12 @@ async function salvarEdicaoPonto() {
   const endereco = editEndereco ? editEndereco.value.trim() : "";
 
   if (!nome || !cidade || !endereco) {
-    setStatus("Preencha nome, cidade e endereco", "erro");
+    setStatus("Preencha nome, cidade e endereÃ§o", "erro");
     return;
   }
 
   try {
-    setStatus("Salvando informacoes...", "normal");
+    setStatus("Salvando informaÃ§Ãµes...", "normal");
 
     const { error } = await supabaseClient
       .from(TABELA_PONTOS)
@@ -1387,7 +1383,7 @@ async function salvarEdicaoPonto() {
 
     if (error) {
       console.error("Erro ao salvar dados do ponto:", error);
-      setStatus("Erro ao salvar informacoes", "erro");
+      setStatus("Erro ao salvar informaÃ§Ãµes", "erro");
       return;
     }
 
@@ -1442,8 +1438,8 @@ async function salvarEdicaoPonto() {
     renderizarCardsPontos(Object.values(pontosMap));
     setStatus("Atualizado com sucesso", "ok");
   } catch (error) {
-    console.error("Erro geral ao salvar edicao:", error);
-    setStatus("Erro ao salvar edicao", "erro");
+    console.error("Erro geral ao salvar ediÃ§Ã£o:", error);
+    setStatus("Erro ao salvar ediÃ§Ã£o", "erro");
   }
 }
 
@@ -1503,7 +1499,7 @@ function abrirModalCopiarPlaylist() {
 
       return `<option value="${escapeHtml(codigo)}">${escapeHtml(nome)} - ${escapeHtml(codigo)}</option>`;
     }).join("")
-    : `<option value="">Nenhuma pasta disponivel</option>`;
+    : `<option value="">Nenhuma pasta disponÃ­vel</option>`;
 
   if (btnConfirmarCopiaPlaylist) {
     btnConfirmarCopiaPlaylist.disabled = !pontos.length;
@@ -1527,7 +1523,7 @@ async function copiarPlaylistInteira() {
     return;
   }
 
-  const confirmar = window.confirm("Copiar toda a playlist dessa pasta para o ponto atual? A playlist atual sera substituida.");
+  const confirmar = window.confirm("Copiar toda a playlist dessa pasta para o ponto atual? A playlist atual serÃ¡ substituÃ­da.");
   if (!confirmar) return;
 
   try {
@@ -1640,9 +1636,9 @@ if (codigoAtual) {
 
     try {
       await navigator.clipboard.writeText(codigoSelecionado);
-      setStatus("Codigo copiado", "ok");
+      setStatus("CÃ³digo copiado", "ok");
     } catch {
-      setStatus("Erro ao copiar codigo", "erro");
+      setStatus("Erro ao copiar cÃ³digo", "erro");
     }
   };
 }
@@ -1784,3 +1780,7 @@ setInterval(() => {
 
 setStatus("Painel Ativo", "ok");
 iniciarPainel();
+
+if (window.lucide) {
+  window.lucide.createIcons();
+}
