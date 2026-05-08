@@ -9,7 +9,12 @@ const TABELA_STATUS_PONTOS = "statuspontos";
 const TABELA_VINCULOS = "playercliente";
 
 const STORAGE_MIDIAS_KEY = "biblioteca_cache_v2";
-const SUPABASE_CDN = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+const SUPABASE_CDNS = [
+  "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
+  "https://unpkg.com/@supabase/supabase-js@2"
+];
+
+console.info("biblioteca.js v215 carregado");
 
 let midias = [];
 let pontosBiblioteca = [];
@@ -50,11 +55,27 @@ async function garantirSupabase() {
   if (supabaseClient) return supabaseClient;
 
   if (!window.supabase) {
-    await carregarScript(SUPABASE_CDN);
+    let carregou = false;
+
+    for (const cdn of SUPABASE_CDNS) {
+      try {
+        await carregarScript(cdn);
+        if (window.supabase) {
+          carregou = true;
+          break;
+        }
+      } catch (error) {
+        console.warn(`Falha ao carregar Supabase por ${cdn}:`, error);
+      }
+    }
+
+    if (!carregou) {
+      throw new Error("Supabase nÃ£o carregou. Confira o CDN no HTML.");
+    }
   }
 
   if (!window.supabase) {
-    throw new Error("Supabase não carregou. Confira o CDN no HTML.");
+    throw new Error("Supabase nÃ£o carregou. Confira o CDN no HTML.");
   }
 
   supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -148,7 +169,7 @@ function pontoEstaAtivoBiblioteca(ponto = {}) {
   const status = String(ponto.status || ponto.status_final || ponto.status_evento || "").trim().toLowerCase();
 
   if (ponto.disponivel === false) return false;
-  if (["inativo", "indisponivel", "indisponível", "offline", "suspensa", "suspenso"].includes(status)) return false;
+  if (["inativo", "indisponivel", "indisponÃ­vel", "offline", "suspensa", "suspenso"].includes(status)) return false;
   return true;
 }
 
@@ -246,7 +267,7 @@ async function buscarPontosRemoto() {
   const pontos = Array.from(mapa.values()).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
 
   if (!pontos.length && erros.length) {
-    mostrarMensagem(`Não encontrei pontos. ${erros[0]}`);
+    mostrarMensagem(`NÃ£o encontrei pontos. ${erros[0]}`);
   }
 
   return pontos;
@@ -285,7 +306,7 @@ async function salvarMidiaRemota(midia) {
     ultimoErro = error;
   }
 
-  throw ultimoErro || new Error("Não foi possível salvar mídia.");
+  throw ultimoErro || new Error("NÃ£o foi possÃ­vel salvar mÃ­dia.");
 }
 
 function obterTipoArquivo(nome) {
@@ -333,7 +354,7 @@ function renderizarMidias() {
 
   listaMidias.innerHTML = midias.length
     ? midias.map(montarLinhaMidia).join("")
-    : `<div class="linha-vazia">Nenhuma mídia adicionada.</div>`;
+    : `<div class="linha-vazia">Nenhuma mÃ­dia adicionada.</div>`;
 
   document.querySelectorAll(".midia-linha").forEach((linha) => {
     linha.addEventListener("dragstart", () => {
@@ -472,7 +493,7 @@ async function adicionarArquivos(files) {
         videoUrl = data.publicUrl;
       }
     } catch (error) {
-      console.warn("Upload da mídia falhou, mantendo local:", error);
+      console.warn("Upload da mÃ­dia falhou, mantendo local:", error);
     }
 
     const midiaBase = {
@@ -488,7 +509,7 @@ async function adicionarArquivos(files) {
     try {
       novasMidias.push(await salvarMidiaRemota(midiaBase));
     } catch (error) {
-      console.warn("Não foi possível salvar mídia no Supabase:", error);
+      console.warn("NÃ£o foi possÃ­vel salvar mÃ­dia no Supabase:", error);
       novasMidias.push(midiaBase);
     }
   }
@@ -497,7 +518,7 @@ async function adicionarArquivos(files) {
   salvarMidias();
   renderizarMidias();
   formatarDataAtualizacao();
-  mostrarMensagem(`${novasMidias.length} mídia(s) adicionada(s).`);
+  mostrarMensagem(`${novasMidias.length} mÃ­dia(s) adicionada(s).`);
 }
 
 function iniciarEventos() {
