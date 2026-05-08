@@ -2225,3 +2225,113 @@ body {
     max-width: 100%;
   }
 }
+
+/* PADRAO IGUAL AO CENTRAL-CLIENTE */
+
+body {
+  padding: 26px 26px 60px 340px;
+}
+
+#conteudoPontos {
+  width: 100%;
+  max-width: none;
+}
+
+.sidebar-app {
+  width: 280px;
+  padding: 34px 22px;
+}
+
+.topo-fixo.novo-topo {
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 1180px;
+  min-height: 104px;
+  margin: 0 0 18px;
+  padding: 14px 0 16px;
+}
+
+.topo-esquerda,
+.topo-direita,
+.logo-topo-img {
+  display: none !important;
+}
+
+.topo-centro {
+  align-items: flex-start;
+  justify-content: center;
+  justify-self: stretch;
+  text-align: left;
+}
+
+.topo-centro h1 {
+  font-size: clamp(1.85rem, 3vw, 2.65rem);
+  line-height: 1;
+  letter-spacing: 0.075em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.topo-centro p {
+  margin-top: 2px;
+  font-size: clamp(1.02rem, 1.55vw, 1.28rem);
+  text-align: left;
+}
+
+.painel-shell {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0;
+}
+
+.pontos-box {
+  width: 100%;
+  max-width: 1180px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 18px;
+}
+
+.novo-ponto-area,
+.assinatura-duna {
+  width: 100%;
+  max-width: 1180px;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.status-topo,
+.status-box {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+}
+
+@media (max-width: 900px) {
+  body {
+    padding: 18px 12px 60px;
+  }
+
+  .sidebar-app {
+    display: none;
+  }
+
+  .topo-fixo.novo-topo,
+  .painel-shell,
+  .pontos-box,
+  .novo-ponto-area,
+  .assinatura-duna {
+    max-width: 100%;
+  }
+
+  .topo-centro {
+    align-items: center;
+    text-align: center;
+  }
+
+  .topo-centro h1,
+  .topo-centro p {
+    text-align: center;
+    white-space: normal;
+  }
+}
