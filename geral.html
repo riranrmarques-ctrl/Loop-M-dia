@@ -1,131 +1,123 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loop Player | Painel Geral</title>
-  <link rel="stylesheet" href="geral.css" />
+  <link rel="stylesheet" href="centralpainel.css?v=1">
 </head>
 
 <body>
-  <aside class="sidebar">
-    <div class="logo">
-      <div class="infinity">∞</div>
-      <span>Loop Player</span>
+  <aside class="sidebar-app">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Loop Player">
     </div>
 
-    <nav>
-      <p>NAVEGAÇÃO</p>
+    <div class="sidebar-label">Navegação</div>
 
-      <a class="active" href="#">
-        <span>▦</span> Geral
-      </a>
-
-      <a href="#">
-        <span>⌖</span> Pontos
-      </a>
-
-      <a href="#">
-        <span>📣</span> Anunciantes
-      </a>
-
-      <a href="#">
-        <span>▥</span> Empresas
-      </a>
-
-      <a href="#">
-        <span>▤</span> Contratos
-      </a>
-
-      <a href="#">
-        <span>▻</span> Biblioteca
-      </a>
+    <nav class="sidebar-nav">
+      <a href="/centralpainel.html" class="ativo"><i data-lucide="layout-dashboard"></i>Geral</a>
+      <a href="/pontos.html"><i data-lucide="map-pin"></i>Pontos</a>
+      <a href="/central-cliente.html"><i data-lucide="megaphone"></i>Anunciantes</a>
+      <a href="/empresas.html"><i data-lucide="building-2"></i>Empresas</a>
+      <a href="/contratos.html"><i data-lucide="file-text"></i>Contratos</a>
+      <a href="/biblioteca.html"><i data-lucide="folder-play"></i>Biblioteca</a>
     </nav>
 
-    <div class="help-card">
-      <div class="whats">☘</div>
-      <h3>Precisa de ajuda?</h3>
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-ajuda">
+      <div class="whatsapp-icon">
+        <i data-lucide="message-circle"></i>
+      </div>
+      <strong>Precisa de ajuda?</strong>
       <p>Fale com o suporte pelo WhatsApp.</p>
-      <button>Abrir WhatsApp</button>
+      <a href="https://wa.me/5531000000000" target="_blank">
+        Abrir WhatsApp
+      </a>
     </div>
 
-    <div class="user-card">
-      <div class="avatar">V</div>
+    <div class="sidebar-user">
+      <div class="avatar-user">V</div>
       <div>
         <strong>Vitor</strong>
         <span>Administrador</span>
       </div>
-      <span class="arrow">⌄</span>
+      <i data-lucide="chevron-down"></i>
     </div>
   </aside>
 
-  <main class="main">
-    <header class="top">
+  <main id="conteudoGeral">
+    <header class="geral-topo">
       <div>
         <h1>Bem-Vindo Vitor 👋</h1>
         <p>Controle e monitoramento da rede indoor</p>
       </div>
 
-      <div class="updated">
-        <span>Atualizado agora <b></b></span>
-        <p>12 de Mai, 10:24</p>
-        <button>↻</button>
+      <div class="topo-status">
+        <div>
+          <span>Atualizado agora</span>
+          <strong>12 de Mai, 10:24</strong>
+        </div>
+
+        <button class="btn-icon" type="button">
+          <i data-lucide="refresh-cw"></i>
+        </button>
       </div>
     </header>
 
-    <section class="cards">
-      <div class="card">
-        <div class="icon orange">⌁</div>
+    <section class="cards-geral">
+      <div class="card-info">
+        <div class="icone-card amarelo"><i data-lucide="radio-tower"></i></div>
         <div>
-          <p>Pontos Ativos</p>
-          <h2><span class="orange-text">18</span><span>/20</span></h2>
+          <span>Pontos Ativos</span>
+          <strong><b>18</b>/20</strong>
         </div>
-        <div class="divider"></div>
-        <div class="legend">
-          <span><b class="dot orange-dot"></b>18 online</span>
-          <span><b class="dot red-dot"></b>2 offline</span>
+        <div class="linha-card"></div>
+        <div class="legenda">
+          <p><i class="dot amarelo-dot"></i>18 online</p>
+          <p><i class="dot vermelho-dot"></i>2 offline</p>
         </div>
       </div>
 
-      <div class="card">
-        <div class="icon purple">▭</div>
+      <div class="card-info">
+        <div class="icone-card roxo"><i data-lucide="monitor"></i></div>
         <div>
-          <p>Telas Ativas</p>
-          <h2><span class="purple-text">56</span><span>/72</span></h2>
+          <span>Telas Ativas</span>
+          <strong><b class="roxo-texto">56</b>/72</strong>
         </div>
-        <div class="divider"></div>
-        <div class="legend">
-          <span><b class="dot purple-dot"></b>56 ativas</span>
-          <span><b class="dot gray-dot"></b>16 disponíveis</span>
+        <div class="linha-card"></div>
+        <div class="legenda">
+          <p><i class="dot roxo-dot"></i>56 ativas</p>
+          <p><i class="dot cinza-dot"></i>16 disponíveis</p>
         </div>
       </div>
 
-      <div class="card">
-        <div class="icon orange">▰</div>
+      <div class="card-info">
+        <div class="icone-card amarelo"><i data-lucide="layers"></i></div>
         <div>
-          <p>Campanhas</p>
-          <h2>34</h2>
+          <span>Campanhas</span>
+          <strong>34</strong>
         </div>
-        <div class="divider"></div>
-        <div class="legend">
-          <span><b class="dot orange-dot"></b>Atualizadas hoje</span>
+        <div class="linha-card"></div>
+        <div class="legenda">
+          <p><i class="dot amarelo-dot"></i>Atualizadas hoje</p>
         </div>
       </div>
 
-      <div class="card storage-card">
-        <div class="icon green">▣</div>
+      <div class="card-info storage">
+        <div class="icone-card verde"><i data-lucide="hard-drive"></i></div>
+        <div>
+          <span>Gigas consumidos</span>
 
-        <div class="storage-content">
-          <p>Gigas consumidos</p>
-
-          <div class="storage-row">
-            <div class="circle">
-              <span>128,4 GB</span>
+          <div class="storage-box">
+            <div class="storage-circle">
+              <strong>128,4 GB</strong>
               <small>Utilizado</small>
             </div>
 
-            <div class="storage-info">
-              <small>Espaço disponível</small>
+            <div class="storage-texto">
+              <span>Espaço disponível</span>
               <strong>371,6 GB</strong>
             </div>
           </div>
@@ -133,50 +125,52 @@
       </div>
     </section>
 
-    <section class="content-grid">
-      <div class="panel">
-        <div class="panel-title">
-          <span class="panel-icon orange-text">⌁</span>
+    <section class="geral-layout">
+      <section class="painel-card">
+        <div class="painel-titulo">
+          <i data-lucide="radio-tower"></i>
           <div>
-            <h3>Status de Telas</h3>
+            <strong>Status de Telas</strong>
             <p>Acompanhe o status das telas em tempo real</p>
           </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>Nome da tela</th>
-              <th>Ponto</th>
-              <th>Status</th>
-              <th>Última conexão</th>
-            </tr>
-          </thead>
+        <div class="tabela-status">
+          <div class="tabela-head">
+            <span>Nome da tela</span>
+            <span>Ponto</span>
+            <span>Status</span>
+            <span>Última conexão</span>
+          </div>
 
-          <tbody id="screenTable"></tbody>
-        </table>
+          <div id="listaTelas"></div>
+        </div>
 
-        <button class="see-more">Ver todas as telas <span>›</span></button>
-      </div>
+        <button class="btn-ver-telas">
+          Ver todas as telas
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </section>
 
-      <div class="panel history">
-        <div class="panel-title">
-          <span class="panel-icon orange-text">◷</span>
+      <section class="painel-card">
+        <div class="painel-titulo">
+          <i data-lucide="clock-3"></i>
           <div>
-            <h3>Históricos de Status</h3>
+            <strong>Históricos de Status</strong>
             <p>Acompanhe os últimos eventos da rede</p>
           </div>
         </div>
 
-        <div id="historyList"></div>
-      </div>
+        <div id="historicoStatus" class="historico-lista"></div>
+      </section>
     </section>
 
-    <footer>
-      DESENVOLVIDO POR <strong>DUNA BRANDING</strong>
-    </footer>
+    <div class="assinatura-duna">
+      Desenvolvido por <strong>Duna Branding</strong>
+    </div>
   </main>
 
-  <script src="geral.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="centralpainel.js?v=1"></script>
 </body>
 </html>
