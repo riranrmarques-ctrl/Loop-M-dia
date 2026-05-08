@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Loop Midia | Empresas</title>
+  <link rel="stylesheet" href="empresas.css?v=1">
+</head>
+
+<body>
+  <aside class="sidebar-app">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Loop Player">
+    </div>
+
+    <div class="sidebar-label">Navegação</div>
+
+    <nav class="sidebar-nav">
+      <a href="/centralpainel.html">
+        <i data-lucide="layout-dashboard"></i>
+        Geral
+      </a>
+
+      <a href="/pontos.html">
+        <i data-lucide="map-pin"></i>
+        Pontos
+      </a>
+
+      <a href="/central-cliente.html">
+        <i data-lucide="megaphone"></i>
+        Anunciantes
+      </a>
+
+      <a href="/empresas.html" class="ativo">
+        <i data-lucide="building-2"></i>
+        Empresas
+      </a>
+
+      <a href="/contratos.html">
+        <i data-lucide="file-text"></i>
+        Contratos
+      </a>
+
+      <a href="/biblioteca.html">
+        <i data-lucide="folder-play"></i>
+        Biblioteca
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-ajuda">
+      <div class="whatsapp-icon">
+        <i data-lucide="message-circle"></i>
+      </div>
+
+      <strong>Precisa de ajuda?</strong>
+      <p>Fale com o suporte pelo WhatsApp.</p>
+
+      <a href="https://wa.me/5531000000000" target="_blank" rel="noopener">
+        Abrir WhatsApp
+        <i data-lucide="external-link"></i>
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar-user">V</div>
+
+      <div>
+        <strong>Vitor</strong>
+        <span>Administrador</span>
+      </div>
+
+      <i data-lucide="chevron-down"></i>
+    </div>
+  </aside>
+
+  <main id="conteudoEmpresas">
+    <header class="pagina-topo">
+      <div>
+        <h1>Empresas</h1>
+        <p>Gerencie franquias e acessos da rede</p>
+      </div>
+
+      <div class="topo-status">
+        <div>
+          <span>Atualizado agora</span>
+          <strong id="dataAtualizacao">Carregando...</strong>
+        </div>
+
+        <button id="btnAtualizarEmpresas" class="btn-icon" type="button" aria-label="Atualizar empresas">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="barra-empresas">
+      <label class="campo-busca" for="buscaEmpresa">
+        <i data-lucide="search"></i>
+        <input id="buscaEmpresa" type="search" placeholder="Buscar franquia...">
+      </label>
+
+      <button id="btnAdicionarEmpresa" class="btn-adicionar" type="button">
+        <i data-lucide="plus"></i>
+        Adicionar franquia
+      </button>
+    </section>
+
+    <section id="listaEmpresas" class="lista-empresas">
+      <div class="estado-vazio">Carregando empresas...</div>
+    </section>
+
+    <div class="assinatura-duna">
+      Desenvolvido por <strong>Duna Branding</strong>
+    </div>
+
+    <div id="mensagemEmpresas" class="status-flutuante" hidden></div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="empresas.js?v=1"></script>
+</body>
+</html>
