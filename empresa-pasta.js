@@ -199,7 +199,7 @@ function preencherFormulario() {
 }
 
 async function buscarEmpresasRemoto() {
-  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const tabelas = tabelaEmpresasAtual
     ? [tabelaEmpresasAtual, ...TABELAS_EMPRESAS.filter((tabela) => tabela !== tabelaEmpresasAtual)]
@@ -242,7 +242,7 @@ function montarPayloadEmpresa() {
 }
 
 async function salvarEmpresaRemota(payload) {
-  if (!supabaseClient) throw new Error("Supabase nÃ£o carregou.");
+  if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const tabela = empresaAtual?.tabelaOrigem || tabelaEmpresasAtual || TABELAS_EMPRESAS[0];
   const id = empresaAtual?.rowId || empresaAtual?.id;
@@ -266,7 +266,7 @@ async function salvarEmpresaRemota(payload) {
     console.warn("Falha ao salvar empresa:", error);
   }
 
-  throw ultimoErro || new Error("NÃ£o foi possÃ­vel salvar empresa.");
+  throw ultimoErro || new Error("Não foi possível salvar empresa.");
 }
 
 async function carregarEmpresa(forcarAtualizacao = false) {
@@ -303,10 +303,10 @@ async function salvarFormulario() {
   try {
     mostrarMensagem("Salvando no Supabase...");
     empresaAtual = await salvarEmpresaRemota(payload);
-    mostrarMensagem("AlteraÃ§Ãµes salvas no Supabase.");
+    mostrarMensagem("Alterações salvas no Supabase.");
   } catch (error) {
     console.error(error);
-    mostrarMensagem("AlteraÃ§Ãµes salvas localmente. Ajuste a tabela no Supabase.");
+    mostrarMensagem("Alterações salvas localmente. Ajuste a tabela no Supabase.");
   }
 
   empresas = empresas.map((empresa) => empresa.id === empresaAtual.id ? empresaAtual : empresa);
@@ -331,8 +331,8 @@ function iniciarDetalhe() {
   btnAtualizarDetalhe?.addEventListener("click", () => carregarEmpresa(true));
 
   btnAlterarSenha?.addEventListener("click", () => {
-    if (senhaEmpresa) senhaEmpresa.value = "â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢";
-    mostrarMensagem("Senha pronta para alteraÃ§Ã£o.");
+    if (senhaEmpresa) senhaEmpresa.value = "••••••••••••••••";
+    mostrarMensagem("Senha pronta para alteração.");
   });
 
   btnBaixarContrato?.addEventListener("click", () => {
