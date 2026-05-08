@@ -6,6 +6,7 @@ const TABELA_MIDIAS = "biblioteca";
 const TABELA_PLAYLISTS = "playlists";
 const TABELA_PONTOS = "pontos";
 const TABELA_STATUS_PONTOS = "statuspontos";
+const TABELA_VINCULOS = "playercliente";
 
 const STORAGE_MIDIAS_KEY = "biblioteca_cache_v2";
 
@@ -95,7 +96,15 @@ function normalizarMidia(item = {}) {
 }
 
 function obterCodigoPonto(ponto) {
-  return String(ponto?.codigo || ponto?.codigo_ponto || ponto?.id || "").trim();
+  return String(
+    ponto?.codigo ||
+    ponto?.codigo_ponto ||
+    ponto?.ponto_codigo ||
+    ponto?.id_ponto ||
+    ponto?.codigo_visual ||
+    ponto?.id ||
+    ""
+  ).trim();
 }
 
 function obterNomePonto(ponto) {
@@ -137,51 +146,77 @@ async function buscarMidiasRemoto() {
 async function buscarPontosRemoto() {
   if (!supabaseClient) throw new Error("Supabase não carregou.");
 
-  const tentativas = [
-    () => supabaseClient.from(TABELA_PONTOS).select("*"),
-    () => supabaseClient.from(TABELA_PONTOS).select("*").order("nome", { ascending: true }),
-    () => supabaseClient.from(TABELA_PONTOS).select("*").order("codigo", { ascending: true })
+  const mapa = new Map();
+  const adicionar = (ponto = {}, somenteAtivo = false) => {
+    if (somenteAtivo && !pontoEstaAtivoBiblioteca(ponto)) return;
+
+    const normalizado = normalizarPontoBiblioteca(ponto);
+    const codigo = normalizado.codigo || normalizado.nome;
+    if (!codigo) return;
+
+    const existente = mapa.get(codigo);
+    mapa.set(codigo, {
+      codigo,
+      nome: normalizado.nome || existente?.nome || codigo
+    });
+  };
+
+  const consultas = [
+    {
+      tabela: TABELA_PONTOS,
+      somenteAtivo: true,
+      normalizar: (row) => row
+    },
+    {
+      tabela: TABELA_STATUS_PONTOS,
+      somenteAtivo: true,
+      normalizar: (row) => ({
+        codigo: row.ponto_codigo || row.codigo,
+        nome: row.nome || row.ponto_codigo || row.codigo,
+        status: row.status || row.evento
+      })
+    },
+    {
+      tabela: TABELA_PLAYLISTS,
+      somenteAtivo: false,
+      normalizar: (row) => ({
+        codigo: row.codigo,
+        nome: row.codigo
+      })
+    },
+    {
+      tabela: TABELA_VINCULOS,
+      somenteAtivo: false,
+      normalizar: (row) => ({
+        codigo: row.ponto_codigo || row.codigo_ponto || row.codigo,
+        nome: row.ponto_codigo || row.codigo_ponto || row.codigo
+      })
+    }
   ];
 
-  let ultimoErro = null;
+  const erros = [];
 
-  for (const tentar of tentativas) {
-    const { data, error } = await tentar();
+  for (const consulta of consultas) {
+    const { data, error } = await supabaseClient
+      .from(consulta.tabela)
+      .select("*");
 
-    if (!error) {
-      const pontos = (data || [])
-        .filter(pontoEstaAtivoBiblioteca)
-        .map(normalizarPontoBiblioteca)
-        .filter((ponto) => ponto.codigo || ponto.nome)
-        .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
-
-      if (pontos.length) return pontos;
-      break;
+    if (error) {
+      erros.push(`${consulta.tabela}: ${error.message || "erro"}`);
+      console.warn(`Falha ao buscar ${consulta.tabela} para biblioteca:`, error);
+      continue;
     }
 
-    ultimoErro = error;
-    console.warn("Falha ao buscar pontos para biblioteca:", error);
+    (data || []).forEach((row) => adicionar(consulta.normalizar(row), consulta.somenteAtivo));
   }
 
-  const { data: statusData, error: statusError } = await supabaseClient
-    .from(TABELA_STATUS_PONTOS)
-    .select("*");
+  const pontos = Array.from(mapa.values()).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
 
-  if (!statusError) {
-    const mapa = new Map();
-
-    (statusData || []).forEach((item) => {
-      const codigo = obterCodigoPonto(item) || String(item.ponto_codigo || item.codigo || "").trim();
-      if (!codigo) return;
-      if (!pontoEstaAtivoBiblioteca(item)) return;
-      mapa.set(codigo, { codigo, nome: codigo });
-    });
-
-    return Array.from(mapa.values()).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  if (!pontos.length && erros.length) {
+    mostrarMensagem(`Não encontrei pontos. ${erros[0]}`);
   }
 
-  if (ultimoErro) throw ultimoErro;
-  return [];
+  return pontos;
 }
 
 async function salvarMidiaRemota(midia) {
