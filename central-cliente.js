@@ -1,6 +1,9 @@
 const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
 
+const TABELA_CLIENTES = "clientes_app";
+const TABELA_PLAYLISTS = "playlists";
+
 const CACHE_CLIENTES_KEY = "central_clientes_cache_v4";
 const CACHE_CLIENTES_TTL = 30 * 60 * 1000;
 const ORDEM_PERSONALIZADA_KEY = "central_clientes_ordem_personalizada_v2";
@@ -88,8 +91,7 @@ function normalizarStatusTexto(status) {
   const valor = String(status || "").trim().toLowerCase();
 
   if (valor === "ativo") return "Ativo";
-  if (valor === "inativo") return "inativo";
-  return status ? String(status).trim() : "inativo";
+  return "inativo";
 }
 
 function obterNomeCliente(cliente) {
@@ -147,10 +149,10 @@ async function copiarCodigoCliente(codigo) {
 
   try {
     await navigator.clipboard.writeText(codigoFinal);
-    mostrarMensagem(`CÃ³digo ${codigoFinal} copiado.`, "#ffffff");
+    mostrarMensagem(`Código ${codigoFinal} copiado.`, "#ffffff");
   } catch (error) {
     console.error(error);
-    mostrarMensagem("NÃ£o foi possÃ­vel copiar o cÃ³digo.", "#ffffff");
+    mostrarMensagem("Não foi possível copiar o código.", "#ffffff");
   }
 }
 
@@ -351,7 +353,7 @@ function renderizarClientes() {
           class="cliente-codigo"
           type="button"
           data-codigo="${escaparHtml(cliente.codigo)}"
-          title="Clique para copiar o cÃ³digo"
+          title="Clique para copiar o código"
         >${escaparHtml(cliente.codigo)}</button>
 
         <div class="cliente-selos">
@@ -373,7 +375,7 @@ function renderizarClientes() {
 
       <div class="cliente-rodape">
         <span>${personalizado ? "Arraste para ordenar" : "Abrir pasta"}</span>
-        <strong>â†’</strong>
+        <strong>&rarr;</strong>
       </div>
     `;
 
@@ -418,7 +420,7 @@ async function buscarClientesRemoto() {
 
   for (const colunas of consultasClientes) {
     const { data, error } = await supabaseClient
-      .from("clientes_app")
+      .from(TABELA_CLIENTES)
       .select(colunas)
       .order("codigo", { ascending: true });
 
@@ -458,7 +460,7 @@ async function buscarClientesRemoto() {
 
   for (const consulta of consultasPlaylists) {
     let query = supabaseClient
-      .from("playlists")
+      .from(TABELA_PLAYLISTS)
       .select(consulta.colunas);
 
     if (consulta.filtro) {
@@ -526,7 +528,7 @@ async function carregarClientes(opcoes = {}) {
       listaClientes.innerHTML = `<div class="vazio">Erro ao conectar com o Supabase.</div>`;
     }
 
-    mostrarMensagem("Supabase nÃ£o carregou. Verifique o script CDN no HTML.", "#ffffff");
+    mostrarMensagem("Supabase não carregou. Verifique o script CDN no HTML.", "#ffffff");
     return;
   }
 
@@ -592,7 +594,7 @@ async function obterCodigoUnico() {
     }
 
     const { data, error } = await supabaseClient
-      .from("clientes_app")
+      .from(TABELA_CLIENTES)
       .select("codigo")
       .eq("codigo", codigo)
       .maybeSingle();
@@ -601,7 +603,7 @@ async function obterCodigoUnico() {
     if (!data) return codigo;
   }
 
-  throw new Error("NÃ£o foi possÃ­vel gerar um cÃ³digo Ãºnico.");
+  throw new Error("Não foi possível gerar um código único.");
 }
 
 async function criarNovoCliente() {
@@ -653,7 +655,7 @@ async function criarNovoCliente() {
 
     for (const payload of tentativasPayload) {
       const { error } = await supabaseClient
-        .from("clientes_app")
+        .from(TABELA_CLIENTES)
         .insert(payload);
 
       if (!error) {
@@ -697,10 +699,10 @@ function iniciarPagina() {
 
   if (!window.supabase) {
     if (listaClientes) {
-      listaClientes.innerHTML = `<div class="vazio">Supabase nÃ£o carregou.</div>`;
+      listaClientes.innerHTML = `<div class="vazio">Supabase não carregou.</div>`;
     }
 
-    mostrarMensagem("Supabase nÃ£o carregou. Verifique o script no HTML.", "#ffffff");
+    mostrarMensagem("Supabase não carregou. Verifique o script no HTML.", "#ffffff");
     return;
   }
 
@@ -739,6 +741,10 @@ function iniciarPagina() {
 
   atualizarBotoesFiltro();
   carregarClientes();
+
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
 }
 
 iniciarPagina();
