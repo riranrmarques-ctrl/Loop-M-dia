@@ -299,26 +299,26 @@ button {
 }
 
 .card-info {
-  height: 118px;
+  height: 126px;
   min-height: 0;
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
   overflow: hidden;
 }
 
 .card-principal {
   display: grid;
-  grid-template-columns: 42px minmax(0, 1fr);
+  grid-template-columns: 44px minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 13px;
   min-width: 0;
 }
 
 .icone-card {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border-radius: 10px;
@@ -326,8 +326,8 @@ button {
 }
 
 .icone-card svg {
-  width: 23px;
-  height: 23px;
+  width: 22px;
+  height: 22px;
 }
 
 .icone-card.amarelo {
@@ -348,7 +348,7 @@ button {
 .card-info span {
   display: block;
   color: #405047;
-  font-size: 0.86rem;
+  font-size: 0.82rem;
   font-weight: 900;
   line-height: 1.2;
   overflow-wrap: anywhere;
@@ -356,9 +356,9 @@ button {
 
 .card-info strong {
   display: block;
-  margin-top: 4px;
+  margin-top: 3px;
   color: var(--text);
-  font-size: clamp(1.45rem, 2.1vw, 2.15rem);
+  font-size: clamp(1.55rem, 2vw, 2rem);
   line-height: 0.95;
   font-weight: 900;
   letter-spacing: 0;
@@ -395,7 +395,7 @@ button {
   gap: 6px;
   min-width: 0;
   color: #405047;
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   line-height: 1.18;
   font-weight: 900;
 }
@@ -415,20 +415,22 @@ button {
 .verde-dot { background: #4ec86d; }
 
 .storage {
-  gap: 9px;
-}
-
-.storage-box {
-  min-height: 44px;
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  align-items: center;
   gap: 10px;
 }
 
+.storage-box {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding-top: 2px;
+}
+
 .storage-circle {
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -453,7 +455,7 @@ button {
 .storage-circle strong {
   margin: 0;
   color: var(--text);
-  font-size: 0.48rem;
+  font-size: 0.44rem;
   line-height: 1;
   text-align: center;
 }
@@ -461,25 +463,26 @@ button {
 .storage-circle small {
   margin-top: 3px;
   color: #405047;
-  font-size: 0.44rem;
+  font-size: 0.4rem;
   font-weight: 900;
 }
 
 .storage-texto {
   min-width: 0;
-  padding-left: 10px;
+  padding-left: 12px;
   border-left: 1px solid var(--line);
 }
 
 .storage-texto span {
   color: var(--muted);
-  font-size: 0.72rem;
+  font-size: 0.74rem;
+  line-height: 1.05;
 }
 
 .storage-texto strong {
-  margin-top: 2px;
+  margin-top: 4px;
   color: var(--text);
-  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  font-size: clamp(1.2rem, 1.65vw, 1.55rem);
   line-height: 1;
 }
 
@@ -488,7 +491,7 @@ button {
   grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
   gap: var(--gap);
   align-items: stretch;
-  height: calc(100vh - 44px - 72px - 18px - 118px - 14px - 34px - 22px);
+  height: calc(100vh - 44px - 72px - 18px - 126px - 14px - 34px - 22px);
   max-height: 430px;
   min-height: 0;
 }
