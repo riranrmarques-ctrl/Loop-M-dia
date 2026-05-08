@@ -98,6 +98,25 @@ button {
   flex: 0 0 auto;
 }
 
+.sidebar-nav a i[data-lucide] {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  display: grid;
+  place-items: center;
+}
+
+.sidebar-nav a i[data-lucide]::before {
+  display: block;
+  font-size: 1rem;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.sidebar-nav a i[data-lucide="folder-open"]::before {
+  content: "□";
+}
+
 .sidebar-nav a.ativo,
 .sidebar-nav a:hover {
   background: #075f2a;
