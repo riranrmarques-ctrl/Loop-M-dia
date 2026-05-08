@@ -599,3 +599,120 @@ button {
     font-size: 0.8rem;
   }
 }
+
+/* Ajuste para caber na tela com margem inferior */
+.biblioteca-topo {
+  min-height: 58px;
+  margin-bottom: 14px;
+}
+
+.biblioteca-topo h1 {
+  margin-top: 12px;
+}
+
+.biblioteca-card {
+  min-height: 0;
+  height: calc(100vh - 190px);
+  max-height: 720px;
+}
+
+.biblioteca-lista-card {
+  padding: 16px 18px;
+}
+
+.biblioteca-card-topo {
+  min-height: 42px;
+  margin-bottom: 10px;
+}
+
+.btn-adicionar {
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 0.82rem;
+}
+
+.tabela-midias {
+  height: calc(100% - 58px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.lista-midias {
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.tabela-cabecalho {
+  padding: 0 16px 10px;
+}
+
+.midia-linha {
+  min-height: 42px;
+  font-size: 0.82rem;
+}
+
+.pontos-card {
+  padding: 22px 18px 16px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.pontos-card-titulo {
+  margin-bottom: 16px;
+}
+
+.pontos-card-titulo strong {
+  font-size: 1rem;
+}
+
+.pontos-card-titulo p {
+  margin-top: 5px;
+  font-size: 0.78rem;
+}
+
+.campo-busca-pontos {
+  min-height: 38px;
+  margin-bottom: 8px;
+}
+
+.lista-pontos {
+  min-height: 0;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  padding-right: 6px;
+}
+
+.ponto-linha {
+  min-height: 42px;
+  font-size: 0.84rem;
+}
+
+.drop-global {
+  min-height: 78px;
+  flex: 0 0 auto;
+}
+
+.assinatura-duna {
+  margin-top: 18px;
+  padding-bottom: 10px;
+}
+
+.lista-midias::-webkit-scrollbar,
+.lista-pontos::-webkit-scrollbar {
+  width: 4px;
+}
+
+.lista-midias::-webkit-scrollbar-thumb,
+.lista-pontos::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.lista-midias::-webkit-scrollbar-track,
+.lista-pontos::-webkit-scrollbar-track {
+  background: transparent;
+}
+
