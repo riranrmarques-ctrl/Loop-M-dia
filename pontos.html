@@ -8,196 +8,238 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Loop Midia | Pontos</title>
-  <link rel="stylesheet" href="pontos.css?v=210">
+  <link rel="stylesheet" href="pontos.css?v=211">
 </head>
 
 <body>
-
-<div id="conteudoPontos">
-
-  <div class="topo-fixo novo-topo">
-
-    <!-- BOTÃO VOLTAR (SUBSTITUIU MENU) -->
-    <div class="topo-esquerda">
-      <button onclick="window.location.href='centralpainel.html'" class="menu-topo-btn">
-        ← Voltar
-      </button>
+  <aside class="sidebar-app">
+    <div class="sidebar-logo">
+      <img src="logo.png" alt="Loop Player">
     </div>
 
-    <div class="topo-centro">
-      <h1>Gerenciador de Pontos</h1>
-      <p>Gerencie seus pontos e playlists</p>
+    <div class="sidebar-label">Navegação</div>
+
+    <nav class="sidebar-nav">
+      <a href="/centralpainel.html">
+        <i data-lucide="layout-dashboard"></i>
+        Geral
+      </a>
+
+      <a href="/pontos.html" class="ativo">
+        <i data-lucide="monitor"></i>
+        Pontos
+      </a>
+
+      <a href="/central-cliente.html">
+        <i data-lucide="users"></i>
+        Anunciantes
+      </a>
+
+      <a href="/empresas.html">
+        <i data-lucide="building-2"></i>
+        Empresas
+      </a>
+
+      <a href="/contratos.html">
+        <i data-lucide="file-text"></i>
+        Contratos
+      </a>
+
+      <a href="/biblioteca.html">
+        <i data-lucide="folder-open"></i>
+        Biblioteca
+      </a>
+    </nav>
+
+    <div class="sidebar-spacer"></div>
+
+    <div class="sidebar-ajuda">
+      <div class="whatsapp-icon">
+        <i data-lucide="message-circle"></i>
+      </div>
+
+      <strong>Precisa de ajuda?</strong>
+      <p>Fale com o suporte pelo WhatsApp.</p>
+
+      <a href="https://wa.me/5531000000000" target="_blank" rel="noopener">
+        Abrir WhatsApp
+        <i data-lucide="external-link"></i>
+      </a>
     </div>
 
-    <div class="topo-direita">
-      <img src="logo.png?v=2" class="logo-topo-img">
+    <div class="sidebar-user">
+      <div class="avatar-user">V</div>
+
+      <div>
+        <strong>Vitor</strong>
+        <span>Administrador</span>
+      </div>
+
+      <i data-lucide="chevron-down"></i>
+    </div>
+  </aside>
+
+  <main id="conteudoPontos">
+    <header class="topo-fixo novo-topo">
+      <div class="topo-centro">
+        <h1>Gerenciador de Pontos</h1>
+        <p>Gerencie seus pontos e playlists</p>
+      </div>
+
       <div class="status-topo">Painel Ativo</div>
-    </div>
+    </header>
 
-  </div>
-
-  <div class="painel-shell">
-
-    <!-- LISTA DE PONTOS -->
-    <div id="listaPontos">
-      <div class="pontos-box">
-        <div class="estado-carregando">Carregando pontos do banco...</div>
-      </div>
-
-      <div class="novo-ponto-area">
-        <button id="btnNovoPonto" class="btn-novo-ponto">+ Novo ponto</button>
-      </div>
-
-      <div class="assinatura-duna">
-        Desenvolvido por <strong>Duna Branding</strong>
-      </div>
-    </div>
-
-    <!-- DETALHE DO PONTO -->
-    <div id="pontoDetalhe" class="playlist-box" style="display:none;">
-
-      <div class="playlist-topbar playlist-topbar-novo">
-        <div class="topbar-esquerda">
-          <button id="btnVoltar" class="btn-secundario">← Voltar</button>
-          <span class="topbar-titulo">Gerencie e organize a sua playlist</span>
+    <section class="painel-shell">
+      <div id="listaPontos">
+        <div class="pontos-box">
+          <div class="estado-carregando">Carregando pontos do banco...</div>
         </div>
 
-        <!-- STATUS ORIGINAL MANTIDO -->
-        <div class="topbar-direita">
-          <div id="statusPonto" class="status-destaque"></div>
+        <div class="novo-ponto-area">
+          <button id="btnNovoPonto" class="btn-novo-ponto" type="button">+ Novo ponto</button>
+        </div>
+
+        <div class="assinatura-duna">
+          Desenvolvido por <strong>Duna Branding</strong>
         </div>
       </div>
 
-      <div class="playlist-header playlist-header-novo">
-        <div class="playlist-topo-flex">
-
-          <div class="playlist-imagem-box">
-            <img id="imagemPonto" src="" alt="Imagem do ponto">
+      <div id="pontoDetalhe" class="playlist-box" style="display:none;">
+        <div class="playlist-topbar playlist-topbar-novo">
+          <div class="topbar-esquerda">
+            <button id="btnVoltar" class="btn-secundario" type="button">← Voltar</button>
+            <span class="topbar-titulo">Gerencie e organize a sua playlist</span>
           </div>
 
-          <div class="playlist-header-textos">
-
-            <h2 id="tituloPasta"></h2>
-
-            <div class="playlist-info-extra">
-              <div id="cidadePonto" class="playlist-info-item"></div>
-              <div id="enderecoPonto" class="playlist-info-item"></div>
-            </div>
-
-            <div class="playlist-codigo-linha">
-              <button id="btnToggleDisponibilidade" class="toggle-ponto ativo">
-                <span class="toggle-bolinha"></span>
-                <span class="toggle-texto">Disponível</span>
-              </button>
-
-              <span id="codigoAtual"></span>
-            </div>
-
-            <div class="playlist-acoes-topo">
-              <button id="btnEditarInfo" class="btn-secundario">Editar informações</button>
-            </div>
-
+          <div class="topbar-direita">
+            <div id="statusPonto" class="status-destaque"></div>
           </div>
         </div>
-      </div>
 
-      <div class="playlist-layout-novo">
+        <div class="playlist-header playlist-header-novo">
+          <div class="playlist-topo-flex">
+            <div class="playlist-imagem-box">
+              <img id="imagemPonto" src="" alt="Imagem do ponto">
+            </div>
 
-        <div class="playlist-coluna-ativa">
-          <div class="playlist-secao playlist-secao-ativa">
-            <div class="playlist-secao-topo">
-              <h4>Playlist ativa</h4>
-              <div class="playlist-botoes-topo">
-                <button id="btnUpgradePlaylist" class="btn-playlist-topo btn-adicionar-material" type="button">
-                  Adicionar material
-                </button>
-                <button id="btnBiblioteca" class="btn-playlist-topo btn-biblioteca" type="button">
-                  Biblioteca
-                </button>
-                <button id="btnCopiarPlaylist" class="btn-playlist-topo btn-copiar-playlist" type="button">
-                  Copiar playlist
-                </button>
+            <div class="playlist-header-textos">
+              <h2 id="tituloPasta"></h2>
+
+              <div class="playlist-info-extra">
+                <div id="cidadePonto" class="playlist-info-item"></div>
+                <div id="enderecoPonto" class="playlist-info-item"></div>
               </div>
-              <input id="inputUpgradePlaylist" type="file" hidden>
+
+              <div class="playlist-codigo-linha">
+                <button id="btnToggleDisponibilidade" class="toggle-ponto ativo" type="button">
+                  <span class="toggle-bolinha"></span>
+                  <span class="toggle-texto">Disponível</span>
+                </button>
+
+                <span id="codigoAtual"></span>
+              </div>
+
+              <div class="playlist-acoes-topo">
+                <button id="btnEditarInfo" class="btn-secundario" type="button">Editar informações</button>
+              </div>
             </div>
-            <div id="playlistAtiva" class="playlist-lista"></div>
           </div>
         </div>
 
-        <div class="playlist-coluna-historico">
+        <div class="playlist-layout-novo">
+          <div class="playlist-coluna-ativa">
+            <div class="playlist-secao playlist-secao-ativa">
+              <div class="playlist-secao-topo">
+                <h4>Playlist ativa</h4>
 
-          <div class="playlist-secao">
-            <div class="playlist-secao-topo">
-              <h4>Histórico de encerramento</h4>
+                <div class="playlist-botoes-topo">
+                  <button id="btnUpgradePlaylist" class="btn-playlist-topo btn-adicionar-material" type="button">
+                    Adicionar material
+                  </button>
+
+                  <button id="btnBiblioteca" class="btn-playlist-topo btn-biblioteca" type="button">
+                    Biblioteca
+                  </button>
+
+                  <button id="btnCopiarPlaylist" class="btn-playlist-topo btn-copiar-playlist" type="button">
+                    Copiar playlist
+                  </button>
+                </div>
+
+                <input id="inputUpgradePlaylist" type="file" hidden>
+              </div>
+
+              <div id="playlistAtiva" class="playlist-lista"></div>
             </div>
-            <div id="historicoEncerramento" class="historico-lista"></div>
           </div>
 
-          <div class="playlist-secao">
-            <div class="playlist-secao-topo">
-              <h4>Histórico de status</h4>
+          <div class="playlist-coluna-historico">
+            <div class="playlist-secao">
+              <div class="playlist-secao-topo">
+                <h4>Histórico de encerramento</h4>
+              </div>
+              <div id="historicoEncerramento" class="historico-lista"></div>
             </div>
-            <div id="historicoStatus" class="historico-lista"></div>
-          </div>
 
+            <div class="playlist-secao">
+              <div class="playlist-secao-topo">
+                <h4>Histórico de status</h4>
+              </div>
+              <div id="historicoStatus" class="historico-lista"></div>
+            </div>
+          </div>
         </div>
+      </div>
+    </section>
+  </main>
 
+  <div id="modalEditar" class="modal-editar" style="display:none;">
+    <div class="modal-conteudo modal-conteudo-amplo">
+      <h3>Editar Informações</h3>
+
+      <div class="modal-secao">
+        <h4>Dados do ponto</h4>
+
+        <input type="text" id="editNome" placeholder="Nome do ponto">
+        <input type="text" id="editCidade" placeholder="Cidade / região">
+        <input type="text" id="editEndereco" placeholder="Endereço completo">
       </div>
 
-    </div>
+      <div class="modal-grid-edicao">
+        <div class="edit-imagem-box modal-secao-imagem">
+          <h4>Imagem do ponto</h4>
+          <img id="previewImagem">
+          <input type="file" id="inputImagem" accept="image/*">
+        </div>
 
+        <div class="edit-botoes">
+          <button id="btnSalvarEdicao" type="button">Salvar</button>
+          <button id="btnDeletarPonto" class="btn-deletar-ponto" type="button">Deletar ponto</button>
+          <button id="btnFecharModal" type="button">Voltar</button>
+        </div>
+      </div>
+    </div>
   </div>
-  
- <!-- MODAL EDITAR -->
-<div id="modalEditar" class="modal-editar" style="display:none;">
-  <div class="modal-conteudo modal-conteudo-amplo">
 
-    <h3>Editar Informações</h3>
+  <div id="modalCopiarPlaylist" class="modal-editar" style="display:none;">
+    <div class="modal-conteudo">
+      <h3>Copiar playlist</h3>
 
-    <div class="modal-secao">
-      <h4>Dados do ponto</h4>
-
-      <input type="text" id="editNome" placeholder="Nome do ponto">
-      <input type="text" id="editCidade" placeholder="Cidade / região">
-      <input type="text" id="editEndereco" placeholder="Endereço completo">
-    </div>
-
-    <div class="modal-grid-edicao">
-      <div class="edit-imagem-box modal-secao-imagem">
-        <h4>Imagem do ponto</h4>
-        <img id="previewImagem">
-        <input type="file" id="inputImagem" accept="image/*">
+      <div class="modal-secao">
+        <h4>Pasta de origem</h4>
+        <select id="playlistOrigemSelect"></select>
+        <p class="modal-ajuda">Os materiais da pasta escolhida serão copiados para o ponto aberto.</p>
       </div>
 
       <div class="edit-botoes">
-        <button id="btnSalvarEdicao" type="button">Salvar</button>
-        <button id="btnDeletarPonto" class="btn-deletar-ponto" type="button">Deletar ponto</button>
-        <button id="btnFecharModal" type="button">Voltar</button>
+        <button id="btnConfirmarCopiaPlaylist" type="button">Copiar playlist inteira</button>
+        <button id="btnFecharCopiaPlaylist" type="button">Voltar</button>
       </div>
     </div>
-
   </div>
-</div>
 
-<div id="modalCopiarPlaylist" class="modal-editar" style="display:none;">
-  <div class="modal-conteudo">
-    <h3>Copiar playlist</h3>
-
-    <div class="modal-secao">
-      <h4>Pasta de origem</h4>
-      <select id="playlistOrigemSelect"></select>
-      <p class="modal-ajuda">Os materiais da pasta escolhida serão copiados para o ponto aberto.</p>
-    </div>
-
-    <div class="edit-botoes">
-      <button id="btnConfirmarCopiaPlaylist" type="button">Copiar playlist inteira</button>
-      <button id="btnFecharCopiaPlaylist" type="button">Voltar</button>
-    </div>
-  </div>
-</div>
-  
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="pontos.js?v=210"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="pontos.js?v=211"></script>
 </body>
 </html>
