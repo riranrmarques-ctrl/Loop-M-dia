@@ -411,23 +411,45 @@ button {
 .verde-dot { background: #4ec86d; }
 
 .storage {
-  justify-content: center;
-  gap: 0;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+}
+
+.storage .card-principal {
+  grid-column: 2;
+  grid-row: 1;
+  display: block;
+  align-self: start;
+  margin-top: 5px;
+}
+
+.storage .icone-card {
+  display: none;
 }
 
 .storage-box {
-  display: block;
+  display: contents;
   min-height: 0;
   padding-top: 0;
 }
 
 .storage-circle {
-  display: none;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  width: 56px;
+  height: 56px;
+  align-self: center;
 }
 
 .storage-texto {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
   min-width: 0;
-  padding-left: 57px;
+  padding-left: 0;
   border-left: none;
 }
 
@@ -436,7 +458,7 @@ button {
 }
 
 .storage-texto strong {
-  margin-top: 4px;
+  margin-top: 26px;
   color: var(--text);
   font-size: clamp(1.55rem, 2vw, 2rem);
   line-height: 1;
