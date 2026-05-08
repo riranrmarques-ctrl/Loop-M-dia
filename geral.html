@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loop Player | Painel Geral</title>
+  <link rel="stylesheet" href="geral.css" />
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="infinity">∞</div>
+      <span>Loop Player</span>
+    </div>
+
+    <nav>
+      <p>NAVEGAÇÃO</p>
+
+      <a class="active" href="#">
+        <span>▦</span> Geral
+      </a>
+
+      <a href="#">
+        <span>⌖</span> Pontos
+      </a>
+
+      <a href="#">
+        <span>📣</span> Anunciantes
+      </a>
+
+      <a href="#">
+        <span>▥</span> Empresas
+      </a>
+
+      <a href="#">
+        <span>▤</span> Contratos
+      </a>
+
+      <a href="#">
+        <span>▻</span> Biblioteca
+      </a>
+    </nav>
+
+    <div class="help-card">
+      <div class="whats">☘</div>
+      <h3>Precisa de ajuda?</h3>
+      <p>Fale com o suporte pelo WhatsApp.</p>
+      <button>Abrir WhatsApp</button>
+    </div>
+
+    <div class="user-card">
+      <div class="avatar">V</div>
+      <div>
+        <strong>Vitor</strong>
+        <span>Administrador</span>
+      </div>
+      <span class="arrow">⌄</span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="top">
+      <div>
+        <h1>Bem-Vindo Vitor 👋</h1>
+        <p>Controle e monitoramento da rede indoor</p>
+      </div>
+
+      <div class="updated">
+        <span>Atualizado agora <b></b></span>
+        <p>12 de Mai, 10:24</p>
+        <button>↻</button>
+      </div>
+    </header>
+
+    <section class="cards">
+      <div class="card">
+        <div class="icon orange">⌁</div>
+        <div>
+          <p>Pontos Ativos</p>
+          <h2><span class="orange-text">18</span><span>/20</span></h2>
+        </div>
+        <div class="divider"></div>
+        <div class="legend">
+          <span><b class="dot orange-dot"></b>18 online</span>
+          <span><b class="dot red-dot"></b>2 offline</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon purple">▭</div>
+        <div>
+          <p>Telas Ativas</p>
+          <h2><span class="purple-text">56</span><span>/72</span></h2>
+        </div>
+        <div class="divider"></div>
+        <div class="legend">
+          <span><b class="dot purple-dot"></b>56 ativas</span>
+          <span><b class="dot gray-dot"></b>16 disponíveis</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon orange">▰</div>
+        <div>
+          <p>Campanhas</p>
+          <h2>34</h2>
+        </div>
+        <div class="divider"></div>
+        <div class="legend">
+          <span><b class="dot orange-dot"></b>Atualizadas hoje</span>
+        </div>
+      </div>
+
+      <div class="card storage-card">
+        <div class="icon green">▣</div>
+
+        <div class="storage-content">
+          <p>Gigas consumidos</p>
+
+          <div class="storage-row">
+            <div class="circle">
+              <span>128,4 GB</span>
+              <small>Utilizado</small>
+            </div>
+
+            <div class="storage-info">
+              <small>Espaço disponível</small>
+              <strong>371,6 GB</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="panel">
+        <div class="panel-title">
+          <span class="panel-icon orange-text">⌁</span>
+          <div>
+            <h3>Status de Telas</h3>
+            <p>Acompanhe o status das telas em tempo real</p>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Nome da tela</th>
+              <th>Ponto</th>
+              <th>Status</th>
+              <th>Última conexão</th>
+            </tr>
+          </thead>
+
+          <tbody id="screenTable"></tbody>
+        </table>
+
+        <button class="see-more">Ver todas as telas <span>›</span></button>
+      </div>
+
+      <div class="panel history">
+        <div class="panel-title">
+          <span class="panel-icon orange-text">◷</span>
+          <div>
+            <h3>Históricos de Status</h3>
+            <p>Acompanhe os últimos eventos da rede</p>
+          </div>
+        </div>
+
+        <div id="historyList"></div>
+      </div>
+    </section>
+
+    <footer>
+      DESENVOLVIDO POR <strong>DUNA BRANDING</strong>
+    </footer>
+  </main>
+
+  <script src="geral.js"></script>
+</body>
+</html>
