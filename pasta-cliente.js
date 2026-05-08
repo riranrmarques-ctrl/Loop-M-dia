@@ -8,7 +8,7 @@ const SUPABASE_URL = "https://dfzvmambzhhsijopcizk.supabase.co";
 const SUPABASE_KEY = "sb_publishable_gSPO1gNfcdy3JNOxMprCbg_Wca6u6WQ";
 
 const BUCKET = "midias";
-const TABELA_CLIENTES = "dadosclientes";
+const TABELA_CLIENTES = "clientes_app";
 const TABELA_VINCULOS = "playercliente";
 const TABELA_PLAYLISTS = "playlists";
 const TABELA_PONTOS = "pontos";
