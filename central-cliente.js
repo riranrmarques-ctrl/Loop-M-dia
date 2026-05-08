@@ -418,7 +418,7 @@ async function buscarClientesRemoto() {
 
   for (const colunas of consultasClientes) {
     const { data, error } = await supabaseClient
-      .from("dadosclientes")
+      .from("clientes_app")
       .select(colunas)
       .order("codigo", { ascending: true });
 
@@ -592,7 +592,7 @@ async function obterCodigoUnico() {
     }
 
     const { data, error } = await supabaseClient
-      .from("dadosclientes")
+      .from("clientes_app")
       .select("codigo")
       .eq("codigo", codigo)
       .maybeSingle();
@@ -653,7 +653,7 @@ async function criarNovoCliente() {
 
     for (const payload of tentativasPayload) {
       const { error } = await supabaseClient
-        .from("dadosclientes")
+        .from("clientes_app")
         .insert(payload);
 
       if (!error) {
