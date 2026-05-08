@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Loop Midia | Empresa</title>
+  <link rel="stylesheet" href="empresa-detalhe.css?v=1">
+</head>
+
+<body>
+  <main id="conteudoEmpresaDetalhe">
+    <header class="detalhe-topo">
+      <div>
+        <a class="voltar-empresas" href="/empresas.html">
+          <i data-lucide="arrow-left"></i>
+          Voltar para empresas
+        </a>
+
+        <div class="titulo-linha">
+          <h1 id="tituloEmpresa">Fulano Indoor</h1>
+          <span id="statusEmpresaTopo" class="status-pill ativa">Ativa</span>
+        </div>
+
+        <p>Gerencie as configurações e acessos da franquia</p>
+      </div>
+
+      <div class="topo-status">
+        <div>
+          <span>Atualizado agora</span>
+          <strong id="dataAtualizacao">Carregando...</strong>
+        </div>
+
+        <button id="btnAtualizarDetalhe" class="btn-icon" type="button" aria-label="Atualizar empresa">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+      </div>
+    </header>
+
+    <section class="detalhe-grid">
+      <section class="box-config">
+        <div class="box-titulo">
+          <div class="box-icone verde">
+            <i data-lucide="user-round"></i>
+          </div>
+          <div>
+            <h2>Acesso da franquia</h2>
+            <p>Credenciais de acesso ao sistema</p>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="emailEmpresa">E-mail</label>
+          <input id="emailEmpresa" type="email">
+        </div>
+
+        <div class="linha-senha">
+          <div class="campo">
+            <label for="senhaEmpresa">Senha</label>
+            <input id="senhaEmpresa" type="password" value="••••••••••••••••">
+          </div>
+
+          <button id="btnAlterarSenha" class="btn-secundario" type="button">Alterar senha</button>
+        </div>
+      </section>
+
+      <section class="box-config">
+        <div class="box-titulo">
+          <div class="box-icone amarelo">
+            <i data-lucide="clipboard-list"></i>
+          </div>
+          <div>
+            <h2>Plano e limites</h2>
+            <p>Defina os limites e recursos da franquia</p>
+          </div>
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="numeroTelas">Número de telas</label>
+            <input id="numeroTelas" type="number" min="0">
+          </div>
+
+          <div class="campo">
+            <label for="numeroPontos">Número de pontos</label>
+            <input id="numeroPontos" type="number" min="0">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="armazenamentoEmpresa">Armazenamento (GB)</label>
+          <div class="input-sufixo">
+            <input id="armazenamentoEmpresa" type="number" min="0">
+            <span>GB</span>
+          </div>
+        </div>
+
+        <div class="storage-info">
+          <span id="textoStorage">220 GB utilizados de 320 GB</span>
+          <strong id="percentualStorage">68.8%</strong>
+        </div>
+        <div class="barra-storage">
+          <span id="barraStorage"></span>
+        </div>
+      </section>
+
+      <section class="box-config">
+        <div class="box-titulo">
+          <div class="box-icone verde">
+            <i data-lucide="info"></i>
+          </div>
+          <div>
+            <h2>Informações da franquia</h2>
+            <p>Dados gerais da franquia</p>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="nomeEmpresa">Nome da franquia</label>
+          <input id="nomeEmpresa" type="text">
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="contatoEmpresa">Contato responsável</label>
+            <input id="contatoEmpresa" type="text">
+          </div>
+
+          <div class="campo">
+            <label for="telefoneEmpresa">Telefone</label>
+            <input id="telefoneEmpresa" type="text">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="statusEmpresa">Status da franquia</label>
+          <select id="statusEmpresa">
+            <option value="Ativa">Ativa</option>
+            <option value="Limite próximo">Limite próximo</option>
+            <option value="Suspensa">Suspensa</option>
+          </select>
+        </div>
+      </section>
+
+      <section class="box-config">
+        <div class="box-titulo">
+          <div class="box-icone verde">
+            <i data-lucide="calendar"></i>
+          </div>
+          <div>
+            <h2>Vencimento e valor fechado</h2>
+            <p>Informações de vencimento e valor do plano</p>
+          </div>
+        </div>
+
+        <div class="linha-dupla">
+          <div class="campo">
+            <label for="vencimentoEmpresa">Próximo vencimento</label>
+            <input id="vencimentoEmpresa" type="date">
+          </div>
+
+          <div class="campo">
+            <label for="valorEmpresa">Valor fechado (mensal)</label>
+            <input id="valorEmpresa" type="text">
+          </div>
+        </div>
+
+        <button id="btnBaixarContrato" class="btn-contrato" type="button">
+          <i data-lucide="download"></i>
+          Baixar contrato
+        </button>
+      </section>
+    </section>
+
+    <footer class="rodape-detalhe">
+      <div class="assinatura-duna">
+        Desenvolvido por <strong>Duna Branding</strong>
+      </div>
+
+      <button id="btnSalvarEmpresa" class="btn-salvar" type="button">
+        Salvar alterações
+      </button>
+    </footer>
+
+    <div id="mensagemDetalhe" class="status-flutuante" hidden></div>
+  </main>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="empresa-detalhe.js?v=1"></script>
+</body>
+</html>
