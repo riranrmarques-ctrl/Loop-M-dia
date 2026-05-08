@@ -410,84 +410,43 @@ button {
 .cinza-dot { background: var(--gray); }
 .verde-dot { background: #4ec86d; }
 
-.storage {
+.card-info.storage {
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-columns: 54px minmax(0, 1fr) minmax(116px, auto);
   align-items: center;
   gap: 14px;
 }
 
 .storage .card-principal {
-  grid-column: 2;
-  grid-row: 1;
   display: block;
-  align-self: start;
-  margin-top: 5px;
+  min-width: 0;
 }
 
-.storage .icone-card {
+.storage .card-principal .icone-card {
   display: none;
+}
+
+.storage .card-principal span {
+  white-space: nowrap;
 }
 
 .storage-box {
   display: contents;
-  min-height: 0;
-  padding-top: 0;
 }
 
 .storage-circle {
-  grid-column: 1;
-  grid-row: 1;
-  display: flex;
-  width: 56px;
-  height: 56px;
-  align-self: center;
-}
-
-.storage-texto {
-  grid-column: 2;
-  grid-row: 1;
-  align-self: end;
-  min-width: 0;
-  padding-left: 0;
-  border-left: none;
-}
-
-.storage-texto span {
-  display: none;
-}
-
-.storage-texto strong {
-  margin-top: 26px;
-  color: var(--text);
-  font-size: clamp(1.55rem, 2vw, 2rem);
-  line-height: 1;
-}
-
-/*
-  Elementos visuais antigos do armazenamento ficam escondidos para manter
-  os cards do topo com o mesmo padrão: título + número.
-*/
-/*
-  display: grid;
-  grid-template-columns: 54px minmax(0, 1fr);
-  align-items: center;
-  gap: 12px;
-  padding-top: 2px;
-}
-
-.storage-circle {
-  width: 50px;
-  height: 50px;
+  width: 54px;
+  height: 54px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: conic-gradient(#58d978 0 34%, #e1eae4 34% 100%);
+  background: conic-gradient(#6edb7c 0 34%, #e3ebe5 34% 100%);
   color: var(--text);
   position: relative;
   isolation: isolate;
+  overflow: hidden;
 }
 
 .storage-circle::before {
@@ -506,34 +465,34 @@ button {
   font-size: 0.44rem;
   line-height: 1;
   text-align: center;
+  white-space: nowrap;
 }
 
 .storage-circle small {
   margin-top: 3px;
   color: #405047;
-  font-size: 0.4rem;
+  font-size: 0.38rem;
   font-weight: 900;
+  line-height: 1;
 }
 
 .storage-texto {
   min-width: 0;
-  padding-left: 12px;
+  padding-left: 14px;
   border-left: 1px solid var(--line);
 }
 
 .storage-texto span {
-  color: var(--muted);
-  font-size: 0.74rem;
-  line-height: 1.05;
+  display: none;
 }
 
 .storage-texto strong {
-  margin-top: 4px;
+  margin: 0;
   color: var(--text);
-  font-size: clamp(1.2rem, 1.65vw, 1.55rem);
-  line-height: 1;
+  font-size: clamp(1.45rem, 1.9vw, 1.9rem);
+  line-height: 0.95;
+  white-space: nowrap;
 }
-*/
 
 .geral-layout {
   display: grid;
