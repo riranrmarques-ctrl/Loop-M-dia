@@ -8,7 +8,7 @@
   --sidebar-w: 280px;
   --page-x: clamp(28px, 4vw, 58px);
   --page-top: 42px;
-  --page-bottom: 58px;
+  --page-bottom: 120px;
   --content-max: 1320px;
   --gap: 22px;
   --bg: #ffffff;
@@ -646,9 +646,9 @@ button {
 }
 
 .assinatura-duna {
-  margin-top: 34px;
-  margin-bottom: 22px;
-  padding-bottom: 10px;
+  margin-top: 38px;
+  margin-bottom: 70px;
+  padding-bottom: 18px;
   text-align: center;
   color: rgba(16, 32, 21, 0.58);
   font-size: 0.82rem;
@@ -713,7 +713,7 @@ button {
 
 @media (max-width: 640px) {
   #conteudoGeral {
-    padding-bottom: 38px;
+    padding-bottom: 96px;
   }
 
   .card-info,
