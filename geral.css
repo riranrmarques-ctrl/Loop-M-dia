@@ -135,8 +135,22 @@ button {
 }
 
 .sidebar-ajuda {
-  padding: 13px;
-  margin-bottom: 12px;
+  position: absolute;
+  right: 20px;
+  bottom: 112px;
+  width: 46px;
+  min-height: 46px;
+  padding: 5px;
+  margin-bottom: 0;
+  overflow: hidden;
+  z-index: 4;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+  transition:
+    width 0.22s ease,
+    min-height 0.22s ease,
+    padding 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
 }
 
 .whatsapp-icon {
@@ -144,7 +158,7 @@ button {
   height: 36px;
   display: grid;
   place-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 0;
   border-radius: 9px;
   background: rgba(7, 95, 42, 0.72);
   color: #22c55e;
@@ -181,6 +195,42 @@ button {
   text-decoration: none;
   font-weight: 900;
   font-size: 0.78rem;
+}
+
+.sidebar-ajuda strong,
+.sidebar-ajuda p,
+.sidebar-ajuda a {
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease;
+}
+
+.sidebar-ajuda:hover,
+.sidebar-ajuda:focus-within {
+  width: 230px;
+  min-height: 150px;
+  padding: 13px;
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.13);
+}
+
+.sidebar-ajuda:hover .whatsapp-icon,
+.sidebar-ajuda:focus-within .whatsapp-icon {
+  margin-bottom: 10px;
+}
+
+.sidebar-ajuda:hover strong,
+.sidebar-ajuda:hover p,
+.sidebar-ajuda:hover a,
+.sidebar-ajuda:focus-within strong,
+.sidebar-ajuda:focus-within p,
+.sidebar-ajuda:focus-within a {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .sidebar-user {
@@ -368,6 +418,10 @@ button {
   content: "⌁";
 }
 
+.icone-card i[data-lucide="map-pin"]::before {
+  content: "⌖";
+}
+
 .icone-card i[data-lucide="monitor"]::before {
   content: "□";
 }
@@ -416,6 +470,10 @@ button {
 
 .card-info strong .roxo-texto {
   color: var(--purple);
+}
+
+.card-info strong .verde-texto {
+  color: var(--green);
 }
 
 .linha-card {
@@ -574,6 +632,11 @@ button {
   width: 26px;
   height: 26px;
   color: var(--yellow);
+}
+
+.painel-titulo .lucide-map-pin,
+.painel-titulo i[data-lucide="map-pin"] {
+  color: var(--green);
 }
 
 .painel-titulo strong {
