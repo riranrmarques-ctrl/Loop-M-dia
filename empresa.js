@@ -148,7 +148,7 @@ function montarLinhaEmpresa(empresa) {
   const statusClasse = obterClasseStatus(empresa.status);
 
   return `
-    <a class="empresa-linha" href="/empresa-detalhe.html?id=${encodeURIComponent(empresa.id)}">
+    <a class="empresa-linha" href="/empresa-pasta.html?id=${encodeURIComponent(empresa.id)}">
       <div class="empresa-identidade">
         <div class="empresa-folder">
           <i data-lucide="folder"></i>
