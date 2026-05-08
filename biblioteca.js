@@ -5,6 +5,7 @@ const BUCKET = "midias";
 const TABELA_MIDIAS = "biblioteca";
 const TABELA_PLAYLISTS = "playlists";
 const TABELA_PONTOS = "pontos";
+const TABELA_STATUS_PONTOS = "statuspontos";
 
 const STORAGE_MIDIAS_KEY = "biblioteca_cache_v2";
 
@@ -101,6 +102,26 @@ function obterNomePonto(ponto) {
   return String(ponto?.nome || ponto?.nome_painel || ponto?.titulo || ponto?.ambiente || obterCodigoPonto(ponto)).trim();
 }
 
+function pontoEstaAtivoBiblioteca(ponto = {}) {
+  const status = String(ponto.status || ponto.status_final || ponto.status_evento || "").trim().toLowerCase();
+
+  if (ponto.disponivel === false) return false;
+  if (["inativo", "indisponivel", "indisponível", "offline", "suspensa", "suspenso"].includes(status)) return false;
+  return true;
+}
+
+function normalizarPontoBiblioteca(ponto = {}) {
+  const codigo = obterCodigoPonto(ponto);
+  const nome = obterNomePonto(ponto) || codigo;
+
+  return {
+    codigo,
+    nome,
+    status: ponto.status || ponto.status_final || ponto.status_evento || "",
+    disponivel: ponto.disponivel
+  };
+}
+
 async function buscarMidiasRemoto() {
   if (!supabaseClient) throw new Error("Supabase não carregou.");
 
@@ -117,19 +138,49 @@ async function buscarPontosRemoto() {
   if (!supabaseClient) throw new Error("Supabase não carregou.");
 
   const tentativas = [
+    () => supabaseClient.from(TABELA_PONTOS).select("*"),
     () => supabaseClient.from(TABELA_PONTOS).select("*").order("nome", { ascending: true }),
-    () => supabaseClient.from(TABELA_PONTOS).select("*").order("codigo", { ascending: true }),
-    () => supabaseClient.from(TABELA_PONTOS).select("*")
+    () => supabaseClient.from(TABELA_PONTOS).select("*").order("codigo", { ascending: true })
   ];
+
+  let ultimoErro = null;
 
   for (const tentar of tentativas) {
     const { data, error } = await tentar();
-    if (!error) return (data || []).map((ponto) => ({
-      codigo: obterCodigoPonto(ponto),
-      nome: obterNomePonto(ponto)
-    })).filter((ponto) => ponto.codigo || ponto.nome);
+
+    if (!error) {
+      const pontos = (data || [])
+        .filter(pontoEstaAtivoBiblioteca)
+        .map(normalizarPontoBiblioteca)
+        .filter((ponto) => ponto.codigo || ponto.nome)
+        .sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+
+      if (pontos.length) return pontos;
+      break;
+    }
+
+    ultimoErro = error;
+    console.warn("Falha ao buscar pontos para biblioteca:", error);
   }
 
+  const { data: statusData, error: statusError } = await supabaseClient
+    .from(TABELA_STATUS_PONTOS)
+    .select("*");
+
+  if (!statusError) {
+    const mapa = new Map();
+
+    (statusData || []).forEach((item) => {
+      const codigo = obterCodigoPonto(item) || String(item.ponto_codigo || item.codigo || "").trim();
+      if (!codigo) return;
+      if (!pontoEstaAtivoBiblioteca(item)) return;
+      mapa.set(codigo, { codigo, nome: codigo });
+    });
+
+    return Array.from(mapa.values()).sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
+  }
+
+  if (ultimoErro) throw ultimoErro;
   return [];
 }
 
