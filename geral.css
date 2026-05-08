@@ -8,7 +8,7 @@
   --sidebar-w: 280px;
   --page-x: clamp(28px, 4vw, 58px);
   --page-top: 42px;
-  --page-bottom: 120px;
+  --page-bottom: 28px;
   --content-max: 1320px;
   --gap: 22px;
   --bg: #ffffff;
@@ -30,11 +30,11 @@
 }
 
 body {
-  min-height: 100vh;
+  height: 100vh;
   font-family: Arial, sans-serif;
   color: var(--text);
   background: #ffffff;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 button {
@@ -178,10 +178,11 @@ button {
 }
 
 #conteudoGeral {
-  min-height: 100vh;
+  height: 100vh;
   margin-left: var(--sidebar-w);
   padding: var(--page-top) var(--page-x) var(--page-bottom);
   background: #ffffff;
+  overflow: hidden;
 }
 
 #conteudoGeral > * {
@@ -485,11 +486,16 @@ button {
   grid-template-columns: minmax(0, 1.58fr) minmax(340px, 0.92fr);
   gap: var(--gap);
   align-items: stretch;
+  height: clamp(330px, calc(100vh - 410px), 520px);
+  min-height: 0;
 }
 
 .painel-card {
-  min-height: 440px;
+  min-height: 0;
+  height: 100%;
   padding: 30px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
@@ -529,7 +535,29 @@ button {
 .tabela-status {
   margin-top: 24px;
   width: 100%;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
+}
+
+#listaTelas,
+.historico-lista {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#listaTelas::-webkit-scrollbar,
+.historico-lista::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+#listaTelas {
+  max-height: calc(100% - 32px);
 }
 
 .tabela-head,
@@ -595,7 +623,7 @@ button {
 
 .btn-ver-telas {
   min-height: 46px;
-  margin: 20px auto 0;
+  margin: 14px auto 0;
   padding: 0 18px;
   display: inline-flex;
   align-items: center;
@@ -617,6 +645,8 @@ button {
 .historico-lista {
   display: flex;
   flex-direction: column;
+  margin-top: 8px;
+  flex: 1;
 }
 
 .historico-item {
@@ -646,9 +676,9 @@ button {
 }
 
 .assinatura-duna {
-  margin-top: 38px;
-  margin-bottom: 70px;
-  padding-bottom: 18px;
+  margin-top: 16px;
+  margin-bottom: 0;
+  padding-bottom: 0;
   text-align: center;
   color: rgba(16, 32, 21, 0.58);
   font-size: 0.82rem;
