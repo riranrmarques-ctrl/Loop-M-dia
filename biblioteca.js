@@ -2,32 +2,32 @@ const STORAGE_MIDIAS_KEY = "biblioteca_midias_v1";
 const STORAGE_ENVIOS_KEY = "biblioteca_envios_v1";
 
 const midiasPadrao = [
-  { id: "m1", nome: "Web - PrevisÃ£o do Tempo.txt", tipo: "TXT", duracao: "-", tamanho: "2.1 KB" },
+  { id: "m1", nome: "Web - Previsão do Tempo.txt", tipo: "TXT", duracao: "-", tamanho: "2.1 KB" },
   { id: "m2", nome: "UOL - Entretenimento.txt", tipo: "TXT", duracao: "-", tamanho: "1.8 KB" },
   { id: "m3", nome: "Jogos de Hoje - Futebol.txt", tipo: "TXT", duracao: "-", tamanho: "1.6 KB" },
-  { id: "m4", nome: "CotaÃ§Ãµes - DÃ³lar e Euro.txt", tipo: "TXT", duracao: "-", tamanho: "1.9 KB" },
-  { id: "m5", nome: "NotÃ­cias - Brasil.txt", tipo: "TXT", duracao: "-", tamanho: "2.4 KB" },
-  { id: "m6", nome: "HorÃ³scopo do Dia.txt", tipo: "TXT", duracao: "-", tamanho: "1.3 KB" },
-  { id: "m7", nome: "PromoÃ§Ã£o - Loja Exemplo.png", tipo: "PNG", duracao: "-", tamanho: "245 KB" },
-  { id: "m8", nome: "CardÃ¡pio - Restaurante.png", tipo: "PNG", duracao: "-", tamanho: "312 KB" },
-  { id: "m9", nome: "Aviso - ManutenÃ§Ã£o.png", tipo: "PNG", duracao: "-", tamanho: "186 KB" },
+  { id: "m4", nome: "Cotações - Dólar e Euro.txt", tipo: "TXT", duracao: "-", tamanho: "1.9 KB" },
+  { id: "m5", nome: "Notícias - Brasil.txt", tipo: "TXT", duracao: "-", tamanho: "2.4 KB" },
+  { id: "m6", nome: "Horóscopo do Dia.txt", tipo: "TXT", duracao: "-", tamanho: "1.3 KB" },
+  { id: "m7", nome: "Promoção - Loja Exemplo.png", tipo: "PNG", duracao: "-", tamanho: "245 KB" },
+  { id: "m8", nome: "Cardápio - Restaurante.png", tipo: "PNG", duracao: "-", tamanho: "312 KB" },
+  { id: "m9", nome: "Aviso - Manutenção.png", tipo: "PNG", duracao: "-", tamanho: "186 KB" },
   { id: "m10", nome: "Oferta Especial.png", tipo: "PNG", duracao: "-", tamanho: "278 KB" },
   { id: "m11", nome: "Banner - Black Friday.png", tipo: "PNG", duracao: "-", tamanho: "342 KB" },
-  { id: "m12", nome: "Tabela - PreÃ§os.png", tipo: "PNG", duracao: "-", tamanho: "198 KB" },
+  { id: "m12", nome: "Tabela - Preços.png", tipo: "PNG", duracao: "-", tamanho: "198 KB" },
   { id: "m13", nome: "Informativo - Evento.png", tipo: "PNG", duracao: "-", tamanho: "256 KB" }
 ];
 
 const pontosPadrao = [
-  "SalÃ£o de Beleza",
+  "Salão de Beleza",
   "Mercado",
   "Academia Alpha",
   "Padaria",
   "Posto Central",
   "Restaurante Sabor",
-  "FarmÃ¡cia Vida",
+  "Farmácia Vida",
   "Escola Futuro",
-  "Bar do ZÃ©",
-  "ClÃ­nica SaÃºde"
+  "Bar do Zé",
+  "Clínica Saúde"
 ];
 
 let midias = [];
