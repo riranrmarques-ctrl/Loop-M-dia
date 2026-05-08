@@ -8,34 +8,40 @@
   --sidebar-w: 280px;
   --page-x: clamp(28px, 4vw, 58px);
   --page-top: 42px;
-  --page-bottom: 52px;
+  --page-bottom: 58px;
   --content-max: 1320px;
   --gap: 22px;
-  --bg-page: #ffffff;
-  --panel: #071e14;
-  --panel-2: #092619;
-  --panel-soft: #0d2c1d;
-  --line: rgba(255, 255, 255, 0.12);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --text: #ffffff;
-  --muted: #b8c2bd;
-  --green: #2f7d3c;
-  --green-2: #1f6f33;
-  --yellow: #f5b638;
-  --red: #ef4444;
-  --purple: #7757ff;
-  --gray: #7d8a86;
+  --bg: #ffffff;
+  --text: #102015;
+  --muted: #5d6d64;
+  --soft: #f7fbf8;
+  --line: rgba(16, 32, 21, 0.12);
+  --line-strong: rgba(16, 32, 21, 0.16);
+  --green: #267a3b;
+  --green-soft: rgba(38, 122, 59, 0.12);
+  --yellow: #c98408;
+  --yellow-soft: rgba(245, 182, 56, 0.16);
+  --purple: #6f52ee;
+  --purple-soft: rgba(111, 82, 238, 0.12);
+  --red: #d8453f;
+  --red-soft: rgba(216, 69, 63, 0.12);
+  --gray: #7a8780;
+  --shadow: 0 18px 42px rgba(16, 32, 21, 0.08);
 }
 
 body {
   min-height: 100vh;
   font-family: Arial, sans-serif;
   color: var(--text);
-  background: var(--bg-page);
+  background: #ffffff;
   overflow-x: hidden;
 }
 
-/* Sidebar mantida no mesmo padrão visual */
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
 .sidebar-app {
   position: fixed;
   inset: 0 auto 0 0;
@@ -175,7 +181,7 @@ body {
   min-height: 100vh;
   margin-left: var(--sidebar-w);
   padding: var(--page-top) var(--page-x) var(--page-bottom);
-  background: var(--bg-page);
+  background: #ffffff;
 }
 
 #conteudoGeral > * {
@@ -189,16 +195,17 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 28px;
-  color: #102015;
+  margin-bottom: 30px;
+  color: var(--text);
 }
 
 .geral-titulo {
   min-width: 0;
 }
 
-.geral-titulo h1 {
-  color: #102015;
+.geral-titulo h1,
+.geral-topo h1 {
+  color: var(--text);
   font-size: clamp(2rem, 3.2vw, 3.3rem);
   line-height: 1;
   font-weight: 900;
@@ -206,10 +213,11 @@ body {
   overflow-wrap: anywhere;
 }
 
-.geral-titulo p {
-  margin-top: 14px;
-  color: #5c6b62;
-  font-size: clamp(1.08rem, 1.55vw, 1.5rem);
+.geral-titulo p,
+.geral-topo p {
+  margin-top: 12px;
+  color: #243329;
+  font-size: clamp(1.05rem, 1.45vw, 1.35rem);
   line-height: 1.25;
   font-weight: 700;
 }
@@ -220,7 +228,7 @@ body {
   justify-content: flex-end;
   gap: 14px;
   flex: 0 0 auto;
-  color: #102015;
+  color: var(--text);
 }
 
 .topo-status div {
@@ -249,7 +257,7 @@ body {
 .topo-status strong {
   display: block;
   margin-top: 8px;
-  color: #102015;
+  color: var(--text);
   font-size: 1.02rem;
   line-height: 1.2;
 }
@@ -259,10 +267,10 @@ body {
   height: 58px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(16, 32, 21, 0.12);
+  border: 1px solid var(--line);
   border-radius: 14px;
   background: #ffffff;
-  color: #102015;
+  color: var(--text);
   cursor: pointer;
   box-shadow: 0 12px 26px rgba(5, 16, 10, 0.08);
 }
@@ -281,18 +289,16 @@ body {
 
 .card-info,
 .painel-card {
-  background:
-    radial-gradient(circle at top left, rgba(47, 172, 88, 0.12), transparent 40%),
-    linear-gradient(180deg, var(--panel-2), var(--panel));
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #ffffff;
+  border: 1px solid var(--line-strong);
   border-radius: 8px;
   color: var(--text);
-  box-shadow: 0 18px 42px rgba(4, 20, 10, 0.16);
+  box-shadow: var(--shadow);
 }
 
 .card-info {
   min-height: 180px;
-  padding: 24px 24px 22px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -322,23 +328,23 @@ body {
 }
 
 .icone-card.amarelo {
-  background: rgba(245, 182, 56, 0.64);
-  color: #ffffff;
+  background: var(--yellow-soft);
+  color: var(--yellow);
 }
 
 .icone-card.roxo {
-  background: var(--purple);
-  color: #ffffff;
+  background: var(--purple-soft);
+  color: var(--purple);
 }
 
 .icone-card.verde {
-  background: var(--green);
-  color: #ffffff;
+  background: var(--green-soft);
+  color: var(--green);
 }
 
 .card-info span {
   display: block;
-  color: rgba(255, 255, 255, 0.9);
+  color: #405047;
   font-size: 1.02rem;
   font-weight: 900;
   line-height: 1.2;
@@ -348,7 +354,7 @@ body {
 .card-info strong {
   display: block;
   margin-top: 8px;
-  color: #ffffff;
+  color: var(--text);
   font-size: clamp(2.2rem, 3.2vw, 3.45rem);
   line-height: 0.95;
   font-weight: 900;
@@ -385,7 +391,7 @@ body {
   align-items: center;
   gap: 8px;
   min-width: 0;
-  color: rgba(255, 255, 255, 0.84);
+  color: #405047;
   font-size: 0.95rem;
   line-height: 1.18;
   font-weight: 900;
@@ -399,32 +405,14 @@ body {
   flex: 0 0 auto;
 }
 
-.amarelo-dot {
-  background: var(--yellow);
-}
-
-.vermelho-dot {
-  background: var(--red);
-}
-
-.roxo-dot {
-  background: var(--purple);
-}
-
-.cinza-dot {
-  background: var(--gray);
-}
-
-.verde-dot {
-  background: #4ec86d;
-}
+.amarelo-dot { background: #f5b638; }
+.vermelho-dot { background: var(--red); }
+.roxo-dot { background: var(--purple); }
+.cinza-dot { background: var(--gray); }
+.verde-dot { background: #4ec86d; }
 
 .storage {
   gap: 14px;
-}
-
-.storage-topo {
-  grid-template-columns: 56px minmax(0, 1fr);
 }
 
 .storage-box {
@@ -443,9 +431,8 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background:
-    conic-gradient(#58d978 0 34%, rgba(255, 255, 255, 0.12) 34% 100%);
-  color: #ffffff;
+  background: conic-gradient(#58d978 0 34%, #e1eae4 34% 100%);
+  color: var(--text);
   position: relative;
   isolation: isolate;
 }
@@ -455,12 +442,14 @@ body {
   position: absolute;
   inset: 14px;
   border-radius: inherit;
-  background: #20362c;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(16, 32, 21, 0.08);
   z-index: -1;
 }
 
 .storage-circle strong {
   margin: 0;
+  color: var(--text);
   font-size: 0.86rem;
   line-height: 1;
   text-align: center;
@@ -468,6 +457,7 @@ body {
 
 .storage-circle small {
   margin-top: 9px;
+  color: #405047;
   font-size: 0.72rem;
   font-weight: 900;
 }
@@ -479,12 +469,13 @@ body {
 }
 
 .storage-texto span {
-  color: rgba(255, 255, 255, 0.74);
+  color: var(--muted);
   font-size: 0.95rem;
 }
 
 .storage-texto strong {
   margin-top: 8px;
+  color: var(--text);
   font-size: clamp(1.7rem, 2.2vw, 2.35rem);
   line-height: 1;
 }
@@ -511,7 +502,8 @@ body {
   border-bottom: 1px solid var(--line);
 }
 
-.painel-titulo > svg {
+.painel-titulo > svg,
+.painel-titulo svg {
   width: 34px;
   height: 34px;
   color: var(--yellow);
@@ -519,7 +511,7 @@ body {
 
 .painel-titulo strong {
   display: block;
-  color: #ffffff;
+  color: var(--text);
   font-size: clamp(1.6rem, 2vw, 2.1rem);
   line-height: 1.05;
   font-weight: 900;
@@ -550,7 +542,7 @@ body {
 
 .tabela-head {
   padding: 0 0 14px;
-  color: rgba(255, 255, 255, 0.64);
+  color: #6b7a71;
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -559,7 +551,7 @@ body {
 .tela-linha {
   min-height: 58px;
   border-top: 1px solid var(--line);
-  color: #ffffff;
+  color: var(--text);
   font-weight: 800;
 }
 
@@ -589,14 +581,16 @@ body {
   line-height: 1;
 }
 
-.status.online {
-  background: var(--green);
-  color: #ffffff;
+.status.online,
+.online {
+  background: var(--green-soft);
+  color: var(--green);
 }
 
-.status.inativo {
-  background: #7f2b22;
-  color: #ffb4aa;
+.status.inativo,
+.inativo {
+  background: var(--red-soft);
+  color: #b42318;
 }
 
 .btn-ver-telas {
@@ -609,7 +603,7 @@ body {
   gap: 10px;
   border: none;
   background: transparent;
-  color: var(--yellow);
+  color: #b87400;
   font-size: 0.95rem;
   font-weight: 900;
   cursor: pointer;
@@ -632,7 +626,7 @@ body {
   align-items: center;
   gap: 18px;
   border-top: 1px solid var(--line);
-  color: #ffffff;
+  color: var(--text);
 }
 
 .historico-item strong {
@@ -640,20 +634,21 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--text);
   font-size: 1rem;
   line-height: 1.2;
 }
 
 .historico-item span {
   text-align: right;
-  color: rgba(255, 255, 255, 0.72);
+  color: var(--muted);
   font-weight: 900;
 }
 
 .assinatura-duna {
-  margin-top: 30px;
-  margin-bottom: 20px;
-  padding-bottom: 8px;
+  margin-top: 34px;
+  margin-bottom: 22px;
+  padding-bottom: 10px;
   text-align: center;
   color: rgba(16, 32, 21, 0.58);
   font-size: 0.82rem;
@@ -663,7 +658,7 @@ body {
 }
 
 .assinatura-duna strong {
-  color: #102015;
+  color: var(--text);
 }
 
 @media (max-width: 1280px) {
